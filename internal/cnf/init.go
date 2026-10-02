@@ -10,24 +10,15 @@ package cnf
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 )
 
-func InitCnfDir() error {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return fmt.Errorf("failed to get home directory: %w", err)
-	}
-
-	xsDir := filepath.Join(homeDir, ".xs")
-	scriptsDir := filepath.Join(xsDir, "scripts")
-
+func (c *Cnf) InitCnfDir() error {
 	directories := []struct {
 		path string
 		name string
 	}{
-		{path: xsDir, name: "~/.xs"},
-		{path: scriptsDir, name: "~/.xs/scripts"},
+		{path: c.FullCnfPath, name: fmt.Sprintf("~/%s", c.Dir)},
+		{path: c.FullScriptsPath, name: fmt.Sprintf("~/%s", c.ScriptsPath)},
 	}
 
 	for _, directory := range directories {
