@@ -1,5 +1,5 @@
-/* 
-Package executor prepares and executes shell scripts. 
+/*
+Package executor prepares and executes shell scripts.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 */
@@ -46,7 +46,7 @@ func (e *Executor) PrepScript(
 
 	// Execute the script relative to the scripts directory without
 	// changing the process-wide working directory.
-	scriptCmd = exec.Command("./"+fileNameWithExt)
+	scriptCmd = exec.Command("./" + fileNameWithExt)
 	scriptCmd.Dir = cnf.FullScriptsPath
 
 	return scriptCmd, nil

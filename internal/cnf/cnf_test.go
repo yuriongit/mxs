@@ -1,6 +1,6 @@
 /*
 Package cnf provides all the functionality
-for Xs's config. Manages the application's 
+for Xs's config. Manages the application's
 configuration and script directory.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.

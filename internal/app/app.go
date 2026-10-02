@@ -1,5 +1,5 @@
-/* 
-Package app wires together the application's 
+/*
+Package app wires together the application's
 configuration and execution dependencies.
 */
 package app
@@ -16,7 +16,6 @@ type App struct {
 	Cnf      *cnf.Cnf
 	Executor *executor.Executor
 }
-
 
 func NewApp() (*App, error) {
 	homePath, err := os.UserHomeDir()

@@ -1,5 +1,5 @@
-/* 
-Package app wires together the application's 
+/*
+Package app wires together the application's
 configuration and execution dependencies.
 */
 package app
