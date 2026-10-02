@@ -1,6 +1,6 @@
 # Xs
 
-A CLI tool with AI capabilities for managing and executing scripts.
+A command-line tool for script execution and AI-assisted script management.
 
 ## Features
 
