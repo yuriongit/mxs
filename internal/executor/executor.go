@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/yuriongit/xs/internal/cnf"
 )
@@ -15,33 +16,39 @@ func NewExecutor() *Executor {
 }
 
 /*
-PrepScript verifies the script exists and prepares 
-the script future execution.
+PrepScript verifies the script exists and prepares
+the script for future execution.
 */
 func (e *Executor) PrepScript(
 	cnf *cnf.Cnf,
 	scriptName string,
 ) (scriptCmd *exec.Cmd, err error) {
-	// Change to /scripts dir
-	if err := cnf.ChToScriptsDir(); err != nil {
-		return nil, err
-	}
-	// Attach the file extension
+	// Attach the file extension.
 	fileNameWithExt := e.attachFileExt(scriptName)
-	// Check if fileName is a script
-	if err := e.isScript(fileNameWithExt); err != nil {
+
+	// Build the full path to the script in the scripts directory.
+	fullScriptPath := filepath.Join(cnf.FullScriptsPath, fileNameWithExt)
+
+	// Check if the script exists.
+	if err := e.isScript(fullScriptPath); err != nil {
 		return nil, err
 	}
-	// Change file mode if fileNameWithExt is a script
-	if err := e.chScriptModToExec(fileNameWithExt); err != nil {
+
+	// Change the script's file mode to executable.
+	if err := e.chScriptModToExec(fullScriptPath); err != nil {
 		return nil, fmt.Errorf("failed to change script's file mode: %w", err)
 	}
 
-	return exec.Command(fmt.Sprintf("./%s", fileNameWithExt)), nil
+	// Execute the script relative to the scripts directory without
+	// changing the process-wide working directory.
+	scriptCmd = exec.Command("./"+fileNameWithExt)
+	scriptCmd.Dir = cnf.FullScriptsPath
+
+	return scriptCmd, nil
 }
 
 func (e *Executor) isScript(fileName string) error {
-	// Use os.Stat to check if file exists
+	// Use os.Stat to check if the script exists.
 	_, err := os.Stat(fileName)
 	if err != nil {
 		if os.IsNotExist(err) {
