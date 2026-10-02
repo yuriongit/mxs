@@ -11,7 +11,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
-	"github.com/yuriongit/xs/internal/ui/execUI"
+	"github.com/yuriongit/xs/internal/ui/screens/execUI"
 )
 
 var rootCmd = &cobra.Command{

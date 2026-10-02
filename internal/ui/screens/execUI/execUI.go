@@ -13,7 +13,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
-	"github.com/yuriongit/xs/styles"
+	"github.com/yuriongit/xs/internal/ui/styles"
 )
 
 // ============================================================================
