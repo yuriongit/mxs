@@ -6,7 +6,6 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/yuriongit/xs/internal/app"
-	"github.com/yuriongit/xs/internal/cnf"
 )
 var globalApp *app.App
 
@@ -36,8 +35,8 @@ to quickly create a Cobra application.`,
 		SetApp(globalApp)
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
-		cnf.InitCnfDir()
+	RunE: func(cmd *cobra.Command, args []string) error {
+	  return globalApp.Cnf.InitCnfDir()
 	},
 }
 
