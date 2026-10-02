@@ -1,6 +1,5 @@
 /* 
-Package executor prepares and executes 
-shell scripts. 
+Package executor prepares and executes shell scripts. 
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 */
