@@ -1,4 +1,4 @@
-package execScreen
+package execUI
 
 import (
 	"bufio"
