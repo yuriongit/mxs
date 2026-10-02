@@ -7,8 +7,6 @@ Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 package cnf
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
 )
 
@@ -31,18 +29,4 @@ func NewCnf(homePath string) *Cnf {
 		fullCnfPath,
 		fullScriptsPath,
 	}
-}
-
-func (c *Cnf) ChToBaseDir() error {
-	if err := os.Chdir(c.FullCnfPath); err != nil {
-		return fmt.Errorf("%w\nfull cnf path: %s", err, c.FullCnfPath)
-	}
-	return nil
-}
-
-func (c *Cnf) ChToScriptsDir() error {
-	if err := os.Chdir(c.FullScriptsPath); err != nil {
-		return fmt.Errorf("%w\nfull scripts path: %s", err, c.FullScriptsPath)
-	}
-	return nil
 }
