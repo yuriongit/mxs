@@ -1,10 +1,13 @@
 # Xs
 
-A command-line tool for script execution and AI-assisted script management.
+Xs, pronounced as _"**ex • es**"_, is a command-line tool for script execution and
+AI-assisted script management.
 
 ## Features
 
-1. Currently none.
+1. Global configuration directory that holds scripts
+2. Script execution
+3. Colored and structured output
 
 ## Configuration
 
@@ -14,11 +17,12 @@ Example paragraph that explains Xs's configuration.
 
 ## Infrastructure
 
-| Layer   | Tool              |
-| ------- | ----------------- |
-| Main    | Go                |
-| Tooling | golangci-lint, Go |
-| Other   | Name              |
+| Layer   | Tool                 |
+| ------- | -------------------- |
+| Main    | Go, Cobra, BubbleTea |
+| Tooling | golangci-lint, Go    |
+| UI      | Bubbles, Lipgloss    |
+| Other   | Name                 |
 
 ## Requirements
 
@@ -55,7 +59,7 @@ xs demo
 
 ## Images
 
-- [/images](./images)
+- [/.github/images](./images)
 
 ## License
 
