@@ -8,17 +8,21 @@ import (
 var (
 	Subtle = lg.NewStyle().Faint(true).Italic(true)
 
-	// Light pink script name header
+	// Purple script name header
 	ScriptName = lg.NewStyle().
-			Foreground(lg.Color(LightPink)).
+			Foreground(lg.Color(Purple)).
 			Bold(true)
 
 	// Base output box style (border color is dynamic per state)
 	BaseOutputBox = lg.NewStyle().
-			Border(lg.RoundedBorder()).
-			Padding(0, 1).
-			MarginTop(1).
-			MarginBottom(1)
+			Border(lg.NormalBorder()).
+			Italic(true).
+			Faint(true).
+			UnsetBorderLeft().
+			UnsetBorderRight().
+			UnsetBorderTop()
+			// UnsetBorderBottom().
+			// Padding(0, 1)
 
 	Success = lg.NewStyle().
 		Foreground(lg.Color(Green)).
@@ -28,6 +32,7 @@ var (
 		Foreground(lg.Color(Red)).
 		Bold(true)
 
-	// Light pink spinner style
-	Spinner = lg.NewStyle().Foreground(lg.Color(LightPink))
+	// Purple spinner style
+	Spinner = lg.NewStyle().Foreground(lg.Color(Purple))
 )
+
