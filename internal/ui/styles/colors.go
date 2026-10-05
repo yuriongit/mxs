@@ -14,10 +14,6 @@ const (
 	Green = "#4CD100"
 	// Purple color
 	Purple = "#915EFF"
-	// Light pink color
-	LightPink = "#fb84b5"
-	// Pink color
-	Pink = "#FF5ECC"
 	// Red color
 	Red = "#FF5E7C"
 )
