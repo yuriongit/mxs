@@ -30,8 +30,8 @@ type state int
 
 const (
 	stateSearching state = iota // 0: Finding script in ~/.xs/scripts
-	stateRunning                // 1: Streaming script output (Lime box)
-	stateFinished               // 2: Completed execution or failed (Lime / Red box)
+	stateRunning                // 1: Streaming script output
+	stateFinished               // 2: Completed execution or failed
 )
 
 // ============================================================================
@@ -42,6 +42,7 @@ type scriptFoundMsg struct{ path string }
 type scriptNotFoundMsg struct{ err error }
 type outputLineMsg string
 type executionFinishedMsg struct{ err error }
+type tickMsg time.Time // Stopwatch update tick message
 
 // ============================================================================
 // Bubble Tea Model
@@ -53,7 +54,7 @@ type model struct {
 	scriptPath string        // Resolved path on disk
 	state      state         // Current lifecycle state
 	spinner    spinner.Model // Bubbles spinner component
-	output     []string      // Ring buffer holding streamed logs
+	output     []string      // Streamed stdout/stderr log buffer
 	err        error         // Execution error, if any
 	startTime  time.Time     // Timer start
 	duration   time.Duration // Total elapsed run time
@@ -80,6 +81,23 @@ func (m model) Init() tea.Cmd {
 		m.spinner.Tick,
 		findScriptCmd(m.targetName),
 	)
+}
+
+// Run executes the UI with reserved terminal buffer space to prevent screen scrolling
+func Run(targetName string, scriptArgs []string) error {
+	// Pre-scroll 20 lines so the terminal never scrolls up during rendering
+	fmt.Print(strings.Repeat("\n", 20) + "\033[20A")
+
+	p := tea.NewProgram(InitialModel(targetName, scriptArgs))
+	_, err := p.Run()
+	return err
+}
+
+// 80ms timer tick for smooth stopwatch updates
+func tickCmd() tea.Cmd {
+	return tea.Tick(80*time.Millisecond, func(t time.Time) tea.Msg {
+		return tickMsg(t)
+	})
 }
 
 // ============================================================================
@@ -169,7 +187,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.scriptPath = msg.path
 		m.state = stateRunning
 		m.startTime = time.Now()
-		cmds = append(cmds, runScriptCmd(m.scriptPath, m.scriptArgs, m.sub), waitForActivity(m.sub))
+		cmds = append(cmds,
+			runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
+			waitForActivity(m.sub),
+			tickCmd(), // Start the 80ms stopwatch ticker
+		)
+
+	case tickMsg:
+		// Re-trigger tickCmd as long as execution is running
+		if m.state == stateRunning {
+			cmds = append(cmds, tickCmd())
+		}
 
 	case scriptNotFoundMsg:
 		m.state = stateFinished
@@ -178,9 +206,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case outputLineMsg:
 		m.output = append(m.output, string(msg))
-		if len(m.output) > 12 {
-			m.output = m.output[len(m.output)-12:]
-		}
 		cmds = append(cmds, waitForActivity(m.sub))
 
 	case executionFinishedMsg:
@@ -216,10 +241,6 @@ func (m model) View() string {
 		if len(m.scriptArgs) > 0 {
 			argInfo = fmt.Sprintf(" (args: %s)", strings.Join(m.scriptArgs, " "))
 		}
-		b.WriteString(fmt.Sprintf("%s Running %s%s...\n",
-			m.spinner.View(),
-			styles.ScriptName.Render(filepath.Base(m.scriptPath)),
-			styles.Subtle.Render(argInfo)))
 
 		var logs string
 		if len(m.output) == 0 {
@@ -228,29 +249,33 @@ func (m model) View() string {
 			logs = strings.Join(m.output, "\n")
 		}
 
-		// Live box border is Lime while script is in progress
-		runningBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.LightPink))
-		b.WriteString(runningBoxStyle.Render(logs + "\n"))
+		runningBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Purple))
+		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Purple)).Render(logs + "\n..."))
+
+		// Live 80ms stopwatch readout
+		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
+		b.WriteString(fmt.Sprintf("\n%s Running %s%s, time: %s",
+			m.spinner.View(),
+			styles.ScriptName.Render(filepath.Base(m.scriptPath)),
+			styles.Subtle.Render(argInfo),
+			elapsed,
+		))
 
 	case stateFinished:
 		if m.err != nil {
-			b.WriteString(styles.Error.Render("✗ Execution failed\n"))
 			if len(m.output) > 0 {
-				// Box border turns Red on failure
 				errBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Red))
-				b.WriteString(errBoxStyle.Render(strings.Join(m.output, "\n")))
+				b.WriteString(errBoxStyle.Foreground(lg.Color(styles.Red)).Render(strings.Join(m.output, "\n")))
 			}
-			b.WriteString(styles.Subtle.Render("\n" + m.err.Error() + "\n"))
+			b.WriteString(styles.Subtle.Render(m.err.Error()))
+			b.WriteString(styles.Error.Render("\n✗ Execution failed\n"))
 		} else {
-			b.WriteString(styles.Success.Render("✓ Execution completed\n"))
 			if len(m.output) > 0 {
-				// Box border turns Lime on success
-				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Green))
+				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Green)).Foreground(lg.Color(styles.Green))
 				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
-			b.WriteString(
-				styles.Subtle.Render(fmt.Sprintf("\nFinished in %s", m.duration.Round(time.Millisecond)) + "\n"),
-			)
+			
+			b.WriteString(styles.Success.Render(fmt.Sprintf("\n✓ Execution completed, finished in %s\n", m.duration.Round(time.Millisecond))))
 		}
 	}
 
