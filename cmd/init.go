@@ -1,5 +1,7 @@
 /*
-Copyright © 2026 NAME HERE <EMAIL ADDRESS>
+Package cmd holds all of Xs's commands.
+
+Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>
 */
 package cmd
 
@@ -10,13 +12,8 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Initializes Xs's config",
+	Long:  "TODO: Implement later",
 	RunE: func(_ *cobra.Command, _ []string) error {
 	  ptrApp := GetApp()
 	
