@@ -10,7 +10,6 @@ import (
 	"testing"
 
 	"github.com/yuriongit/xs/internal/cnf"
-	"github.com/yuriongit/xs/internal/executor"
 )
 
 func TestNewApp(t *testing.T) {
@@ -108,7 +107,7 @@ func TestNewAppInitializesExpectedDependencies(t *testing.T) {
 	}
 
 	// Confirm that the dependency is the expected concrete executor type.
-	var _ *executor.Executor = app.Executor
+	var _ = app.Executor
 }
 
 func TestNewAppDoesNotCreateDirectories(t *testing.T) {

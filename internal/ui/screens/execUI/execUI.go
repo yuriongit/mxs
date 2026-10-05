@@ -232,9 +232,9 @@ func (m model) View() string {
 
 	switch m.state {
 	case stateSearching:
-		b.WriteString(fmt.Sprintf("%s Locating %s in ~/.xs/scripts...\n",
+		fmt.Fprintf(&b, "%s Locating %s in ~/.xs/scripts...\n",
 			m.spinner.View(),
-			styles.ScriptName.Render(m.targetName)))
+			styles.ScriptName.Render(m.targetName))
 
 	case stateRunning:
 		argInfo := ""
@@ -254,12 +254,12 @@ func (m model) View() string {
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
-		b.WriteString(fmt.Sprintf("\n%s Running %s%s, time: %s",
+		fmt.Fprintf(&b, "\n%s Running %s%s, time: %s",
 			m.spinner.View(),
 			styles.ScriptName.Render(filepath.Base(m.scriptPath)),
 			styles.Subtle.Render(argInfo),
 			elapsed,
-		))
+		)
 
 	case stateFinished:
 		if m.err != nil {
