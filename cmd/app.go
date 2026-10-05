@@ -8,14 +8,14 @@ package cmd
 import "github.com/yuriongit/xs/internal/app"
 
 
-var application *app.App
+var ptrApp *app.App
 
 // SetApp sets the application struct.
 func SetApp(a *app.App) {
-	application = a
+	ptrApp = a
 }
 
 // GetApp gets the application struct.
 func GetApp() *app.App {
-	return application
+	return ptrApp
 }

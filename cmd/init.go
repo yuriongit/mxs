@@ -5,9 +5,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/yuriongit/xs/internal/app"
 )
-var globalApp *app.App
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
@@ -19,24 +17,10 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-  PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
-		// Skip app init for "init" command
-		if cmd.Name() == "init" {
-			return nil
-		}
-
-		// Initialize app for all other commands
-		var err error
-		globalApp, err = app.NewApp()
-		if err != nil {
-			return err
-		}
-
-		SetApp(globalApp)
-		return nil
-	},
-	RunE: func(cmd *cobra.Command, args []string) error {
-	  return globalApp.Cnf.InitCnfDir()
+	RunE: func(_ *cobra.Command, _ []string) error {
+	  ptrApp := GetApp()
+	
+		return ptrApp.Cnf.InitCnfDir()
 	},
 }
 

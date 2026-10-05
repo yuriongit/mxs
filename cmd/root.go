@@ -6,19 +6,40 @@ Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>
 package cmd
 
 import (
+	"fmt"
+	"log"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
+	"github.com/yuriongit/xs/internal/app"
 	"github.com/yuriongit/xs/internal/ui/screens/execUI"
 )
+
+var globalApp *app.App
 
 var rootCmd = &cobra.Command{
 	Use:   "xs <script-name> [args...]",
 	Short: "A CLI tool with AI capabilities for managing and executing scripts",
 	Args:  cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
+	PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
+		// Skip app init for "init" command
+		if cmd.Name() == "help" {
+			return nil
+		}
+
+		// Initialize app for all other commands
+		var err error
+		globalApp, err = app.NewApp()
+		if err != nil {
+			return err
+		}
+
+		SetApp(globalApp)
+		return nil
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+	
 		scriptName := args[0]
 		scriptArgs := args[1:]
 
@@ -26,13 +47,31 @@ var rootCmd = &cobra.Command{
 		if _, err := p.Run(); err != nil {
 			log.Fatal("Fatal error running xs", "err", err)
 		}
+
+		// Initialize app for all other commands
+		var err error
+		globalApp, err = app.NewApp()
+		if err != nil {
+			return err
+		}
+
+		SetApp(globalApp)
+		return nil
 	},
 }
 
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	log.SetPrefix("xs")
-
-	if err := rootCmd.Execute(); err != nil {
-		os.Exit(1)
+	err := rootCmd.Execute()
+	if err != nil {
+  	fmt.Fprintf(os.Stderr, "✗ %s\n", err.Error())
+		return
 	}
+
+	// Global cleanup
+	// if globalApp != nil {
+	// 	globalApp.Cancel()
+	// 	globalApp.Database.Pool.Close()
+	// }
 }
