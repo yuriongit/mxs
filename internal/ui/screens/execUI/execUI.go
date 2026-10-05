@@ -274,7 +274,7 @@ func (m model) View() string {
 				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Green)).Foreground(lg.Color(styles.Green))
 				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
-			
+
 			b.WriteString(styles.Success.Render(fmt.Sprintf("\n✓ Execution completed, finished in %s\n", m.duration.Round(time.Millisecond))))
 		}
 	}

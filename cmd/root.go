@@ -39,7 +39,7 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-	
+
 		scriptName := args[0]
 		scriptArgs := args[1:]
 
@@ -65,7 +65,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-  	fmt.Fprintf(os.Stderr, "✗ %s\n", err.Error())
+		fmt.Fprintf(os.Stderr, "✗ %s\n", err.Error())
 		return
 	}
 

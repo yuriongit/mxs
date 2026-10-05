@@ -15,8 +15,8 @@ var initCmd = &cobra.Command{
 	Short: "Initializes Xs's config",
 	Long:  "TODO: Implement later",
 	RunE: func(_ *cobra.Command, _ []string) error {
-	  ptrApp := GetApp()
-	
+		ptrApp := GetApp()
+
 		return ptrApp.Cnf.InitCnfDir()
 	},
 }

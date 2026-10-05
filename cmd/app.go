@@ -7,7 +7,6 @@ package cmd
 
 import "github.com/yuriongit/xs/internal/app"
 
-
 var ptrApp *app.App
 
 // SetApp sets the application struct.

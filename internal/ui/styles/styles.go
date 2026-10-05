@@ -21,8 +21,8 @@ var (
 			UnsetBorderLeft().
 			UnsetBorderRight().
 			UnsetBorderTop()
-			// UnsetBorderBottom().
-			// Padding(0, 1)
+		// UnsetBorderBottom().
+		// Padding(0, 1)
 
 	Success = lg.NewStyle().
 		Foreground(lg.Color(Green)).
@@ -35,4 +35,3 @@ var (
 	// Purple spinner style
 	Spinner = lg.NewStyle().Foreground(lg.Color(Purple))
 )
-
