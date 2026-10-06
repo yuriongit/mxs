@@ -267,8 +267,10 @@ func (m model) View() string {
 			if len(m.output) > 0 {
 				errBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Red))
 				b.WriteString(errBoxStyle.Foreground(lg.Color(styles.Red)).Render(strings.Join(m.output, "\n")))
+				b.WriteString("\n")
 			}
-			b.WriteString(styles.Error.Render(fmt.Sprintf("\n✗ Execution failed, %s\n", m.err.Error())))
+			
+			b.WriteString(styles.Error.Render(fmt.Sprintf("✗ Execution failed, %s\n", m.err.Error())))
 		} else {
 			if len(m.output) > 0 {
 				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Green)).Foreground(lg.Color(styles.Green))
