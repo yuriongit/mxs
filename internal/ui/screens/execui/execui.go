@@ -134,7 +134,8 @@ func findScriptCmd(name string) tea.Cmd {
 func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 	return func() tea.Msg {
 		execArgs := append([]string{scriptPath}, args...)
-		cmd := exec.Command("bash", execArgs...)
+		// #nosec G204 -- scriptPath from internal execution pipeline
+		cmd := exec.Command(scriptPath, execArgs...)
 
 		stdout, err := cmd.StdoutPipe()
 		if err != nil {
