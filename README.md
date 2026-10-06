@@ -59,7 +59,9 @@ xs demo
 
 ## Images
 
-- [/.github/images](./images)
+To see a preview of XS, view [/docs/preview.md](./docs/preview.md)
+
+_Images directory - [/.github/images](./github/images)_
 
 ## License
 
