@@ -22,7 +22,7 @@ func TestExecutorPrepScript(t *testing.T) {
 		scriptPath := filepath.Join(scriptsDir, "backup.sh")
 		scriptContents := []byte("#!/bin/sh\nprintf 'backup complete'\n")
 
-		if err := os.WriteFile(scriptPath, scriptContents, 0600); err != nil {
+		if err := os.WriteFile(scriptPath, scriptContents, 0700); err != nil {
 			t.Fatalf("failed to create script: %v", err)
 		}
 
