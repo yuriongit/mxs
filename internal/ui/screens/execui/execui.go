@@ -269,7 +269,7 @@ func (m model) View() string {
 				b.WriteString(errBoxStyle.Foreground(lg.Color(styles.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
-			
+
 			b.WriteString(styles.Error.Render(fmt.Sprintf("✗ Execution failed, %s\n", m.err.Error())))
 		} else {
 			if len(m.output) > 0 {
