@@ -36,7 +36,7 @@ func (c *Cnf) InitCnfDir() error {
 		case os.IsNotExist(err):
 			if err := os.MkdirAll(directory.path, 0700); err != nil {
 				return fmt.Errorf(
-					"failed to create %s directory: %w",
+					"Failed to create %s directory: %w",
 					directory.name,
 					err,
 				)
@@ -45,7 +45,7 @@ func (c *Cnf) InitCnfDir() error {
 			fmt.Printf("✓ Created %s directory\n", directory.name)
 
 		default:
-			return fmt.Errorf("failed to check %s directory: %w", directory.name, err)
+			return fmt.Errorf("Failed to check %s directory: %w", directory.name, err)
 		}
 	}
 
