@@ -1,8 +1,3 @@
-/*
-Package executor prepares and executes shell scripts.
-
-Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
-*/
 package executor
 
 import (
@@ -48,11 +43,13 @@ func TestExecutorPrepScript(t *testing.T) {
 			t.Fatal("PrepScript() returned a nil command")
 		}
 
-		if command.Path != "./backup.sh" {
+		expectedScriptPath := filepath.Join(scriptsDir, "backup.sh")
+
+		if command.Path != expectedScriptPath {
 			t.Fatalf(
 				"command.Path = %q, want %q",
 				command.Path,
-				"./backup.sh",
+				expectedScriptPath,
 			)
 		}
 
@@ -64,7 +61,7 @@ func TestExecutorPrepScript(t *testing.T) {
 			)
 		}
 
-		expectedArgs := []string{"./backup.sh"}
+		expectedArgs := []string{expectedScriptPath}
 		if len(command.Args) != len(expectedArgs) ||
 			command.Args[0] != expectedArgs[0] {
 			t.Fatalf(
