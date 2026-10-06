@@ -65,8 +65,8 @@ func (c *Cnf) SetupDemoScript() error {
 	fullDemoScriptPath := filepath.Join(c.FullScriptsPath, demoScriptFileName)
 
 	// os.O_EXCL creates the file atomically or fails if it already exists
-	// #nosec G304 -- fullDemoScriptPath built from config path with hardcoded filename
-	file, err := os.OpenFile(fullDemoScriptPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	// #nosec G304 G302 -- fullDemoScriptPath built from config path with hardcoded filename && enables script execution
+	file, err := os.OpenFile(fullDemoScriptPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0700)
 	switch {
 	case os.IsExist(err):
 		fmt.Printf("✓ Found existing demo script in ~/%s\n", c.ScriptsPath)
