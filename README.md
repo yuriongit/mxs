@@ -8,7 +8,7 @@ _Soon, some AI-assisted managerial operations will be implemented._
 ## Features
 
 1. Initializes the global configuration directory `~/.xs`
-2. Executes scripts, with reported success and errors
+2. Script execution with reported success and errors
 3. Structured colored output
 
 ## Configuration
@@ -24,7 +24,6 @@ XS's configuration directory, `~/.xs`, is currently the home for a user's script
 | Main    | Go, Cobra, BubbleTea |
 | Tooling | golangci-lint, Go    |
 | UI      | Bubbles, Lipgloss    |
-| Other   | Name                 |
 
 ## Requirements
 
@@ -47,7 +46,7 @@ Start:
 xs help
 ```
 
-Init XS & Run demo script:
+Init XS and run the demo script:
 
 ```bash
 xs init
