@@ -1,19 +1,21 @@
-# Xs
+# XS
 
-Xs, pronounced as _"**ex • es**"_, is a command-line tool for script execution and
-AI-assisted script management.
+XS, pronounced as _"**ex • es | x • s**"_, is a command-line tool for script execution
+and management.
+
+_Soon, some AI-assisted managerial operations will be implemented._
 
 ## Features
 
-1. Global configuration directory that holds scripts
-2. Script execution
-3. Colored and structured output
+1. Initializes the global configuration directory `~/.xs`
+2. Executes scripts, with reported success and errors
+3. Structured colored output
 
 ## Configuration
 
-Example paragraph that explains Xs's configuration.
+XS's configuration directory, `~/.xs`, is currently the home for a user's scripts.
 
-- Configuration directory & options: [/.xs](./docs/.xs.md)
+- `~/.xs` directory layout document (coming soon): [/docs/xs.md](./docs/xs.md)
 
 ## Infrastructure
 
@@ -42,26 +44,26 @@ go install
 Start:
 
 ```bash
-xs --help
+xs help
 ```
 
-Init Xs & Run demo script:
+Init XS & Run demo script:
 
 ```bash
 xs init
-xs demo
+xs demo "Your FirstName"
 ```
+
+## Images
+
+To see a preview of XS, view the [/docs/preview.md](./docs/preview.md) document.
+
+_Images directory - [/.github/images](./github/images)_
 
 ## Docs
 
 - [/docs/architecture.md](./docs/architecture.md)
 - [/docs/planned.md](./docs/planned.md)
-
-## Images
-
-To see a preview of XS, view [/docs/preview.md](./docs/preview.md)
-
-_Images directory - [/.github/images](./github/images)_
 
 ## License
 
