@@ -39,11 +39,6 @@ func (e *Executor) PrepScript(
 		return nil, err
 	}
 
-	// Change the script's file mode to executable.
-	if err := e.chScriptModToExec(fullScriptPath); err != nil {
-		return nil, fmt.Errorf("Failed to change script's file mode: %w", err)
-	}
-
 	// Execute the script relative to the scripts directory without
 	// changing the process-wide working directory.
 	// #nosec G204 -- scriptPath validated by isScript() above
@@ -68,9 +63,4 @@ func (e *Executor) isScript(fileName string) error {
 
 func (e *Executor) attachFileExt(fileName string) string {
 	return fmt.Sprintf("%s.sh", fileName)
-}
-
-func (e *Executor) chScriptModToExec(fileName string) error {
-	// #nosec G302 -- execute permission needed for script
-	return os.Chmod(fileName, 0700)
 }
