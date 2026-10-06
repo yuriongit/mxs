@@ -18,6 +18,8 @@ type Cnf struct {
 	FullScriptsPath string
 }
 
+var demoScriptFileName = "demo.sh"
+
 func NewCnf(homePath string) *Cnf {
 	cnfDir := ".xs"
 	scriptsDir := filepath.Join(cnfDir, "scripts")

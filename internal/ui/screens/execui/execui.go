@@ -1,10 +1,10 @@
 /*
-Package execUI provides the execution screen for locating scripts,
+Package execui provides the execution screen for locating scripts,
 streaming their output, and displaying their completion status.
 
 The screens directory contains terminal user interfaces used by the application.
 */
-package execUI
+package execui
 
 import (
 	"bufio"
@@ -134,6 +134,7 @@ func findScriptCmd(name string) tea.Cmd {
 func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 	return func() tea.Msg {
 		execArgs := append([]string{scriptPath}, args...)
+		// #nosec G204 -- scriptPath from internal execution pipeline
 		cmd := exec.Command("bash", execArgs...)
 
 		stdout, err := cmd.StdoutPipe()

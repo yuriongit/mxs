@@ -11,6 +11,7 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 func (c *Cnf) InitCnfDir() error {
@@ -57,13 +58,14 @@ func (c *Cnf) InitCnfDir() error {
 }
 
 //go:embed demo.sh
-var demoScript string
+var demoScriptContent string
 
-// setupDemoScript creates the demo script.
+// SetupDemoScript creates the demo script.
 func (c *Cnf) SetupDemoScript() error {
-	fullDemoScriptPath := fmt.Sprintf("%s/demo.sh", c.FullScriptsPath)
+	fullDemoScriptPath := filepath.Join(c.FullScriptsPath, demoScriptFileName)
 
 	// os.O_EXCL creates the file atomically or fails if it already exists
+	// #nosec G304 -- fullDemoScriptPath built from config path with hardcoded filename
 	file, err := os.OpenFile(fullDemoScriptPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 	switch {
 	case os.IsExist(err):
@@ -73,14 +75,14 @@ func (c *Cnf) SetupDemoScript() error {
 		return fmt.Errorf("Failed to check or create demo script: %w", err)
 	}
 
-	_, writeErr := file.WriteString(demoScript)
+	_, writeErr := file.WriteString(demoScriptContent)
 	if err := file.Close(); err != nil {
 		return fmt.Errorf("Failed to close demo script file: %w", err)
 	}
 	if writeErr != nil {
 		return fmt.Errorf("Failed to write demo script: %w", writeErr)
 	}
-	fmt.Printf("✓ Created demo script (demo.sh) in %s\n", c.ScriptsPath)
+	fmt.Printf("✓ Created demo script (%s) in %s\n", demoScriptFileName, c.ScriptsPath)
 
 	return nil
 }

@@ -9,6 +9,7 @@ package cnf
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -22,6 +23,7 @@ func TestCnfInitCnfDirCreatesDirectories(t *testing.T) {
 
 	assertDirectory(t, config.FullCnfPath)
 	assertDirectory(t, config.FullScriptsPath)
+	assertDemoScriptExists(t, config.FullScriptsPath)
 }
 
 func TestCnfInitCnfDirWhenDirectoriesAlreadyExist(t *testing.T) {
@@ -38,6 +40,7 @@ func TestCnfInitCnfDirWhenDirectoriesAlreadyExist(t *testing.T) {
 
 	assertDirectory(t, config.FullCnfPath)
 	assertDirectory(t, config.FullScriptsPath)
+	assertDemoScriptExists(t, config.FullScriptsPath)
 }
 
 func TestCnfInitCnfDirCreatesMissingScriptsDirectory(t *testing.T) {
@@ -54,6 +57,7 @@ func TestCnfInitCnfDirCreatesMissingScriptsDirectory(t *testing.T) {
 
 	assertDirectory(t, config.FullCnfPath)
 	assertDirectory(t, config.FullScriptsPath)
+	assertDemoScriptExists(t, config.FullScriptsPath)
 }
 
 func TestCnfInitCnfDirFailsWhenBasePathIsFile(t *testing.T) {
@@ -100,9 +104,8 @@ func TestCnfInitCnfDirFailsWhenScriptsPathIsFile(t *testing.T) {
 		t.Fatal("InitCnfDir() returned nil when scripts path was a file")
 	}
 
-	// The implementation builds this display name from c.ScriptsPath,
-	// which is "scripts", so the current expected error is ~/scripts.
-	expected := "~/scripts exists but is not a directory"
+	// Updated to match actual error message from InitCnfDir
+	expected := "~/.xs/scripts exists but is not a directory"
 	if err.Error() != expected {
 		t.Fatalf("error = %q, want %q", err.Error(), expected)
 	}
@@ -122,6 +125,7 @@ func TestCnfInitCnfDirIsIdempotent(t *testing.T) {
 
 	assertDirectory(t, config.FullCnfPath)
 	assertDirectory(t, config.FullScriptsPath)
+	assertDemoScriptExists(t, config.FullScriptsPath)
 }
 
 func assertDirectory(t *testing.T, path string) {
@@ -134,5 +138,19 @@ func assertDirectory(t *testing.T, path string) {
 
 	if !info.IsDir() {
 		t.Fatalf("%q exists but is not a directory", path)
+	}
+}
+
+func assertDemoScriptExists(t *testing.T, scriptsPath string) {
+	t.Helper()
+
+	demoPath := filepath.Join(scriptsPath, demoScriptFileName)
+	info, err := os.Stat(demoPath)
+	if err != nil {
+		t.Fatalf("failed to stat demo script at %q: %v", demoPath, err)
+	}
+
+	if info.IsDir() {
+		t.Fatalf("demo script at %q is a directory, not a file", demoPath)
 	}
 }

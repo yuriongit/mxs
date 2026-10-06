@@ -13,7 +13,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/yuriongit/xs/internal/app"
-	"github.com/yuriongit/xs/internal/ui/screens/execUI"
+	"github.com/yuriongit/xs/internal/ui/screens/execui"
 )
 
 var globalApp *app.App
@@ -43,7 +43,7 @@ var rootCmd = &cobra.Command{
 		scriptName := args[0]
 		scriptArgs := args[1:]
 
-		p := tea.NewProgram(execUI.InitialModel(scriptName, scriptArgs))
+		p := tea.NewProgram(execui.InitialModel(scriptName, scriptArgs))
 		if _, err := p.Run(); err != nil {
 			log.Fatal("Fatal error running xs", "err", err)
 		}
