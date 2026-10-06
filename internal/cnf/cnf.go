@@ -20,9 +20,9 @@ type Cnf struct {
 
 func NewCnf(homePath string) *Cnf {
 	cnfDir := ".xs"
-	scriptsDir := "scripts"
+	scriptsDir := filepath.Join(cnfDir, "scripts")
 	fullCnfPath := filepath.Join(homePath, cnfDir)
-	fullScriptsPath := filepath.Join(homePath, cnfDir, scriptsDir)
+	fullScriptsPath := filepath.Join(homePath, scriptsDir)
 
 	return &Cnf{
 		cnfDir,
