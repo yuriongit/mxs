@@ -22,6 +22,7 @@ func TestExecutorPrepScript(t *testing.T) {
 		scriptPath := filepath.Join(scriptsDir, "backup.sh")
 		scriptContents := []byte("#!/bin/sh\nprintf 'backup complete'\n")
 
+		// #nosec G306 -- enables script execution
 		if err := os.WriteFile(scriptPath, scriptContents, 0700); err != nil {
 			t.Fatalf("failed to create script: %v", err)
 		}
