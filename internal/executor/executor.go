@@ -46,9 +46,8 @@ func (e *Executor) PrepScript(
 
 	// Execute the script relative to the scripts directory without
 	// changing the process-wide working directory.
-	scriptPath := filepath.Join(cnf.FullScriptsPath, fileNameWithExt)
 	// #nosec G204 -- scriptPath validated by isScript() above
-	scriptCmd = exec.Command(scriptPath)
+	scriptCmd = exec.Command(filepath.Join(cnf.FullScriptsPath, fileNameWithExt))
 	scriptCmd.Dir = cnf.FullScriptsPath
 
 	return scriptCmd, nil
