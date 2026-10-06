@@ -8,6 +8,7 @@ Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 package cnf
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
 )
@@ -47,6 +48,39 @@ func (c *Cnf) InitCnfDir() error {
 			return fmt.Errorf("failed to check %s directory: %w", directory.name, err)
 		}
 	}
+
+	if err := c.SetupDemoScript(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//go:embed demo.sh
+var demoScript string
+
+// setupDemoScript creates the demo script.
+func (c *Cnf) SetupDemoScript() error {
+	fullDemoScriptPath := fmt.Sprintf("%s/demo.sh", c.FullScriptsPath)
+
+	// os.O_EXCL creates the file atomically or fails if it already exists
+	file, err := os.OpenFile(fullDemoScriptPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	switch {
+	case os.IsExist(err):
+		fmt.Printf("✓ Found existing demo script in ~/%s\n", c.ScriptsPath)
+		return nil
+	case err != nil:
+		return fmt.Errorf("Failed to check or create demo script: %w", err)
+	}
+
+	_, writeErr := file.WriteString(demoScript)
+	if err := file.Close(); err != nil {
+		return fmt.Errorf("Failed to close demo script file: %w", err)
+	}
+	if writeErr != nil {
+		return fmt.Errorf("Failed to write demo script: %w", writeErr)
+	}
+	fmt.Printf("✓ Created demo script (demo.sh) in %s\n", c.ScriptsPath)
 
 	return nil
 }
