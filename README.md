@@ -13,7 +13,7 @@ _Soon, some AI-assisted managerial operations will be implemented._
 
 ## Configuration
 
-XS's configuration directory, `~/.xs`, is currently the home for a user's scripts.
+XS's configuration directory, `~/.xs`, is the home for a user's scripts.
 
 - `~/.xs` directory layout document (coming soon): [/docs/xs.md](./docs/xs.md)
 
