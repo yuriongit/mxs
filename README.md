@@ -7,7 +7,7 @@ _Soon, some AI-assisted managerial operations will be implemented._
 
 ## Features
 
-1. Initializes the global configuration directory `~/.xs`
+1. Global configuration directory support with offered automatic setup
 2. Script execution with reported success and errors
 3. Structured colored output
 
