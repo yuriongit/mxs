@@ -64,7 +64,7 @@ To see a preview of XS, view the [/docs/preview.md](./docs/preview.md) document.
 
 _Images directory - [/.github/images](./github/images)_
 
-## Docs
+## Documents
 
 - [/docs/architecture.md](./docs/architecture.md)
 - [/docs/planned.md](./docs/planned.md)
