@@ -31,11 +31,16 @@ XS's configuration directory, `~/.xs`, is currently the home for a user's script
 
 ## Quick Start
 
-Clone the repo & build the binary:
+Clone the repo:
 
 ```bash
 git clone https://github.com/yuriongit/xs.git
 cd xs
+```
+
+Build the binary:
+
+```bash
 go build
 go install
 ```
