@@ -1,4 +1,4 @@
-module github.com/yuriongit/xs
+module github.com/yuriongit/mxs
 
 go 1.27.1
 

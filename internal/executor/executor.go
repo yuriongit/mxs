@@ -11,7 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/yuriongit/xs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cnf"
 )
 
 type Executor struct{}
