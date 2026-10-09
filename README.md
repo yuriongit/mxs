@@ -1,6 +1,6 @@
-# XS
+# MXS
 
-XS, pronounced as _"**ex • es | x • s**"_, is a command-line tool for script execution
+MXS, pronounced as _"**em • ex • es**"_, is a command-line tool for script execution
 and management.
 
 _Soon, some AI-assisted managerial operations will be implemented._
@@ -13,9 +13,9 @@ _Soon, some AI-assisted managerial operations will be implemented._
 
 ## Configuration
 
-XS's configuration directory, `~/.xs`, is the home for a user's scripts.
+MXS's configuration directory, `~/.mxs`, is the home for a user's scripts.
 
-- `~/.xs` directory layout document (coming soon): [/docs/xs.md](./docs/xs.md)
+- `~/.mxs` directory layout document (coming soon): [/docs/mxs.md](./docs/mxs.md)
 
 ## Infrastructure
 
@@ -34,33 +34,43 @@ XS's configuration directory, `~/.xs`, is the home for a user's scripts.
 Clone the repo:
 
 ```bash
-git clone https://github.com/yuriongit/xs.git
-cd xs
+git clone https://github.com/yuriongit/mxs.git
+cd mxs
 ```
 
 Build the binary:
 
 ```bash
 go build
+```
+
+Install the binary:
+
+```bash
 go install
 ```
 
 Start:
 
 ```bash
-xs help
+mxs help
 ```
 
-Init XS and run the demo script:
+Initialize MXS:
 
 ```bash
-xs init
-xs demo "Your FirstName"
+mxs init
+```
+
+Run the demo:
+
+```bash
+mxs demo "Your FirstName"
 ```
 
 ## Images
 
-To see a preview of XS, view the [/docs/preview.md](./docs/preview.md) document.
+To see a preview of MXS, view the [/docs/preview.md](./docs/preview.md) document.
 
 _Images directory - [/.github/images](./github/images)_
 

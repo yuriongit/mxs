@@ -1,6 +1,6 @@
 /*
 Package cnf provides all the functionality
-for Xs's config. Manages the application's
+for MXS' config. Manages the application's
 configuration and script directory.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
@@ -21,7 +21,7 @@ type Cnf struct {
 var demoScriptFileName = "demo.sh"
 
 func NewCnf(homePath string) *Cnf {
-	cnfDir := ".xs"
+	cnfDir := ".mxs"
 	scriptsDir := filepath.Join(cnfDir, "scripts")
 	fullCnfPath := filepath.Join(homePath, cnfDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)

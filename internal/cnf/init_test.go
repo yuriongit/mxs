@@ -1,6 +1,6 @@
 /*
 Package cnf provides all the functionality
-for Xs's config. Manages the application's
+for MXS' config. Manages the application's
 configuration and script directory.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
@@ -77,7 +77,7 @@ func TestCnfInitCnfDirFailsWhenBasePathIsFile(t *testing.T) {
 		t.Fatal("InitCnfDir() returned nil when base path was a file")
 	}
 
-	expected := "~/.xs exists but is not a directory"
+	expected := "~/.mxs exists but is not a directory"
 	if err.Error() != expected {
 		t.Fatalf("error = %q, want %q", err.Error(), expected)
 	}
@@ -105,7 +105,7 @@ func TestCnfInitCnfDirFailsWhenScriptsPathIsFile(t *testing.T) {
 	}
 
 	// Updated to match actual error message from InitCnfDir
-	expected := "~/.xs/scripts exists but is not a directory"
+	expected := "~/.mxs/scripts exists but is not a directory"
 	if err.Error() != expected {
 		t.Fatalf("error = %q, want %q", err.Error(), expected)
 	}

@@ -1,5 +1,5 @@
 /*
-Package cmd holds all of Xs's commands.
+Package cmd holds all of MXS' commands.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>
 */
@@ -12,14 +12,14 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-	"github.com/yuriongit/xs/internal/app"
-	"github.com/yuriongit/xs/internal/ui/screens/execui"
+	"github.com/yuriongit/mxs/internal/app"
+	"github.com/yuriongit/mxs/internal/ui/screens/execui"
 )
 
 var globalApp *app.App
 
 var rootCmd = &cobra.Command{
-	Use:   "xs <script-name> [args...]",
+	Use:   "mxs <script-name> [args...]",
 	Short: "A CLI tool with AI capabilities for managing and executing scripts",
 	Args:  cobra.MinimumNArgs(1),
 	PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
@@ -45,7 +45,7 @@ var rootCmd = &cobra.Command{
 
 		p := tea.NewProgram(execui.InitialModel(scriptName, scriptArgs))
 		if _, err := p.Run(); err != nil {
-			log.Fatal("Fatal error running xs", "err", err)
+			log.Fatal("Fatal error running MXS", "err", err)
 		}
 
 		// Initialize app for all other commands

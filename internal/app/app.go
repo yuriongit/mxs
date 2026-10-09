@@ -7,8 +7,8 @@ package app
 import (
 	"os"
 
-	"github.com/yuriongit/xs/internal/cnf"
-	"github.com/yuriongit/xs/internal/executor"
+	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/executor"
 )
 
 type App struct {

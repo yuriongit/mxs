@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yuriongit/xs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cnf"
 )
 
 func TestExecutorPrepScript(t *testing.T) {
 	t.Run("successfully prepares script", func(t *testing.T) {
 		homeDir := t.TempDir()
-		scriptsDir := filepath.Join(homeDir, ".xs", "scripts")
+		scriptsDir := filepath.Join(homeDir, ".mxs", "scripts")
 
 		if err := os.MkdirAll(scriptsDir, 0700); err != nil {
 			t.Fatalf("failed to create scripts directory: %v", err)
@@ -139,7 +139,7 @@ func TestExecutorPrepScript(t *testing.T) {
 
 	t.Run("returns an error when script does not exist", func(t *testing.T) {
 		homeDir := t.TempDir()
-		scriptsDir := filepath.Join(homeDir, ".xs", "scripts")
+		scriptsDir := filepath.Join(homeDir, ".mxs", "scripts")
 
 		if err := os.MkdirAll(scriptsDir, 0700); err != nil {
 			t.Fatalf("failed to create scripts directory: %v", err)
