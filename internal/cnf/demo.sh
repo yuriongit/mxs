@@ -5,7 +5,7 @@ NAME="${1:-}"
 
 if [[ -z "$NAME" ]]; then
   echo "✗ Error: Name is required" >&2
-  echo "Usage: xs demo <your-first-name>" >&2
+  echo "Usage: mxs demo <your-first-name>" >&2
   exit 1
 fi
 

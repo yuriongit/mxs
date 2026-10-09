@@ -5,7 +5,7 @@ Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 */
 package cmd
 
-import "github.com/yuriongit/xs/internal/app"
+import "github.com/yuriongit/mxs/internal/app"
 
 var ptrApp *app.App
 

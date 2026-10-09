@@ -1,5 +1,5 @@
 /*
-Package cmd holds all of Xs's commands.
+Package cmd holds all of MXS' commands.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>
 */
@@ -12,7 +12,7 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Initializes Xs's config",
+	Short: "Initializes MXS' config",
 	Long:  "TODO: Implement later",
 	RunE: func(_ *cobra.Command, _ []string) error {
 		ptrApp := GetApp()

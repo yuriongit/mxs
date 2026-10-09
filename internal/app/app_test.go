@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yuriongit/xs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cnf"
 )
 
 func TestNewApp(t *testing.T) {
@@ -45,7 +45,7 @@ func TestNewApp(t *testing.T) {
 		t.Fatal("App.Executor is nil")
 	}
 
-	expectedCnfPath := filepath.Join(homePath, ".xs")
+	expectedCnfPath := filepath.Join(homePath, ".mxs")
 	if app.Cnf.FullCnfPath != expectedCnfPath {
 		t.Fatalf(
 			"App.Cnf.FullCnfPath = %q, want %q",
@@ -54,7 +54,7 @@ func TestNewApp(t *testing.T) {
 		)
 	}
 
-	expectedScriptsPath := filepath.Join(homePath, ".xs", "scripts")
+	expectedScriptsPath := filepath.Join(homePath, ".mxs", "scripts")
 	if app.Cnf.FullScriptsPath != expectedScriptsPath {
 		t.Fatalf(
 			"App.Cnf.FullScriptsPath = %q, want %q",
@@ -119,7 +119,7 @@ func TestNewAppDoesNotCreateDirectories(t *testing.T) {
 		t.Fatalf("NewApp() returned unexpected error: %v", err)
 	}
 
-	cnfPath := filepath.Join(homePath, ".xs")
+	cnfPath := filepath.Join(homePath, ".mxs")
 	scriptsPath := filepath.Join(cnfPath, "scripts")
 
 	if _, err := os.Stat(cnfPath); !os.IsNotExist(err) {

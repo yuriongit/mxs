@@ -19,7 +19,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
-	"github.com/yuriongit/xs/internal/ui/styles"
+	"github.com/yuriongit/mxs/internal/ui/styles"
 )
 
 // ============================================================================
@@ -29,7 +29,7 @@ import (
 type state int
 
 const (
-	stateSearching state = iota // 0: Finding script in ~/.xs/scripts
+	stateSearching state = iota // 0: Finding script in ~/.mxs/scripts
 	stateRunning                // 1: Streaming script output
 	stateFinished               // 2: Completed execution or failed
 )
@@ -113,7 +113,7 @@ func findScriptCmd(name string) tea.Cmd {
 			return scriptNotFoundMsg{err: fmt.Errorf("could not locate home directory")}
 		}
 
-		scriptsDir := filepath.Join(home, ".xs", "scripts")
+		scriptsDir := filepath.Join(home, ".mxs", "scripts")
 		candidates := []string{
 			filepath.Join(scriptsDir, name),
 			filepath.Join(scriptsDir, name+".sh"),
@@ -233,7 +233,7 @@ func (m model) View() string {
 
 	switch m.state {
 	case stateSearching:
-		fmt.Fprintf(&b, "%s Locating %s in ~/.xs/scripts...\n",
+		fmt.Fprintf(&b, "%s Locating %s in ~/.mxs/scripts...\n",
 			m.spinner.View(),
 			styles.ScriptName.Render(m.targetName))
 
