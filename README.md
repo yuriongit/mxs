@@ -1,7 +1,6 @@
 # MXS
 
-MXS, pronounced as _"**em • ex • es**"_, is a command-line tool for script execution
-and management.
+A simple & colored CLI to manage and execute your Bash scripts.
 
 _Soon, some AI-assisted managerial operations will be implemented._
 
