@@ -1,15 +1,15 @@
 # MXS
 
-MXS, pronounced as _"**em • ex • es**"_, is a command-line tool for script execution
-and management.
+A simple & colored CLI to manage and execute your Bash scripts.
 
-_Soon, some AI-assisted managerial operations will be implemented._
+[mxs-cli.vercel.app](https://mxs-cli.vercel.app)
 
 ## Features
 
 1. Global configuration directory support with offered automatic setup
 2. Script execution with reported success and errors
-3. Structured colored output
+3. Structured and colored output
+4. Arguments support
 
 ## Configuration
 
@@ -25,13 +25,15 @@ MXS's configuration directory, `~/.mxs`, is the home for a user's scripts.
 | Tooling | golangci-lint, Go    |
 | UI      | Bubbles, Lipgloss    |
 
-## Requirements
+## Quick Start
+
+Currently, releases aren't available. To try out MXS, build it from source:
+
+### Requirements
 
 - Go: 1.27.1+
 - Bash: 5.3.9+
 - Architecture: x86_64
-
-## Quick Start
 
 Clone the repo:
 
