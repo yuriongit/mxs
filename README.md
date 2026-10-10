@@ -2,7 +2,7 @@
 
 A simple & colored CLI to manage and execute your Bash scripts.
 
-_Soon, some AI-assisted managerial operations will be implemented._
+[mxs-cli.vercel.app](https://mxs-cli.vercel.app)
 
 ## Features
 
