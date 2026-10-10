@@ -27,6 +27,8 @@ MXS's configuration directory, `~/.mxs`, is the home for a user's scripts.
 
 ## Quick Start
 
+Currently, releases aren't available. To try out MXS, build it from source:
+
 ### Requirements
 
 - Go: 1.27.1+
