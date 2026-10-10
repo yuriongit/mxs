@@ -34,8 +34,6 @@ Currently, releases aren't available. To try out MXS, build it from source:
 - Bash: 5.3.9+
 - Architecture: x86_64
 
-## Quick Start
-
 Clone the repo:
 
 ```bash
