@@ -8,7 +8,7 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 1. Global configuration directory support with offered automatic setup
 2. Script execution with reported success and errors
-3. Structured colored output
+3. Structured and colored output
 
 ## Configuration
 
