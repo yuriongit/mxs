@@ -27,7 +27,9 @@ MXS's configuration directory, `~/.mxs`, is the home for a user's scripts.
 
 ## Requirements
 
-- Go 1.27.1 or later
+- Go: 1.27.1+
+- Bash: 5.3.9+
+- Architecture: x86_64
 
 ## Quick Start
 
