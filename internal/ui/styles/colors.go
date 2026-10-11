@@ -10,10 +10,8 @@ package styles
 const (
 	// Lime color
 	Lime = "#B6FF6E"
-	// Purple color
-	Purple = "#FF6EB7"
+	// Pink color
+	Pink = "#FF6EB7"
 	// Red color
 	Red = "#FF5E7C"
 )
-
-// Pink

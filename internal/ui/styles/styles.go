@@ -10,7 +10,7 @@ var (
 
 	// Purple script name header
 	ScriptName = lg.NewStyle().
-			Foreground(lg.Color(Purple)).
+			Foreground(lg.Color(Pink)).
 			Bold(true)
 
 	// Base output box style (border color is dynamic per state)
@@ -33,5 +33,5 @@ var (
 		Bold(true)
 
 	// Purple spinner style
-	Spinner = lg.NewStyle().Foreground(lg.Color(Purple))
+	Spinner = lg.NewStyle().Foreground(lg.Color(Pink))
 )
