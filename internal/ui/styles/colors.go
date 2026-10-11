@@ -13,7 +13,7 @@ const (
 	// Green color
 	Green = "#B6FF6E"
 	// Purple color
-	Purple = "#915EFF"
+	Purple = "#FF6EB7"
 	// Red color
 	Red = "#FF5E7C"
 )
