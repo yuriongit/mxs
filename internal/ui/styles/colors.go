@@ -8,8 +8,8 @@ package styles
 
 // Color constants.
 const (
-	// Green color
-	Green = "#B6FF6E"
+	// Lime color
+	Lime = "#B6FF6E"
 	// Purple color
 	Purple = "#FF6EB7"
 	// Red color

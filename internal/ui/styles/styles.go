@@ -25,7 +25,7 @@ var (
 		// Padding(0, 1)
 
 	Success = lg.NewStyle().
-		Foreground(lg.Color(Green)).
+		Foreground(lg.Color(Lime)).
 		Bold(true)
 
 	Error = lg.NewStyle().
