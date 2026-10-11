@@ -250,8 +250,8 @@ func (m model) View() string {
 			logs = strings.Join(m.output, "\n")
 		}
 
-		runningBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Purple))
-		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Purple)).Render(logs + "\n..."))
+		runningBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Pink))
+		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Pink)).Render(logs + "\n..."))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
@@ -273,7 +273,7 @@ func (m model) View() string {
 			b.WriteString(styles.Error.Render(fmt.Sprintf("✗ Execution failed, %s\n", m.err.Error())))
 		} else {
 			if len(m.output) > 0 {
-				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Green)).Foreground(lg.Color(styles.Green))
+				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Lime)).Foreground(lg.Color(styles.Lime))
 				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 

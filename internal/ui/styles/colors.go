@@ -9,11 +9,9 @@ package styles
 // Color constants.
 const (
 	// Lime color
-	Lime = "#CCFF5E"
-	// Green color
-	Green = "#4CD100"
-	// Purple color
-	Purple = "#915EFF"
+	Lime = "#B6FF6E"
+	// Pink color
+	Pink = "#FF6EB7"
 	// Red color
 	Red = "#FF5E7C"
 )
