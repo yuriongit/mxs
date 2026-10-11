@@ -11,9 +11,11 @@ const (
 	// Lime color
 	Lime = "#CCFF5E"
 	// Green color
-	Green = "#4CD100"
+	Green = "#B6FF6E"
 	// Purple color
 	Purple = "#915EFF"
 	// Red color
 	Red = "#FF5E7C"
 )
+
+// Pink
