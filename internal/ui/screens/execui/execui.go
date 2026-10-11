@@ -255,7 +255,7 @@ func (m model) View() string {
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
-		fmt.Fprintf(&b, "\n%s Running %s%s, time: %s",
+		fmt.Fprintf(&b, "\n%sRunning %s%s, time: %s", // removed extra whitespace from spinner
 			m.spinner.View(),
 			styles.ScriptName.Render(filepath.Base(m.scriptPath)),
 			styles.Subtle.Render(argInfo),
