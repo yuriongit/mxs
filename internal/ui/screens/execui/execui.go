@@ -62,13 +62,13 @@ type model struct {
 }
 
 var (
-	blue = "#6eb6ff"
-	pipe                       = "│"
+	blue             = "#6eb6ff"
+	pipe             = "│"
 	RegularTextColor = "#f3f3f3"
-	
+
 	SubMsgStyle                = lg.NewStyle().Faint(true).PaddingLeft(2)
 	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(blue))
-	RegularTextStyle = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
+	RegularTextStyle           = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
 )
 
 // addFormattedScriptMsg formats each incoming "message" according to it's order.
@@ -77,8 +77,8 @@ var (
 // formatted differently from the remainder of messages (logs). The script's
 // description and closing message and colored in blue.
 //
-// Additionally, if the current message is not the description or the closing 
-// message, that message will be structured and styled as a "log" before being 
+// Additionally, if the current message is not the description or the closing
+// message, that message will be structured and styled as a "log" before being
 // appended. Each log is fainted as well and includes a pipe wall to it's left.
 func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
 	isOutroMsg := false
@@ -97,8 +97,8 @@ func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
 	// feature to operate as intended.
 	//
 	// ATTENTION: This implementation does not support closing messages within an
-	// error state. Furthermore, the detection of a closing message relies on a 
-	// checkmark being included. 
+	// error state. Furthermore, the detection of a closing message relies on a
+	// checkmark being included.
 	currLogAmt := len(m.output)
 	if currLogAmt != 0 && !isOutroMsg {
 		// If it's the first message, append the "Msg" header
@@ -258,7 +258,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 
 	case outputLineMsg:
-  	addFormattedScriptMsg(&m, &msg)
+		addFormattedScriptMsg(&m, &msg)
 		cmds = append(cmds, waitForActivity(m.sub))
 
 	case executionFinishedMsg:
