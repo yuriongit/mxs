@@ -6,10 +6,12 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 ## Features
 
-1. Global configuration directory
-2. Execution status reports with exit codes
-3. Structured and colored output
-4. Argument support
+1. Script execution
+2. Run a script using it's name (no file extension needed)
+3. Global configuration directory
+4. Execution status reports with exit codes
+5. Structured and colored output
+6. Argument support
 
 ## Configuration
 
