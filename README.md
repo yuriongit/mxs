@@ -27,8 +27,6 @@ MXS' configuration directory, `~/.mxs`, is the home for a user's scripts.
 
 ## Build From Source
 
-Currently, releases aren't available. To try out MXS, build it from source:
-
 ### Requirements
 
 | Tool  | Type/Version |
