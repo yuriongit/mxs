@@ -1,10 +1,10 @@
 /*
-Package styles provides all UI components for MXS.
+Package ui provides all UI components for MXS.
 
 It provides color constants for Lipgloss styles,
 colors, and UI components.
 */
-package styles
+package ui
 
 // Color constants.
 const (
