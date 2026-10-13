@@ -305,7 +305,7 @@ func (m model) View() string {
 		fmt.Fprintf(&b, "\n%sRunning %s, time: %s", // removed extra whitespace from spinner
 			m.spinner.View(),
 			styles.ScriptName.Render(filepath.Base(m.scriptPath)),
-			elapsed,
+			ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
 		)
 
 	case stateFinished:
