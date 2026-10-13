@@ -17,7 +17,8 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 MXS' configuration directory, `~/.mxs`, is the home for a user's scripts.
 
-- `~/.mxs` directory layout document (coming soon): [/docs/mxs.md](./docs/mxs.md)
+For more info, view: [/docs/configuration-directory.md](./docs/configuration-directory.md)
+(coming soon)
 
 ## Infrastructure
 
