@@ -61,6 +61,58 @@ type model struct {
 	sub        chan tea.Msg  // Async channel for streaming output
 }
 
+var (
+	blue = "#6eb6ff"
+	pipe                       = "│"
+	RegularTextColor = "#f3f3f3"
+	
+	SubMsgStyle                = lg.NewStyle().Faint(true).PaddingLeft(2)
+	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(blue))
+	RegularTextStyle = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
+)
+
+// addFormattedScriptMsg formats each incoming "message" according to it's order.
+//
+// The script description and closing message (the first and last message) are
+// formatted differently from the remainder of messages (logs). The script's
+// description and closing message and colored in blue.
+//
+// Additionally, if the current message is not the description or the closing 
+// message, that message will be structured and styled as a "log" before being 
+// appended. Each log is fainted as well and includes a pipe wall to it's left.
+func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
+	isOutroMsg := false
+	currMsgAmt := len(m.output)
+	// Check for the closing message
+	if currMsgAmt > 0 {
+		isOutroMsg = strings.Contains(string(*msg), "✓ ")
+	}
+	// If the current message is the first message, the Logs= header will
+	// be formatted and appended first before any logs appear.
+	//
+	// Additionally, if the current message is not the first, nor the last, that
+	// message will be formatted as a "log" before being appended.
+	//
+	// Currently, a description message and closing message is needed for this
+	// feature to operate as intended.
+	//
+	// ATTENTION: This implementation does not support closing messages within an
+	// error state. Furthermore, the detection of a closing message relies on a 
+	// checkmark being included. 
+	currLogAmt := len(m.output)
+	if currLogAmt != 0 && !isOutroMsg {
+		// If it's the first message, append the "Msg" header
+		if currLogAmt == 1 {
+			m.output = append(m.output, RegularTextStyle.Faint(true).Render("  Logs="))
+		}
+		// If not, it's a regular message. Append the pipe and message
+		m.output = append(m.output, SubMsgStyle.Render(fmt.Sprint(pipe, " ", string(*msg))))
+	} else {
+		// Format the script description and last message
+		m.output = append(m.output, ScriptDescAndOutroMsgStyle.Render(string(*msg)))
+	}
+}
+
 func InitialModel(targetName string, scriptArgs []string) model {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
@@ -206,7 +258,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 
 	case outputLineMsg:
-		m.output = append(m.output, string(msg))
+  	addFormattedScriptMsg(&m, &msg)
 		cmds = append(cmds, waitForActivity(m.sub))
 
 	case executionFinishedMsg:
