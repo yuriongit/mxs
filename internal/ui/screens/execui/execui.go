@@ -19,7 +19,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
-	"github.com/yuriongit/mxs/internal/ui/styles"
+	"github.com/yuriongit/mxs/internal/ui"
 )
 
 // ============================================================================
@@ -116,7 +116,7 @@ func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
 func InitialModel(targetName string, scriptArgs []string) model {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
-	s.Style = styles.Spinner
+	s.Style = ui.Spinner
 
 	return model{
 		targetName: targetName,
@@ -287,49 +287,49 @@ func (m model) View() string {
 	case stateSearching:
 		fmt.Fprintf(&b, "%s Locating %s in ~/.mxs/scripts...\n",
 			m.spinner.View(),
-			styles.ScriptName.Render(m.targetName))
+			ui.ScriptName.Render(m.targetName))
 
 	case stateRunning:
 		var logs string
 		if len(m.output) == 0 {
-			logs = styles.Subtle.Render("Listening for output...")
+			logs = ui.Subtle.Render("Listening for output...")
 		} else {
 			logs = strings.Join(m.output, "\n")
 		}
 
-		runningBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Pink))
-		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Pink)).Render(logs))
+		runningBoxStyle := ui.BaseOutputBox.BorderForeground(lg.Color(ui.Pink))
+		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
 		fmt.Fprintf(&b, "\n%sExecuting %s for %s",
 			m.spinner.View(),
-			styles.ScriptName.Render(filepath.Base(m.scriptPath)),
+			ui.ScriptName.Render(filepath.Base(m.scriptPath)),
 			ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
 		)
 
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
-				errBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Red))
-				b.WriteString(errBoxStyle.Foreground(lg.Color(styles.Red)).Render(strings.Join(m.output, "\n")))
+				errBoxStyle := ui.BaseOutputBox.BorderForeground(lg.Color(ui.Red))
+				b.WriteString(errBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
 
 			b.WriteString(
-				styles.Error.Render(fmt.Sprintf("✗ Executing %s ", styles.ScriptName.Render(filepath.Base(m.scriptPath)))),
+				ui.Error.Render(fmt.Sprintf("✗ Executing %s ", ui.ScriptName.Render(filepath.Base(m.scriptPath)))),
 			)
-			b.WriteString(styles.Error.Render(fmt.Sprintf("failed, %s\n", m.err.Error())))
+			b.WriteString(ui.Error.Render(fmt.Sprintf("failed, %s\n", m.err.Error())))
 
 		} else {
 			if len(m.output) > 0 {
-				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Lime)).Foreground(lg.Color(styles.Lime))
+				successBoxStyle := ui.BaseOutputBox.BorderForeground(lg.Color(ui.Lime)).Foreground(lg.Color(ui.Lime))
 				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
-			b.WriteString(styles.Success.Render("\n✓ Executed "))
-			b.WriteString(styles.ScriptName.Render(filepath.Base(m.scriptPath)))
-			b.WriteString(styles.Success.Render(" for "))
+			b.WriteString(ui.Success.Render("\n✓ Executed "))
+			b.WriteString(ui.ScriptName.Render(filepath.Base(m.scriptPath)))
+			b.WriteString(ui.Success.Render(" for "))
 			b.WriteString(
 				ScriptDescAndOutroMsgStyle.Bold(true).Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)
