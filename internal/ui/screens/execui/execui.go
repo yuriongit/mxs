@@ -290,11 +290,6 @@ func (m model) View() string {
 			styles.ScriptName.Render(m.targetName))
 
 	case stateRunning:
-		argInfo := ""
-		if len(m.scriptArgs) > 0 {
-			argInfo = fmt.Sprintf(" (args: %s)", strings.Join(m.scriptArgs, " "))
-		}
-
 		var logs string
 		if len(m.output) == 0 {
 			logs = styles.Subtle.Render("Listening for output...")
@@ -303,15 +298,14 @@ func (m model) View() string {
 		}
 
 		runningBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Pink))
-		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Pink)).Render(logs + "\n..."))
+		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Pink)).Render(logs))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
-		fmt.Fprintf(&b, "\n%sRunning %s%s, time: %s", // removed extra whitespace from spinner
+		fmt.Fprintf(&b, "\n%sExecuting %s for %s",
 			m.spinner.View(),
 			styles.ScriptName.Render(filepath.Base(m.scriptPath)),
-			styles.Subtle.Render(argInfo),
-			elapsed,
+			ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
 		)
 
 	case stateFinished:
@@ -322,14 +316,23 @@ func (m model) View() string {
 				b.WriteString("\n")
 			}
 
-			b.WriteString(styles.Error.Render(fmt.Sprintf("✗ Execution failed, %s\n", m.err.Error())))
+			b.WriteString(
+				styles.Error.Render(fmt.Sprintf("✗ Executing %s ", styles.ScriptName.Render(filepath.Base(m.scriptPath)))),
+			)
+			b.WriteString(styles.Error.Render(fmt.Sprintf("failed, %s\n", m.err.Error())))
+
 		} else {
 			if len(m.output) > 0 {
 				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Lime)).Foreground(lg.Color(styles.Lime))
 				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
-			b.WriteString(styles.Success.Render(fmt.Sprintf("\n✓ Execution completed, finished in %s\n", m.duration.Round(time.Millisecond))))
+			b.WriteString(styles.Success.Render("\n✓ Executed "))
+			b.WriteString(styles.ScriptName.Render(filepath.Base(m.scriptPath)))
+			b.WriteString(styles.Success.Render(" for "))
+			b.WriteString(
+				ScriptDescAndOutroMsgStyle.Bold(true).Render(m.duration.Round(time.Millisecond).String(), "\n"),
+			)
 		}
 	}
 

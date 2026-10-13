@@ -16,8 +16,6 @@ var (
 	// Base output box style (border color is dynamic per state)
 	BaseOutputBox = lg.NewStyle().
 			Border(lg.NormalBorder()).
-			Italic(true).
-			Faint(true).
 			UnsetBorderLeft().
 			UnsetBorderRight().
 			UnsetBorderTop()
