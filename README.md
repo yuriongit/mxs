@@ -32,6 +32,8 @@ For more info, view: [/docs/configuration-directory.md](./docs/configuration-dir
 
 ### Requirements
 
+For clarification, these requirements _only_ apply if you are building from source.
+
 | Tool  | Type/Version |
 | ----- | ------------ |
 | Shell | Bash         |
