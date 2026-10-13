@@ -25,7 +25,7 @@ MXS' configuration directory, `~/.mxs`, is the home for a user's scripts.
 | Tooling | golangci-lint, Go    |
 | UI      | Bubbles, Lipgloss    |
 
-## Quick Start
+## Build From Source
 
 Currently, releases aren't available. To try out MXS, build it from source:
 
