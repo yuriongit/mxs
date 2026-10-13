@@ -303,7 +303,7 @@ func (m model) View() string {
 		}
 
 		runningBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Pink))
-		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Pink)).Render(logs + "\n..."))
+		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(styles.Pink)).Render(logs))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
