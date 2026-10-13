@@ -13,7 +13,7 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 ## Configuration
 
-MXS's configuration directory, `~/.mxs`, is the home for a user's scripts.
+MXS' configuration directory, `~/.mxs`, is the home for a user's scripts.
 
 - `~/.mxs` directory layout document (coming soon): [/docs/mxs.md](./docs/mxs.md)
 
@@ -31,9 +31,10 @@ Currently, releases aren't available. To try out MXS, build it from source:
 
 ### Requirements
 
-- Go: 1.27.1+
-- Bash: 5.3.9+
-- Architecture: x86_64
+| Tool  | Type/Version |
+| ----- | ------------ |
+| Shell | Bash         |
+| Go    | 1.27.1+      |
 
 Clone the repo:
 
