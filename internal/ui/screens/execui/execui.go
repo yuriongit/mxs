@@ -316,7 +316,11 @@ func (m model) View() string {
 				b.WriteString("\n")
 			}
 
-			b.WriteString(styles.Error.Render(fmt.Sprintf("✗ Execution failed, %s\n", m.err.Error())))
+			b.WriteString(
+  			styles.Error.Render(fmt.Sprintf("✗ Executing %s ", styles.ScriptName.Render(filepath.Base(m.scriptPath)))),
+			)
+			b.WriteString(styles.Error.Render(fmt.Sprintf("failed, %s\n", m.err.Error())))
+			
 		} else {
 			if len(m.output) > 0 {
 				successBoxStyle := styles.BaseOutputBox.BorderForeground(lg.Color(styles.Lime)).Foreground(lg.Color(styles.Lime))
