@@ -37,6 +37,8 @@ For more info, view: [/docs/configuration-directory.md](./docs/configuration-dir
 | Shell | Bash         |
 | Go    | 1.27.1+      |
 
+---
+
 Clone the repo:
 
 ```bash
@@ -44,22 +46,11 @@ git clone https://github.com/yuriongit/mxs.git
 cd mxs
 ```
 
-Build the binary:
+Build and install the binary:
 
 ```bash
 go build
-```
-
-Install the binary:
-
-```bash
 go install
-```
-
-Start:
-
-```bash
-mxs help
 ```
 
 Initialize MXS:
@@ -71,7 +62,8 @@ mxs init
 Run the demo:
 
 ```bash
-mxs demo "Your FirstName"
+mxs demo World
+# mxs demo "Your FirstName"
 ```
 
 ## Images
