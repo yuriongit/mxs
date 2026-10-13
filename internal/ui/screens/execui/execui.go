@@ -323,7 +323,12 @@ func (m model) View() string {
 				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
-			b.WriteString(styles.Success.Render(fmt.Sprintf("\n✓ Execution completed, finished in %s\n", m.duration.Round(time.Millisecond))))
+			b.WriteString(styles.Success.Render("\n✓ Executed "))
+			b.WriteString(styles.ScriptName.Render(filepath.Base(m.scriptPath)))
+			b.WriteString(styles.Success.Render(" for "))
+			b.WriteString(
+  			ScriptDescAndOutroMsgStyle.Bold(true).Render(m.duration.Round(time.Millisecond).String(), "\n"),
+			)
 		}
 	}
 
