@@ -1,10 +1,10 @@
 /*
-Package execui provides the execution screen for locating scripts,
+Package executor provides the execution screen for locating scripts,
 streaming their output, and displaying their completion status.
 
 The screens directory contains terminal user interfaces used by the application.
 */
-package execui
+package executor
 
 import (
 	"bufio"
