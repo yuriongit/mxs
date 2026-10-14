@@ -28,6 +28,10 @@ For more info, view: [/docs/configuration-directory.md](./docs/configuration-dir
 | Tooling | golangci-lint, Go    |
 | UI      | Bubbles, Lipgloss    |
 
+## Installation
+
+To install MXS, visit [mxs-cli.vercel.app/#install](https://mxs-cli.vercel.app/#install).
+
 ## Build From Source
 
 ### Requirements
