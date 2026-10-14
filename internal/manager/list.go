@@ -3,6 +3,7 @@
 package manager
 
 import (
+	"errors"
 	"os"
 	"strings"
 
@@ -27,6 +28,8 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 	raw, err := os.ReadDir(cnf.FullScriptsPath)
 	if err != nil {
 		return "", err
+	} else if len(raw) == 0 {
+		return "", errors.New("No existing scripts")
 	}
 
 	for idx, val := range raw {
