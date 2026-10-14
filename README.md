@@ -1,53 +1,24 @@
 # MXS
 
-<!--/*
-  Add custom configured colors: If there's any errors
-  in the config, they must first be resolved. Until
-  then, a script will not run.
-
-  Add this functionality to the cnf package.
-
-  These following colors will have a default color.
-
-  Also, in the cnf file, add a themes section:
-
-  theme: {
-    colors: {
-      errors: ["#LIGHT", "#DARK"],
-      execution_progress: ["#LIGHT", "#DARK"],
-      successful_execution: ["#LIGHT", "#DARK"]
-    },
-    spinner: {
-      extraspace: false,
-      type: "dots | monkey | meter",
-      color: "#HEX_CODE"
-    },
-    verbosity: {
-      supplied_args: true,
-      stopwatch: true,
-    },
-    logs: {
-      quotes: true
-    }
-  }
-*/-->
-
 A simple & colored CLI to manage and execute your Bash scripts.
 
 [mxs-cli.vercel.app](https://mxs-cli.vercel.app)
 
 ## Features
 
-1. Global configuration directory support with offered automatic setup
-2. Script execution with reported success and errors
-3. Structured and colored output
-4. Arguments support
+1. Script execution
+2. Run a script using it's name (no file extension needed)
+3. Global configuration directory
+4. Execution status reports with exit codes
+5. Structured and colored output
+6. Argument support
 
 ## Configuration
 
-MXS's configuration directory, `~/.mxs`, is the home for a user's scripts.
+MXS' configuration directory, `~/.mxs`, is the home for a user's scripts.
 
-- `~/.mxs` directory layout document (coming soon): [/docs/mxs.md](./docs/mxs.md)
+For more info, view: [/docs/configuration-directory.md](./docs/configuration-directory.md)
+(coming soon)
 
 ## Infrastructure
 
@@ -57,15 +28,22 @@ MXS's configuration directory, `~/.mxs`, is the home for a user's scripts.
 | Tooling | golangci-lint, Go    |
 | UI      | Bubbles, Lipgloss    |
 
-## Quick Start
+## Installation
 
-Currently, releases aren't available. To try out MXS, build it from source:
+To install MXS, visit [mxs-cli.vercel.app/#install](https://mxs-cli.vercel.app/#install).
+
+## Build From Source
 
 ### Requirements
 
-- Go: 1.27.1+
-- Bash: 5.3.9+
-- Architecture: x86_64
+For clarification, these requirements _only_ apply if you are building from source.
+
+| Tool  | Type/Version |
+| ----- | ------------ |
+| Shell | Bash         |
+| Go    | 1.27.1+      |
+
+---
 
 Clone the repo:
 
@@ -74,22 +52,11 @@ git clone https://github.com/yuriongit/mxs.git
 cd mxs
 ```
 
-Build the binary:
+Build and install the binary:
 
 ```bash
 go build
-```
-
-Install the binary:
-
-```bash
 go install
-```
-
-Start:
-
-```bash
-mxs help
 ```
 
 Initialize MXS:
@@ -101,7 +68,8 @@ mxs init
 Run the demo:
 
 ```bash
-mxs demo "Your FirstName"
+mxs demo World
+# mxs demo "Your FirstName"
 ```
 
 ## Images
