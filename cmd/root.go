@@ -65,6 +65,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
+		// TODO: Style error mark symbol with ui.Error style
 		fmt.Fprintf(os.Stderr, "✗ %s\n", err.Error())
 		return
 	}
