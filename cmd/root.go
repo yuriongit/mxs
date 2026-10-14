@@ -13,7 +13,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/yuriongit/mxs/internal/app"
-	"github.com/yuriongit/mxs/internal/ui/screens/execui"
+	"github.com/yuriongit/mxs/internal/executor"
 )
 
 var globalApp *app.App
@@ -43,7 +43,7 @@ var rootCmd = &cobra.Command{
 		scriptName := args[0]
 		scriptArgs := args[1:]
 
-		p := tea.NewProgram(execui.InitialModel(scriptName, scriptArgs))
+		p := tea.NewProgram(executor.InitialModel(scriptName, scriptArgs))
 		if _, err := p.Run(); err != nil {
 			log.Fatal("Fatal error running MXS", "err", err)
 		}
