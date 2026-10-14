@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	lg "github.com/charmbracelet/lipgloss"
 	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/ui"
 )
 
 func ListAllScripts(cnf *cnf.Cnf) error {
@@ -16,7 +16,7 @@ func ListAllScripts(cnf *cnf.Cnf) error {
 		return err
 	}
 
-	renderScriptsDir(scriptsDir)
+	renderListAllScriptsView(cnf.ScriptsPath, scriptsDir)
 
 	return nil
 }
@@ -30,24 +30,15 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 	}
 
 	for idx, val := range raw {
-		strBuilder.WriteString(val.Name())
 		if (idx + 1) != len(raw) {
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEntrySymbol))
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(val.Name()))
 			strBuilder.WriteString("\n")
+		} else {
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEndingEntrySymbol))
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(val.Name()))
 		}
 	}
 
-	scriptsDirName := lg.NewStyle().
-		PaddingLeft(2).
-		Render(
-			"~/" + cnf.ScriptsPath + "/",
-		)
-	scripts := lg.NewStyle().
-		PaddingLeft(4).
-		Render(
-			strBuilder.String(),
-		)
-
-	scriptsDirContent := scriptsDirName + "\n" + scripts
-
-	return scriptsDirContent, nil
+	return strBuilder.String(), nil
 }

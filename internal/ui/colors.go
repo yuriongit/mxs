@@ -14,4 +14,6 @@ const (
 	Pink = "#FF6EB7"
 	// Red color
 	Red = "#FF5E7C"
+	// Blue color
+	Blue = "#6eb6ff"
 )

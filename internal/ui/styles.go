@@ -32,4 +32,18 @@ var (
 
 	// Purple spinner style
 	Spinner = lg.NewStyle().Foreground(lg.Color(Pink))
+
+	DirEntrySymbol = lg.NewStyle().
+			Foreground(lg.Color(Blue)).
+			Faint(true).
+			PaddingLeft(1).
+			Render("├─")
+	DirEndingEntrySymbol = lg.NewStyle().
+				Foreground(lg.Color(Blue)).
+				Faint(true).
+				PaddingLeft(1).
+				Render("└─")
+	ScriptEntryStyle = lg.NewStyle().
+				PaddingRight(1).
+				Foreground(lg.Color(Blue))
 )
