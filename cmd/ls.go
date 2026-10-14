@@ -7,6 +7,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/yuriongit/mxs/internal/manager"
 )
 
 // lsCmd represents the ls command
@@ -14,7 +15,10 @@ var lsCmd = &cobra.Command{
 	Use:   "ls",
 	Short: "Lists all scripts",
 	Long:  "TODO: Implement later",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
+		app := GetApp()
+
+		return manager.ListAllScripts(app.Cnf)
 	},
 }
 
