@@ -23,5 +23,8 @@ var lsCmd = &cobra.Command{
 }
 
 func init() {
+	lsCmd.SilenceErrors = true
+	lsCmd.SilenceUsage = true
+
 	rootCmd.AddCommand(lsCmd)
 }
