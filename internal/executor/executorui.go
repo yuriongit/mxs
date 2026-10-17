@@ -304,7 +304,7 @@ func (m model) View() string {
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
 		fmt.Fprintf(&b, "\n%sExecuting %s for %s",
 			m.spinner.View(),
-			ui.ScriptName.Render(filepath.Base(m.scriptPath)),
+			ui.ScriptName.Render(m.targetName),
 			ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
 		)
 
@@ -317,7 +317,7 @@ func (m model) View() string {
 			}
 
 			b.WriteString(
-				ui.Error.Render(fmt.Sprintf("✗ Executing %s ", ui.ScriptName.Render(filepath.Base(m.scriptPath)))),
+				ui.Error.Render(fmt.Sprintf("✗ Executing %s ", ui.ScriptName.Render(m.targetName))),
 			)
 			b.WriteString(ui.Error.Render(fmt.Sprintf("failed, %s\n", m.err.Error())))
 
@@ -328,7 +328,7 @@ func (m model) View() string {
 			}
 
 			b.WriteString(ui.Success.Render("\n✓ Executed "))
-			b.WriteString(ui.ScriptName.Render(filepath.Base(m.scriptPath)))
+			b.WriteString(ui.ScriptName.Render(m.targetName))
 			b.WriteString(ui.Success.Render(" for "))
 			b.WriteString(
 				ScriptDescAndOutroMsgStyle.Bold(true).Render(m.duration.Round(time.Millisecond).String(), "\n"),
