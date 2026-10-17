@@ -33,11 +33,14 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 	}
 
 	for idx, val := range raw {
-		if (idx + 1) != len(raw) {
+		switch {
+		case !strings.HasSuffix(val.Name(), ".sh"):
+			continue
+		case (idx + 1) != len(raw):
 			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEntrySymbol))
 			strBuilder.WriteString(ui.ScriptEntryStyle.Render(strings.TrimSuffix(val.Name(), ".sh")))
 			strBuilder.WriteString("\n")
-		} else {
+		default:
 			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEndingEntrySymbol))
 			strBuilder.WriteString(ui.ScriptEntryStyle.Render(strings.TrimSuffix(val.Name(), ".sh")))
 		}
