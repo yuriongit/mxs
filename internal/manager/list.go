@@ -4,6 +4,7 @@ package manager
 
 import (
 	"errors"
+	"io/fs"
 	"os"
 	"strings"
 
@@ -32,24 +33,34 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 		return "", errors.New("No existing scripts")
 	}
 
-	for idx, val := range raw {
-		switch {
-		case !strings.HasSuffix(val.Name(), ".sh"):
-			continue
-		case (idx + 1) != len(raw):
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEntrySymbol))
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(strings.TrimSuffix(val.Name(), ".sh")))
-			strBuilder.WriteString("\n")
-		default:
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEndingEntrySymbol))
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(strings.TrimSuffix(val.Name(), ".sh")))
+	// Collect only .sh files
+	var scriptFiles []fs.DirEntry
+	for _, val := range raw {
+		if strings.HasSuffix(val.Name(), ".sh") {
+			scriptFiles = append(scriptFiles, val)
 		}
+	}
+
+	if len(scriptFiles) == 0 {
+		return "", errors.New("No .sh scripts found")
+	}
+
+	// Render with correct symbols
+	for idx, val := range scriptFiles {
+		if idx > 0 {
+			strBuilder.WriteString("\n")
+		}
+
+		if idx == len(scriptFiles)-1 {
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEndingEntrySymbol))
+		} else {
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEntrySymbol))
+		}
+
+		// Remove .sh extension
+		name := strings.TrimSuffix(val.Name(), ".sh")
+		strBuilder.WriteString(ui.ScriptEntryStyle.Render(name))
 	}
 
 	return strBuilder.String(), nil
 }
-
-// TODO: Ignore non .sh files in the scripts directory.
-// if !strings.Contains(val.Name(), ".sh") {
-// 			continue
-// 		} else {
