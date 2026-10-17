@@ -35,13 +35,18 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 	for idx, val := range raw {
 		if (idx + 1) != len(raw) {
 			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEntrySymbol))
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(val.Name()))
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(strings.TrimSuffix(val.Name(), ".sh")))
 			strBuilder.WriteString("\n")
 		} else {
 			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEndingEntrySymbol))
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(val.Name()))
+			strBuilder.WriteString(ui.ScriptEntryStyle.Render(strings.TrimSuffix(val.Name(), ".sh")))
 		}
 	}
 
 	return strBuilder.String(), nil
 }
+
+// TODO: Ignore non .sh files in the scripts directory.
+// if !strings.Contains(val.Name(), ".sh") {
+// 			continue
+// 		} else {
