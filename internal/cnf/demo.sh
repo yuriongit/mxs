@@ -1,24 +1,32 @@
-#!/usr/bin/env bash
 set -euo pipefail
 
-NAME="${1:-}"
+FIRST_NAME="${1:-}"
 
-if [[ -z "$NAME" ]]; then
-  echo "✗ Error: Name is required" >&2
-  echo "Usage: mxs demo <your-first-name>" >&2
+echo "◌ Gifts a greeting and a fun fact"
+
+if [[ -z "$FIRST_NAME" ]]; then
+  echo "First name required"
   exit 1
 fi
 
-echo "• Starting demo script"
+sleep 1
+
+echo "Hello, $FIRST_NAME :)"
 
 sleep 1
 
-echo "Hello, $NAME!"
+echo "Did you know, you can see a million colors?"
 
 sleep 1
 
-echo "Bye now, $NAME :("
+echo "Mhhhmmmm, including THESE ones 🔥"
 
 sleep 1
 
-echo "✓ Demo script completed successfully"
+echo "Well, that's your first script with MXS"
+
+sleep 1
+
+echo "✓ Done"
+
+sleep 0.5
