@@ -316,10 +316,11 @@ func (m model) View() string {
 				b.WriteString("\n")
 			}
 
-			b.WriteString(
-				ui.Error.Render(fmt.Sprintf("✗ Executing %s ", ui.ScriptName.Render(m.targetName))),
-			)
-			b.WriteString(ui.Error.Render(fmt.Sprintf("failed, %s\n", m.err.Error())))
+			b.WriteString(ui.Error.Render("✗"))
+			b.WriteString(" Executing ")
+			b.WriteString(ui.Error.Render(m.targetName))
+			b.WriteString(" failed, ")
+			fmt.Fprintf(&b, "%s\n", m.err.Error())
 
 		} else {
 			if len(m.output) > 0 {
@@ -327,11 +328,10 @@ func (m model) View() string {
 				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
-			b.WriteString(ui.Success.Render("\n✓ Executed "))
-			b.WriteString(ui.ScriptName.Render(m.targetName))
-			b.WriteString(ui.Success.Render(" for "))
+			b.WriteString(ui.Success.Render("\n✓ "))
+			fmt.Fprintf(&b, "Executed %s for ", ui.Success.Render(m.targetName))
 			b.WriteString(
-				ScriptDescAndOutroMsgStyle.Bold(true).Render(m.duration.Round(time.Millisecond).String(), "\n"),
+				ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)
 		}
 	}
