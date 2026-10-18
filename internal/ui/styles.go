@@ -10,8 +10,7 @@ var (
 
 	// Purple script name header
 	ScriptName = lg.NewStyle().
-			Foreground(lg.Color(Pink)).
-			Bold(true)
+			Foreground(lg.Color(Pink))
 
 	// Base output box style (border color is dynamic per state)
 	BaseOutputBox = lg.NewStyle().
@@ -23,12 +22,10 @@ var (
 		// Padding(0, 1)
 
 	Success = lg.NewStyle().
-		Foreground(lg.Color(Lime)).
-		Bold(true)
+		Foreground(lg.Color(Lime))
 
 	Error = lg.NewStyle().
-		Foreground(lg.Color(Red)).
-		Bold(true)
+		Foreground(lg.Color(Red))
 
 	// Purple spinner style
 	Spinner = lg.NewStyle().Foreground(lg.Color(Pink))
