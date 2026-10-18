@@ -318,7 +318,7 @@ func (m model) View() string {
 
 			b.WriteString(ui.Error.Render("✗"))
 			b.WriteString(" Executing ")
-			b.WriteString(ui.ScriptName.Render(m.targetName))
+			b.WriteString(ui.Error.Render(m.targetName))
 			b.WriteString(" failed, ")
 			fmt.Fprintf(&b, "%s\n", m.err.Error())
 
@@ -329,7 +329,7 @@ func (m model) View() string {
 			}
 
 			b.WriteString(ui.Success.Render("\n✓ "))
-			b.WriteString(fmt.Sprintf("Executed %s for ", ui.ScriptName.Render(m.targetName)))
+			b.WriteString(fmt.Sprintf("Executed %s for ", ui.Success.Render(m.targetName)))
 			b.WriteString(
 				ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)
