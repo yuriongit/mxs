@@ -4,18 +4,21 @@ import (
 	lg "github.com/charmbracelet/lipgloss"
 )
 
+// UI components
 var (
+	// Pipe wall
 	Pipe = "│"
-)
-
-var (
-	SubMsgStyle                = lg.NewStyle().Faint(true).PaddingLeft(2)
-	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(Blue))
-	RegularTextStyle           = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
 )
 
 // Lip Gloss Styles
 var (
+	// Scripts outputted logs style
+	SubMsgStyle = lg.NewStyle().Faint(true).PaddingLeft(2)
+	// Script description and outro message style
+	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(Blue))
+	// Regular text style (dark mode supported)
+	RegularTextStyle = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
+
 	Subtle = lg.NewStyle().Faint(true).Italic(true)
 
 	// Purple script name header
