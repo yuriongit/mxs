@@ -61,16 +61,6 @@ type model struct {
 	sub        chan tea.Msg  // Async channel for streaming output
 }
 
-var (
-	blue             = "#6eb6ff"
-	pipe             = "│"
-	RegularTextColor = "#f3f3f3"
-
-	SubMsgStyle                = lg.NewStyle().Faint(true).PaddingLeft(2)
-	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(blue))
-	RegularTextStyle           = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
-)
-
 // addFormattedScriptMsg formats each incoming "message" according to it's order.
 //
 // The script description and closing message (the first and last message) are
@@ -103,13 +93,13 @@ func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
 	if currLogAmt != 0 && !isOutroMsg {
 		// If it's the first message, append the "Msg" header
 		if currLogAmt == 1 {
-			m.output = append(m.output, RegularTextStyle.Faint(true).Render("  Logs="))
+			m.output = append(m.output, ui.RegularTextStyle.Faint(true).Render("  Logs="))
 		}
 		// If not, it's a regular message. Append the pipe and message
-		m.output = append(m.output, SubMsgStyle.Render(fmt.Sprint(pipe, " ", string(*msg))))
+		m.output = append(m.output, ui.SubMsgStyle.Render(fmt.Sprint(ui.Pipe, " ", string(*msg))))
 	} else {
 		// Format the script description and last message
-		m.output = append(m.output, ScriptDescAndOutroMsgStyle.Render(string(*msg)))
+		m.output = append(m.output, ui.ScriptDescAndOutroMsgStyle.Render(string(*msg)))
 	}
 }
 
@@ -297,22 +287,20 @@ func (m model) View() string {
 			logs = strings.Join(m.output, "\n")
 		}
 
-		runningBoxStyle := ui.BaseOutputBox.BorderForeground(lg.Color(ui.Pink))
-		b.WriteString(runningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
+		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
 		fmt.Fprintf(&b, "\n%sExecuting %s for %s",
 			m.spinner.View(),
 			ui.ScriptName.Render(m.targetName),
-			ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
+			ui.ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
 		)
 
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
-				errBoxStyle := ui.BaseOutputBox.BorderForeground(lg.Color(ui.Red))
-				b.WriteString(errBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
+				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
 
@@ -324,14 +312,13 @@ func (m model) View() string {
 
 		} else {
 			if len(m.output) > 0 {
-				successBoxStyle := ui.BaseOutputBox.BorderForeground(lg.Color(ui.Lime)).Foreground(lg.Color(ui.Lime))
-				b.WriteString(successBoxStyle.Render(strings.Join(m.output, "\n")))
+				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
 			b.WriteString(ui.Success.Render("\n✓ "))
 			fmt.Fprintf(&b, "Executed %s for ", ui.Success.Render(m.targetName))
 			b.WriteString(
-				ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
+				ui.ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)
 		}
 	}

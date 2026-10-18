@@ -4,8 +4,21 @@ import (
 	lg "github.com/charmbracelet/lipgloss"
 )
 
+// UI components
+var (
+	// Pipe wall
+	Pipe = "│"
+)
+
 // Lip Gloss Styles
 var (
+	// Scripts outputted logs style
+	SubMsgStyle = lg.NewStyle().Faint(true).PaddingLeft(2)
+	// Script description and outro message style
+	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(Blue))
+	// Regular text style (dark mode supported)
+	RegularTextStyle = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
+
 	Subtle = lg.NewStyle().Faint(true).Italic(true)
 
 	// Purple script name header
@@ -20,12 +33,15 @@ var (
 			UnsetBorderTop()
 		// UnsetBorderBottom().
 		// Padding(0, 1)
+	RunningBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Pink))
 
-	Success = lg.NewStyle().
-		Foreground(lg.Color(Lime))
+	SuccessBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Lime)).Foreground(lg.Color(Lime))
+	Success         = lg.NewStyle().
+			Foreground(lg.Color(Lime))
 
 	Error = lg.NewStyle().
 		Foreground(lg.Color(Red))
+	ErrBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Red))
 
 	// Purple spinner style
 	Spinner = lg.NewStyle().Foreground(lg.Color(Pink))
@@ -43,4 +59,9 @@ var (
 	ScriptEntryStyle = lg.NewStyle().
 				PaddingRight(1).
 				Foreground(lg.Color(Blue))
+
+	ScriptsDirStyle = lg.NewStyle().
+			Foreground(lg.Color(Pink)).
+			PaddingLeft(0).
+			Bold(true)
 )
