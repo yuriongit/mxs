@@ -8,6 +8,8 @@ package ui
 
 // Color constants.
 const (
+	// TODO: rename
+	RegularTextColor = "#f3f3f3"
 	// Lime color
 	Lime = "#B6FF6E"
 	// Pink color
