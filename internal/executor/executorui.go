@@ -329,7 +329,7 @@ func (m model) View() string {
 			}
 
 			b.WriteString(ui.Success.Render("\n✓ "))
-			b.WriteString(fmt.Sprintf("Executed %s for ", ui.Success.Render(m.targetName)))
+			fmt.Fprintf(&b, "Executed %s for ", ui.Success.Render(m.targetName))
 			b.WriteString(
 				ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)
