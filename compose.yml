@@ -1,0 +1,7 @@
+services:
+  goreleaser:
+    build: .
+    image: mxs-goreleaser
+    user: "${HOST_UID}:${HOST_GID}"
+    volumes:
+      - .:/app
