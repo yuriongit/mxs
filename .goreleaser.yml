@@ -49,16 +49,16 @@ changelog:
 
   groups:
     - title: "New!"
-      regexp: "^.*feat[(\\w)]*:+.*$"
+      regexp: '^feat(\([^)]+\))?!?:'
       order: 0
     - title: "Fixed"
-      regexp: "^.*fix[(\\w)]*:+.*$"
+      regexp: '^fix(\([^)]+\))?!?:'
       order: 1
     - title: "Maintenance & Refactoring"
-      regexp: '^(refactor|chore|ci)[(\w\s)]*:'
+      regexp: '^(refactor|chore|ci)(\([^)]+\))?!?:'
       order: 2
     - title: "Docs"
-      regexp: "^.*docs[(\\w)]*:+.*$"
+      regexp: '^docs(\([^)]+\))?!?:'
       order: 3
     - title: "Other stuff"
       order: 999
