@@ -32,7 +32,7 @@ builds:
 changelog:
   sort: asc
   use: github
-  format: "[`{{ .ShortCommit }}`](https://github.com/yuriongit/mxs-cd-test/commit/{{ .Commit }}): {{ .Message }} ({{ with .AuthorUsername }}@{{ . }}{{ else }}{{ .AuthorName }}{{ end }})"
+  format: "[`{{ slice .SHA 0 7 }}`](https://github.com/yuriongit/mxs/commit/{{ .SHA }}): {{ .Message }} ({{ with .AuthorUsername }}@{{ . }}{{ else }}{{ .AuthorName }}{{ end }})"
 
   filters:
     exclude:
