@@ -35,7 +35,7 @@ For more info, view: [/docs/configuration-directory.md](./docs/configuration-dir
 
 ## Installation
 
-To install MXS, visit [mxs-cli.vercel.app/#install](https://mxs-cli.vercel.app/#install).
+To install MXS, visit [mxs-cli.vercel.app/install](https://mxs-cli.vercel.app/install).
 
 ## Build From Source
 
