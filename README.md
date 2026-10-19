@@ -79,11 +79,9 @@ mxs demo World
 # mxs demo "Your FirstName"
 ```
 
-## Images
+## Preview
 
-To see a preview of MXS, view the [/docs/preview.md](./docs/preview.md) document.
-
-_Images directory - [/.github/images](./github/images)_
+To see a preview of MXS, visit [mxs-cli.vercel.app/preview](https://mxs-cli.vercel.app/preview)
 
 ## Documents
 
