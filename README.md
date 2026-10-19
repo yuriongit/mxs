@@ -1,5 +1,7 @@
 # MXS
 
+**Current Version:** `v0.2.0-beta` (under development)
+
 A simple & colored CLI to manage and execute your Bash scripts.
 
 [mxs-cli.vercel.app](https://mxs-cli.vercel.app)
@@ -8,10 +10,13 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 1. Script execution
 2. Run a script using it's name (no file extension needed)
-3. Global configuration directory
-4. Execution status reports with exit codes
-5. Structured and colored output
-6. Argument support
+3. List your scripts with `mxs ls` (only `.sh` files, shown without the extension)
+4. Global configuration directory
+5. Execution status reports with exit codes
+6. Structured and colored output, with separate opening and closing messages and
+   logs in between
+7. Argument support
+8. Automated installers for Linux and macOS
 
 ## Configuration
 
@@ -30,7 +35,9 @@ For more info, view: [/docs/configuration-directory.md](./docs/configuration-dir
 
 ## Installation
 
-To install MXS, visit [mxs-cli.vercel.app/#install](https://mxs-cli.vercel.app/#install).
+To install MXS, visit [mxs-cli.vercel.app/install](https://mxs-cli.vercel.app/install).
+
+Installers are available for Linux and macOS.
 
 ## Build From Source
 
@@ -72,11 +79,9 @@ mxs demo World
 # mxs demo "Your FirstName"
 ```
 
-## Images
+## Preview
 
-To see a preview of MXS, view the [/docs/preview.md](./docs/preview.md) document.
-
-_Images directory - [/.github/images](./github/images)_
+To see a preview of MXS, visit [mxs-cli.vercel.app/preview](https://mxs-cli.vercel.app/preview)
 
 ## Documents
 
