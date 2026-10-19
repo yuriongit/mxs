@@ -1,5 +1,7 @@
 # MXS
 
+**Current Version:** `v0.2.0-beta` (under development)
+
 A simple & colored CLI to manage and execute your Bash scripts.
 
 [mxs-cli.vercel.app](https://mxs-cli.vercel.app)
