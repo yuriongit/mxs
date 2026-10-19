@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      # Triggers automatically a tag is pushed
+      - "v*"
+
+permissions:
+  # Grants permission to upload binaries to GitHub Releases
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required by GoReleaser to read git history and build changelogs
+
+      # Install Go
+      - name: Install Go
+        uses: actions/go-version@v5
+        with:
+          go-version-file: "go.mod" # Reads the Go version directly from your go.mod file
+
+      # Run GoReleaser to cross-compile and publish
+      - name: Cross-compile and Publish
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
+        env:
+          # Automatically provided by GitHub
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
