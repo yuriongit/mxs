@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+version: 2
+
+before:
+  hooks: ["go mod tidy"]
+
+builds:
+  - id: mxs
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: linux
+        goarch: arm64
+      - goos: darwin
+        goarch: amd64
+    # Set main entrypoint if it's not in the root directory
+    main: .
+    binary: mxs
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+changelog:
+  sort: asc
+  use: github
+  format: "[`{{ .ShortCommit }}`](https://github.com/yuriongit/mxs-cd-test/commit/{{ .Commit }}): {{ .Message }} ({{ with .AuthorUsername }}@{{ . }}{{ else }}{{ .AuthorName }}{{ end }})"
+
+  filters:
+    exclude:
+      - "^test:"
+      - "^merge"
+      - "^chore"
+      - "merge conflict"
+      - "typo"
+      - "bump version"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+
+  groups:
+    - title: "New!"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: "Fixed"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: "Maintenance & Refactoring"
+      regexp: '^(refactor|chore|ci)[(\w\s)]*:'
+      order: 2
+    - title: "Docs"
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 3
+    - title: "Other stuff"
+      order: 999
