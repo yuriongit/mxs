@@ -32,7 +32,7 @@ builds:
 changelog:
   sort: asc
   use: github
-  format: "[`{{ .ShortCommit }}`](https://github.com/yuriongit/mxs-cd-test/commit/{{ .Commit }}): {{ .Message }} ({{ with .AuthorUsername }}@{{ . }}{{ else }}{{ .AuthorName }}{{ end }})"
+  format: "[`{{ slice .SHA 0 7 }}`](https://github.com/yuriongit/mxs/commit/{{ .SHA }}): {{ .Message }} ({{ with .AuthorUsername }}@{{ . }}{{ else }}{{ .AuthorName }}{{ end }})"
 
   filters:
     exclude:
@@ -42,23 +42,23 @@ changelog:
       - "merge conflict"
       - "typo"
       - "bump version"
-      - Merge pull request
-      - Merge remote-tracking branch
-      - Merge branch
-      - go mod tidy
+      - "Merge pull request"
+      - "Merge remote-tracking branch"
+      - "Merge branch"
+      - "go mod tidy"
 
   groups:
     - title: "New!"
-      regexp: "^.*feat[(\\w)]*:+.*$"
+      regexp: '^feat(\([^)]+\))?!?:'
       order: 0
     - title: "Fixed"
-      regexp: "^.*fix[(\\w)]*:+.*$"
+      regexp: '^fix(\([^)]+\))?!?:'
       order: 1
     - title: "Maintenance & Refactoring"
-      regexp: '^(refactor|chore|ci)[(\w\s)]*:'
+      regexp: '^(refactor|chore|ci)(\([^)]+\))?!?:'
       order: 2
     - title: "Docs"
-      regexp: "^.*docs[(\\w)]*:+.*$"
+      regexp: '^docs(\([^)]+\))?!?:'
       order: 3
     - title: "Other stuff"
       order: 999
