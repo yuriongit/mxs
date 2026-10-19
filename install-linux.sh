@@ -3,9 +3,9 @@
 set -euo pipefail
 
 REPO="yuriongit/mxs"
-VERSION="v0.1.0-beta"
-BIN="mxs-${VERSION}-linux-x86_64"
-URL="https://github.com/${REPO}/releases/download/${VERSION}/${BIN}"
+VERSION="0.2.0"
+BIN="mxs_${VERSION}_linux_amd64.tar.gz"
+URL="https://github.com/${REPO}/releases/download/v${VERSION}/${BIN}"
 INSTALL_DIR="/usr/local/bin"
 DEST="${INSTALL_DIR}/mxs"
 
