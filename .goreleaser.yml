@@ -1,0 +1,72 @@
+version: 2
+
+project_name: mxs
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: mxs
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    # Set main entrypoint if it's not in the root directory
+    main: .
+    binary: mxs
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - format: tar.gz
+    # Use zip for Windows if added later, tar.gz for Linux/macOS
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+
+  # Format how each commit line looks
+  # Available fields: .Hash, .ShortHash, .Title, .Author
+  use: github
+
+  # Group commit messages into formatted sections based on regex matches
+  groups:
+    - title: "Features"
+      regexp: '^feat[(\w\s)]*:'
+      order: 0
+    - title: "Bug Fixes"
+      regexp: '^fix[(\w\s)]*:'
+      order: 1
+    - title: "Maintenance & Refactoring"
+      regexp: '^(refactor|chore|ci)[(\w\s)]*:'
+      order: 2
+    - title: "Documentation"
+      regexp: '^docs[(\w\s)]*:'
+      order: 3
+    - title: "Catch-all / Others"
+      order: 999
+
+  # Exclude commits matching specific patterns (regex)
+  filters:
+    exclude:
+      - "^test:"
+      - "^merge"
+      - "typo"
+      - "bump version"
