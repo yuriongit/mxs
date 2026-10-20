@@ -315,8 +315,13 @@ func (m model) View() string {
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
-			b.WriteString(ui.Success.Render("\n✓ "))
-			fmt.Fprintf(&b, "Executed %s for ", ui.Success.Render(m.targetName))
+			b.WriteString("\n")
+			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("Executed %s for ", ui.Success.Render(m.targetName)))
+			if err != nil {
+				return ""
+			}
+			b.WriteString(msg)
+
 			b.WriteString(
 				ui.ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)

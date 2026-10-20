@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/yuriongit/mxs/internal/app"
 	"github.com/yuriongit/mxs/internal/executor"
+	"github.com/yuriongit/mxs/internal/ui"
 )
 
 var globalApp *app.App
@@ -66,7 +67,8 @@ func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
 		// TODO: Style error mark symbol with ui.Error style
-		fmt.Fprintf(os.Stderr, "✗ %s\n", err.Error())
+		errorMark := ui.Error.Render("✗")
+		fmt.Fprintf(os.Stderr, "%s %s\n", errorMark, err.Error())
 		return
 	}
 

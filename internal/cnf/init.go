@@ -12,6 +12,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/yuriongit/mxs/internal/ui"
 )
 
 func (c *Cnf) InitCnfDir() error {
@@ -31,9 +33,12 @@ func (c *Cnf) InitCnfDir() error {
 			if !info.IsDir() {
 				return fmt.Errorf("%s exists but is not a directory", directory.name)
 			}
+			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("Found existing %s directory", directory.name))
+			if err != nil {
+				return err
+			}
 
-			fmt.Printf("✓ Found existing %s directory\n", directory.name)
-
+			fmt.Println(msg)
 		case os.IsNotExist(err):
 			if err := os.MkdirAll(directory.path, 0700); err != nil {
 				return fmt.Errorf(
@@ -42,9 +47,12 @@ func (c *Cnf) InitCnfDir() error {
 					err,
 				)
 			}
+			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("Created %s directory", directory.name))
+			if err != nil {
+				return err
+			}
 
-			fmt.Printf("✓ Created %s directory\n", directory.name)
-
+			fmt.Println(msg)
 		default:
 			return fmt.Errorf("Failed to check %s directory: %w", directory.name, err)
 		}
@@ -69,7 +77,11 @@ func (c *Cnf) SetupDemoScript() error {
 	file, err := os.OpenFile(fullDemoScriptPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0700)
 	switch {
 	case os.IsExist(err):
-		fmt.Printf("✓ Found existing demo script in ~/%s\n", c.ScriptsPath)
+		msg, err := ui.CreateSuccessMessage("Found existing demo script (%s) in %s")
+		if err != nil {
+			return err
+		}
+		fmt.Println(msg)
 		return nil
 	case err != nil:
 		return fmt.Errorf("Failed to check or create demo script: %w", err)
@@ -82,7 +94,12 @@ func (c *Cnf) SetupDemoScript() error {
 	if writeErr != nil {
 		return fmt.Errorf("Failed to write demo script: %w", writeErr)
 	}
-	fmt.Printf("✓ Created demo script (%s) in %s\n", demoScriptFileName, c.ScriptsPath)
+	msg, err := ui.CreateSuccessMessage("Created demo script (%s) in %s")
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(msg)
 
 	return nil
 }

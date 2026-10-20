@@ -6,6 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/ui"
 )
 
 // AddNewScript validates the script name, creates the script file,
@@ -77,7 +78,12 @@ func OpenEditorForScript(name *string, scriptPath string) (msg string, err error
 		return "", err
 	}
 
-	return fmt.Sprintf("✓ created %s and opened %s for editing", *name, editor), nil
+	msg, err = ui.CreateSuccessMessage(fmt.Sprintf("created %s and opened %s for editing", ui.ScriptName.Render(*name), ui.ScriptDescAndOutroMsgStyle.Render(editor)))
+	if err != nil {
+		return "", err
+	}
+
+	return msg, nil
 }
 
 // TODO: Create success message helper
