@@ -17,6 +17,7 @@ var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Creates a new script",
 	Long:  "TODO: Implement later",
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
 			return manager.AddNewScript(args[0])
