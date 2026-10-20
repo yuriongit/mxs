@@ -8,6 +8,8 @@ Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 package cnf
 
 import (
+	"errors"
+	"os"
 	"path/filepath"
 )
 
@@ -32,4 +34,21 @@ func NewCnf(homePath string) *Cnf {
 		fullCnfPath,
 		fullScriptsPath,
 	}
+}
+
+func (c *Cnf) hasCnfDirectory(subDir string) error {
+	switch subDir {
+	case "":
+		if _, err := os.ReadDir(c.FullCnfPath); err != nil {
+			return err
+		}
+	case "scripts":
+		if _, err := os.ReadDir(c.FullScriptsPath); err != nil {
+			return err
+		}
+	default:
+		return errors.New("invalid sub-directory option")
+	}
+
+	return nil
 }
