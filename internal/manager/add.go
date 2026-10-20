@@ -8,6 +8,8 @@ import (
 	"github.com/yuriongit/mxs/internal/cnf"
 )
 
+// AddNewScript validates the script name, creates the script file,
+// opens it in the configured editor, and outputs a success message.
 func AddNewScript(cnf *cnf.Cnf, scriptName *string) error {
 	if err := validateScriptName(scriptName); err != nil {
 		return err
@@ -26,6 +28,7 @@ func AddNewScript(cnf *cnf.Cnf, scriptName *string) error {
 	return nil
 }
 
+// validateScriptName checks that the script name meets the required naming rules.
 func validateScriptName(name *string) error {
 	// Check length
 	if len(*name) == 0 {
@@ -57,6 +60,8 @@ func validateScriptName(name *string) error {
 	return nil
 }
 
+// OpenEditorForScript launches the configured editor with the script file.
+// It returns a success message or an error if the editor cannot be launched.
 func OpenEditorForScript(name *string, scriptPath string) (msg string, err error) {
 	editorEnvName := "EDITOR"
 
@@ -75,6 +80,7 @@ func OpenEditorForScript(name *string, scriptPath string) (msg string, err error
 	return fmt.Sprintf("✓ created %s and opened %s for editing", *name, editor), nil
 }
 
+// outputScriptCreationSuccess prints the script creation success message.
 func outputScriptCreationSuccess(msg string) {
 	fmt.Println(msg)
 }
