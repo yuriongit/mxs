@@ -7,9 +7,9 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/yuriongit/mxs/internal/manager"
 )
 
 // addCmd represents the ls command
@@ -19,9 +19,7 @@ var addCmd = &cobra.Command{
 	Long:  "TODO: Implement later",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
-			fmt.Println("Script name:", args[0])
-			return nil
-			// return manager.AddNewScript(args[0])
+			return manager.AddNewScript(args[0])
 		}
 		return errors.New("Script name required")
 	},
