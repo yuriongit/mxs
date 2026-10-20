@@ -18,6 +18,7 @@ type Cnf struct {
 	ScriptsPath     string
 	FullCnfPath     string
 	FullScriptsPath string
+	ScriptTemplate  string
 }
 
 var demoScriptFileName = "demo.sh"
@@ -27,12 +28,20 @@ func NewCnf(homePath string) *Cnf {
 	scriptsDir := filepath.Join(cnfDir, "scripts")
 	fullCnfPath := filepath.Join(homePath, cnfDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)
+	scriptTemplate := `#!mxs-description
+	# Description
+
+	echo "%s"
+
+	#!mxs-end
+	# Done`
 
 	return &Cnf{
 		cnfDir,
 		scriptsDir,
 		fullCnfPath,
 		fullScriptsPath,
+		scriptTemplate,
 	}
 }
 
