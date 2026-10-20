@@ -25,7 +25,7 @@ func validateScriptName(name string) error {
 
 	// Check first character (must be lowercase letter, +, -)
 	firstChar := rune(name[0])
-	if !(firstChar == '+' || firstChar == '-' || (firstChar >= 'a' && firstChar <= 'z')) {
+	if firstChar != '+' && firstChar != '-' && (firstChar < 'a' || firstChar > 'z') {
 		return fmt.Errorf("script name must start with a lowercase letter or '+' (got '%c')", firstChar)
 	}
 
