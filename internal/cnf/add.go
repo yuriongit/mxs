@@ -13,6 +13,9 @@ import (
 	"path/filepath"
 )
 
+// CreateNewScript creates a new script file with executable permissions
+// and populates it with the configured script template.
+// It returns the script's full path or an error if creation fails.
 func (c *Cnf) CreateNewScript(scriptName *string) (scriptPath string, err error) {
 	if err := c.hasCnfDirectory("scripts"); err != nil {
 		return "", err
@@ -36,6 +39,7 @@ func (c *Cnf) CreateNewScript(scriptName *string) (scriptPath string, err error)
 	return filepath.Join(c.FullScriptsPath, file), f.Close()
 }
 
+// fillScriptTemplate populates the configured script template with the given script name.
 func (c *Cnf) fillScriptTemplate(scriptName string) string {
 	return fmt.Sprintf(
 		c.ScriptTemplate, scriptName)
