@@ -2,35 +2,47 @@ package manager
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
+
+	"github.com/yuriongit/mxs/internal/cnf"
 )
 
-func AddNewScript(scriptName string) error {
+func AddNewScript(cnf *cnf.Cnf, scriptName *string) error {
 	if err := validateScriptName(scriptName); err != nil {
 		return err
 	}
+	scriptPath, err := cnf.CreateNewScript(scriptName)
+	if err != nil {
+		return err
+	}
+	msg, err := OpenEditorForScript(scriptName, scriptPath)
+	if err != nil {
+		return err
+	}
 
-	fmt.Println(scriptName)
+	outputScriptCreationSuccess(msg)
 
 	return nil
 }
 
-func validateScriptName(name string) error {
+func validateScriptName(name *string) error {
 	// Check length
-	if len(name) == 0 {
+	if len(*name) == 0 {
 		return fmt.Errorf("script name required")
 	}
-	if len(name) > 63 {
-		return fmt.Errorf("script name must be 63 characters or less (got %d)", len(name))
+	if len(*name) > 63 {
+		return fmt.Errorf("script name must be 63 characters or less (got %d)", len(*name))
 	}
 
 	// Check first character (must be lowercase letter, +, -)
-	firstChar := rune(name[0])
+	firstChar := rune((*name)[0])
 	if firstChar != '+' && firstChar != '-' && (firstChar < 'a' || firstChar > 'z') {
 		return fmt.Errorf("script name must start with a lowercase letter or '+' (got '%c')", firstChar)
 	}
 
 	// Check all characters
-	for i, ch := range name {
+	for i, ch := range *name {
 		isLowercase := ch >= 'a' && ch <= 'z'
 		isDigit := ch >= '0' && ch <= '9'
 		isHyphen := ch == '-'
@@ -44,3 +56,28 @@ func validateScriptName(name string) error {
 
 	return nil
 }
+
+func OpenEditorForScript(name *string, scriptPath string) (msg string, err error) {
+	editorEnvName := "EDITOR"
+
+	editor, ok := os.LookupEnv(editorEnvName)
+	if !ok {
+		fmt.Println()
+		return "", fmt.Errorf("failed to retrieve %s", editorEnvName)
+	}
+
+	// #nosec G204 -- opens editor with $EDITOR variable, which does not derive from user input
+	cmd := exec.Command(editor, scriptPath)
+	if err := cmd.Start(); err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("✓ created %s and opened %s for editing", *name, editor), nil
+}
+
+func outputScriptCreationSuccess(msg string) {
+	fmt.Println(msg)
+}
+
+// TODO: Create success message helper
+// TODO: Lowercase all messages
