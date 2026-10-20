@@ -80,10 +80,5 @@ func OpenEditorForScript(name *string, scriptPath string) (msg string, err error
 	return fmt.Sprintf("✓ created %s and opened %s for editing", *name, editor), nil
 }
 
-// outputScriptCreationSuccess prints the script creation success message.
-func outputScriptCreationSuccess(msg string) {
-	fmt.Println(msg)
-}
-
 // TODO: Create success message helper
 // TODO: Lowercase all messages
