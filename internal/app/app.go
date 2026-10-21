@@ -13,9 +13,9 @@ import (
 )
 
 type App struct {
-	HomePath *string
-	Cnf      *cnf.Cnf
-	Executor *executor.Executor
+	HomePath  *string
+	Cnf       *cnf.Cnf
+	Executor  *executor.Executor
 	Validator *validator.Validate
 }
 
@@ -27,7 +27,7 @@ func NewApp() (*App, error) {
 
 	cnf := cnf.NewCnf(homePath)
 	executor := executor.NewExecutor()
-	
+
 	validator := &validator.Validate{}
 
 	return &App{
