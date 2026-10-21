@@ -33,7 +33,7 @@ func (c *Cnf) InitCnfDir() error {
 			if !info.IsDir() {
 				return fmt.Errorf("%s exists but is not a directory", directory.name)
 			}
-			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("Found existing %s directory", directory.name))
+			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("found existing %s directory", directory.name))
 			if err != nil {
 				return err
 			}
@@ -42,19 +42,19 @@ func (c *Cnf) InitCnfDir() error {
 		case os.IsNotExist(err):
 			if err := os.MkdirAll(directory.path, 0700); err != nil {
 				return fmt.Errorf(
-					"Failed to create %s directory: %w",
+					"failed to create %s directory: %w",
 					directory.name,
 					err,
 				)
 			}
-			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("Created %s directory", directory.name))
+			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("created %s directory", directory.name))
 			if err != nil {
 				return err
 			}
 
 			fmt.Println(msg)
 		default:
-			return fmt.Errorf("Failed to check %s directory: %w", directory.name, err)
+			return fmt.Errorf("failed to check %s directory: %w", directory.name, err)
 		}
 	}
 
@@ -77,24 +77,24 @@ func (c *Cnf) SetupDemoScript() error {
 	file, err := os.OpenFile(fullDemoScriptPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0700)
 	switch {
 	case os.IsExist(err):
-		msg, err := ui.CreateSuccessMessage("Found existing demo script (%s) in %s")
+		msg, err := ui.CreateSuccessMessage("found existing demo script")
 		if err != nil {
 			return err
 		}
 		fmt.Println(msg)
 		return nil
 	case err != nil:
-		return fmt.Errorf("Failed to check or create demo script: %w", err)
+		return fmt.Errorf("failed to check or create demo script: %w", err)
 	}
 
 	_, writeErr := file.WriteString(demoScriptContent)
 	if err := file.Close(); err != nil {
-		return fmt.Errorf("Failed to close demo script file: %w", err)
+		return fmt.Errorf("failed to close demo script file: %w", err)
 	}
 	if writeErr != nil {
-		return fmt.Errorf("Failed to write demo script: %w", writeErr)
+		return fmt.Errorf("failed to write demo script: %w", writeErr)
 	}
-	msg, err := ui.CreateSuccessMessage("Created demo script (%s) in %s")
+	msg, err := ui.CreateSuccessMessage("created demo script")
 	if err != nil {
 		return err
 	}

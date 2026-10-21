@@ -29,12 +29,12 @@ func NewCnf(homePath string) *Cnf {
 	fullCnfPath := filepath.Join(homePath, cnfDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)
 	scriptTemplate := `#!mxs-description
-# Description
+# description
 
 echo "%s"
 
 #!mxs-end
-# Done`
+# done`
 
 	return &Cnf{
 		cnfDir,

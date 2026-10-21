@@ -2,31 +2,31 @@ set -euo pipefail
 
 FIRST_NAME="${1:-}"
 
-echo "◌ Gifts a greeting and a fun fact"
+echo "◌ gifts a greeting and a fun fact"
 
 if [[ -z "$FIRST_NAME" ]]; then
-  echo "First name required"
+  echo "first name required"
   exit 1
 fi
 
 sleep 1
 
-echo "Hello, $FIRST_NAME :)"
+echo "hello, $FIRST_NAME :)"
 
 sleep 1
 
-echo "Did you know, you can see a million colors?"
+echo "did you know, you can see a million colors?"
 
 sleep 1
 
-echo "Mhhhmmmm, including THESE ones 🔥"
+echo "mhhhmmmm, including these ones 🔥"
 
 sleep 1
 
-echo "Well, that's your first script with MXS"
+echo "well, that's your first script with mxs"
 
 sleep 1
 
-echo "✓ Done"
+echo "✓ done"
 
 sleep 0.5
