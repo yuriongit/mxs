@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/yuriongit/mxs/v0.2.0/internal/cnf/mxs.schema.json",
+  "$id": "https://raw.githubusercontent.com/yuriongit/mxs/feat/add-configuration-file/internal/cnf/mxs.schema.json",
   "title": "MXS' Configuration File Schema",
   "description": "MXS' configuration file",
   "type": "object",
