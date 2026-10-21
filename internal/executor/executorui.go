@@ -93,7 +93,7 @@ func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
 	if currLogAmt != 0 && !isOutroMsg {
 		// If it's the first message, append the "Msg" header
 		if currLogAmt == 1 {
-			m.output = append(m.output, ui.RegularTextStyle.Faint(true).Render("  Logs="))
+			m.output = append(m.output, ui.RegularTextStyle.Faint(true).Render("  logs="))
 		}
 		// If not, it's a regular message. Append the pipe and message
 		m.output = append(m.output, ui.SubMsgStyle.Render(fmt.Sprint(ui.Pipe, " ", string(*msg))))
@@ -275,14 +275,14 @@ func (m model) View() string {
 
 	switch m.state {
 	case stateSearching:
-		fmt.Fprintf(&b, "%s Locating %s in ~/.mxs/scripts...\n",
+		fmt.Fprintf(&b, "%s locating %s in ~/.mxs/scripts...\n",
 			m.spinner.View(),
 			ui.ScriptName.Render(m.targetName))
 
 	case stateRunning:
 		var logs string
 		if len(m.output) == 0 {
-			logs = ui.Subtle.Render("Listening for output...")
+			logs = ui.Subtle.Render("listening for output...")
 		} else {
 			logs = strings.Join(m.output, "\n")
 		}
@@ -291,7 +291,7 @@ func (m model) View() string {
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
-		fmt.Fprintf(&b, "\n%sExecuting %s for %s",
+		fmt.Fprintf(&b, "\n%sexecuting %s for %s",
 			m.spinner.View(),
 			ui.ScriptName.Render(m.targetName),
 			ui.ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
@@ -305,7 +305,7 @@ func (m model) View() string {
 			}
 
 			b.WriteString(ui.Error.Render("✗"))
-			b.WriteString(" Executing ")
+			b.WriteString(" executing ")
 			b.WriteString(ui.Error.Render(m.targetName))
 			b.WriteString(" failed, ")
 			fmt.Fprintf(&b, "%s\n", m.err.Error())
@@ -316,7 +316,7 @@ func (m model) View() string {
 			}
 
 			b.WriteString("\n")
-			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("Executed %s for ", ui.Success.Render(m.targetName)))
+			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("executed %s for ", ui.Success.Render(m.targetName)))
 			if err != nil {
 				return ""
 			}
