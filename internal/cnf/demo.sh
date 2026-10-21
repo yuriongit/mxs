@@ -1,17 +1,17 @@
 set -euo pipefail
 
-FIRST_NAME="${1:-}"
+COLOR="${1:-}"
 
-echo "◌ gifts a greeting and a fun fact"
+echo "◌ paints your output with personality"
 
-if [[ -z "$FIRST_NAME" ]]; then
-  echo "first name required"
+if [[ -z "$COLOR" ]]; then
+  echo "color required"
   exit 1
 fi
 
 sleep 1
 
-echo "hello, $FIRST_NAME :)"
+echo "i like ${COLOR,,} too :)"
 
 sleep 1
 
