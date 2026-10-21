@@ -19,6 +19,8 @@ type Cnf struct {
 	FullCnfPath     string
 	FullScriptsPath string
 	ScriptTemplate  string
+	File            *File
+	FileName        string
 }
 
 var demoScriptFileName = "demo.sh"
@@ -35,6 +37,7 @@ echo "%s"
 
 #!mxs-end
 # done`
+	cnfFileName := "mxs.json"
 
 	return &Cnf{
 		cnfDir,
@@ -42,6 +45,8 @@ echo "%s"
 		fullCnfPath,
 		fullScriptsPath,
 		scriptTemplate,
+		&File{},
+		cnfFileName,
 	}
 }
 

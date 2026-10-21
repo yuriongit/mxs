@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/yuriongit/mxs/main/internal/cnf/mxs.schema.json",
+  "title": "MXS' Configuration File Schema",
+  "description": "MXS' configuration file",
+  "type": "object",
+  "required": ["editor"],
+  "properties": {
+    "editor": {
+      "type": "object",
+      "description": "Editor metadata for creating and updating scripts",
+      "properties": {
+        "name_as_command": {
+          "type": "string",
+          "description": "Editor name as command (e.g. 'zed', 'nvim', 'code')",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "ui_type": {
+          "type": "string",
+          "enum": ["tui", "gui"],
+          "description": "Editor UI type: 'tui' for terminal-based (e.g. Neovim) or 'gui' for graphical (e.g. Visual Studio Code)"
+        }
+      },
+      "required": ["name_as_command", "ui_type"]
+    }
+  }
+}
