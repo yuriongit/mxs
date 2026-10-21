@@ -19,6 +19,7 @@ type Cnf struct {
 	FullCnfPath     string
 	FullScriptsPath string
 	ScriptTemplate  string
+	File            *File
 }
 
 var demoScriptFileName = "demo.sh"
@@ -42,6 +43,7 @@ echo "%s"
 		fullCnfPath,
 		fullScriptsPath,
 		scriptTemplate,
+		&File{},
 	}
 }
 
