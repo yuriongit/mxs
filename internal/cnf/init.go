@@ -58,6 +58,10 @@ func (c *Cnf) InitCnfDir() error {
 		}
 	}
 
+	if err := c.CreateCnfFile(); err != nil {
+		return err
+	}
+
 	if err := c.SetupDemoScript(); err != nil {
 		return err
 	}
@@ -95,6 +99,45 @@ func (c *Cnf) SetupDemoScript() error {
 		return fmt.Errorf("failed to write demo script: %w", writeErr)
 	}
 	msg, err := ui.CreateSuccessMessage("created demo script")
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(msg)
+
+	return nil
+}
+
+//go:embed mxs.json
+var cnfFileTemplate string
+
+// CreateCnfFile creates a templatized MXS configurationf file
+func (c *Cnf) CreateCnfFile() error {
+	fullCnfFilePath := filepath.Join(c.FullCnfPath, c.FileName)
+
+	// os.O_EXCL creates the file atomically or fails if it already exists
+	// #nosec G304 G302 -- fullDemoScriptPath built from config path with hardcoded filename && enables script execution
+	file, err := os.OpenFile(fullCnfFilePath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	switch {
+	case os.IsExist(err):
+		msg, err := ui.CreateSuccessMessage("found existing configuration file")
+		if err != nil {
+			return err
+		}
+		fmt.Println(msg)
+		return nil
+	case err != nil:
+		return fmt.Errorf("failed to check or create configuration file: %w", err)
+	}
+
+	_, writeErr := file.WriteString(cnfFileTemplate)
+	if err := file.Close(); err != nil {
+		return fmt.Errorf("failed to close configuration file: %w", err)
+	}
+	if writeErr != nil {
+		return fmt.Errorf("failed to write configuration file: %w", writeErr)
+	}
+	msg, err := ui.CreateSuccessMessage("created configuration file")
 	if err != nil {
 		return err
 	}
