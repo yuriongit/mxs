@@ -19,6 +19,7 @@ type Cnf struct {
 	FullCnfPath     string
 	FullScriptsPath string
 	ScriptTemplate  string
+	ScriptHeaders   *ScriptHeaders
 	File            *File
 	FileName        string
 }
@@ -39,12 +40,18 @@ echo "%s"
 # done`
 	cnfFileName := "mxs.json"
 
+	var scrHeaders = &ScriptHeaders{
+		Description: "#!mxs-description\n# ",
+		Done:        "#!mxs-end\n # done",
+	}
+
 	return &Cnf{
 		cnfDir,
 		scriptsDir,
 		fullCnfPath,
 		fullScriptsPath,
 		scriptTemplate,
+		scrHeaders,
 		&File{},
 		cnfFileName,
 	}
