@@ -8,6 +8,7 @@ Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 package cnf
 
 import (
+	_ "embed"
 	"errors"
 	"os"
 	"path/filepath"
@@ -25,12 +26,15 @@ type Cnf struct {
 
 var demoScriptFileName = "demo.sh"
 
+//go:embed script-template.sh
+var scriptTemplateContents string
+
 func NewCnf(homePath string) *Cnf {
 	cnfDir := ".mxs"
 	scriptsDir := filepath.Join(cnfDir, "scripts")
 	fullCnfPath := filepath.Join(homePath, cnfDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)
-	scriptTemplate := ``
+	scriptTemplate := scriptTemplateContents
 	cnfFileName := "mxs.json"
 
 	return &Cnf{
