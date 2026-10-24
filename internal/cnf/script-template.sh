@@ -1,7 +1,7 @@
-#!mxs-description
+# mxs-description
 # description
 
 echo "%s"
 
-#!mxs-end
+# mxs-end
 # done`
