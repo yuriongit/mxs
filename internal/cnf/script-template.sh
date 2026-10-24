@@ -2,6 +2,3 @@
 # description
 
 echo "%s"
-
-# mxs-end
-# done`
