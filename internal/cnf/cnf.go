@@ -15,14 +15,14 @@ import (
 )
 
 type Cnf struct {
-	Dir             string
-	ScriptsPath     string
-	FullCnfPath     string
-	FullScriptsPath string
-	ScriptTemplate  string
+	Dir               string
+	ScriptsPath       string
+	FullCnfPath       string
+	FullScriptsPath   string
+	ScriptTemplate    string
 	ScriptDescription string
-	File            *File
-	FileName        string
+	File              *File
+	FileName          string
 }
 
 var demoScriptFileName = "demo.sh"
