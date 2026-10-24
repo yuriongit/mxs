@@ -1,7 +1,5 @@
-#!mxs-description
+#!/usr/bin/env bash
+# mxs-description
 # description
 
 echo "%s"
-
-#!mxs-end
-# done`
