@@ -20,6 +20,7 @@ type Cnf struct {
 	FullCnfPath     string
 	FullScriptsPath string
 	ScriptTemplate  string
+	ScriptDescription string
 	File            *File
 	FileName        string
 }
@@ -43,6 +44,7 @@ func NewCnf(homePath string) *Cnf {
 		fullCnfPath,
 		fullScriptsPath,
 		scriptTemplate,
+		"# mxs-description\n# ",
 		&File{},
 		cnfFileName,
 	}
