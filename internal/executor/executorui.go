@@ -1,7 +1,6 @@
 /*
 Package executor provides the execution screen for locating scripts,
 streaming their output, and displaying their completion status.
-
 The screens directory contains terminal user interfaces used by the application.
 */
 package executor
@@ -14,11 +13,13 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
+	"github.com/yuriongit/mxs/internal/cnf"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
@@ -49,88 +50,64 @@ type tickMsg time.Time // Stopwatch update tick message
 // ============================================================================
 
 type model struct {
-	targetName string        // Name provided by user (e.g. "gitupd")
-	scriptArgs []string      // Arguments forwarded to script
-	scriptPath string        // Resolved path on disk
-	state      state         // Current lifecycle state
-	spinner    spinner.Model // Bubbles spinner component
-	output     []string      // Streamed stdout/stderr log buffer
-	err        error         // Execution error, if any
-	startTime  time.Time     // Timer start
-	duration   time.Duration // Total elapsed run time
-	sub        chan tea.Msg  // Async channel for streaming output
+	cnf             *cnf.Cnf
+	targetName      string   // Name provided by user (e.g. "gitupd")
+	scriptArgs      []string // Arguments forwarded to script
+	scriptPath      string   // Resolved path on disk
+	scriptDesc      string
+	state           state         // Current lifecycle state
+	spinner         spinner.Model // Bubbles spinner component
+	ellipsisSpinner spinner.Model
+	output          []string      // Streamed stdout/stderr log buffer
+	err             error         // Execution error, if any
+	startTime       time.Time     // Timer start
+	duration        time.Duration // Total elapsed run time
+	sub             chan tea.Msg  // Async channel for streaming output
 }
 
-// addFormattedScriptMsg formats each incoming "message" according to it's order.
+// formatScriptLog formats each incoming "message" according to it's order.
 //
-// The script description and closing message (the first and last message) are
-// formatted differently from the remainder of messages (logs). The script's
-// description and closing message and colored in blue.
-//
-// Additionally, if the current message is not the description or the closing
-// message, that message will be structured and styled as a "log" before being
-// appended. Each log is fainted as well and includes a pipe wall to it's left.
-func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
-	isOutroMsg := false
-	currMsgAmt := len(m.output)
-	// Check for the closing message
-	if currMsgAmt > 0 {
-		isOutroMsg = strings.Contains(string(*msg), "✓ ")
-	}
-	// If the current message is the first message, the Logs= header will
-	// be formatted and appended first before any logs appear.
-	//
-	// Additionally, if the current message is not the first, nor the last, that
-	// message will be formatted as a "log" before being appended.
-	//
-	// Currently, a description message and closing message is needed for this
-	// feature to operate as intended.
-	//
-	// ATTENTION: This implementation does not support closing messages within an
-	// error state. Furthermore, the detection of a closing message relies on a
-	// checkmark being included.
-	currLogAmt := len(m.output)
-	if currLogAmt != 0 && !isOutroMsg {
-		// If it's the first message, append the "Msg" header
-		if currLogAmt == 1 {
-			m.output = append(m.output, ui.RegularTextStyle.Faint(true).Render("  logs="))
-		}
-		// If not, it's a regular message. Append the pipe and message
-		m.output = append(m.output, ui.SubMsgStyle.Render(fmt.Sprint(ui.Pipe, " ", string(*msg))))
-	} else {
-		// Format the script description and last message
-		m.output = append(m.output, ui.ScriptDescAndOutroMsgStyle.Render(string(*msg)))
-	}
+// Each log is fainted as well and includes a pipe wall to it's left.
+func formatScriptLog(m model, msg *outputLineMsg) []string {
+	return append(m.output, ui.SubMsgStyle.Render(string(*msg)))
 }
 
-func InitialModel(targetName string, scriptArgs []string) model {
+var ScriptDescStyle = ui.ScriptDescAndOutroMsgStyle
+
+func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	s := spinner.New()
-	s.Spinner = spinner.Dot
+	s.Spinner = spinner.MiniDot
 	s.Style = ui.Spinner
 
+	ellipsisSpinner := spinner.New()
+	ellipsisSpinner.Spinner = spinner.Ellipsis
+	ellipsisSpinner.Style = ui.Subtle
+
 	return model{
-		targetName: targetName,
-		scriptArgs: scriptArgs,
-		state:      stateSearching,
-		spinner:    s,
-		output:     make([]string, 0),
-		sub:        make(chan tea.Msg),
+		cnf:             c,
+		targetName:      targetName,
+		scriptArgs:      scriptArgs,
+		scriptPath:      "",
+		state:           stateSearching,
+		spinner:         s,
+		ellipsisSpinner: ellipsisSpinner,
+		output:          make([]string, 0),
+		sub:             make(chan tea.Msg),
 	}
 }
 
 func (m model) Init() tea.Cmd {
 	return tea.Batch(
 		m.spinner.Tick,
-		findScriptCmd(m.targetName),
+		m.ellipsisSpinner.Tick,
+		findScriptCmd(m.cnf, m.targetName),
 	)
 }
 
-// Run executes the UI with reserved terminal buffer space to prevent screen scrolling
-func Run(targetName string, scriptArgs []string) error {
-	// Pre-scroll 20 lines so the terminal never scrolls up during rendering
-	fmt.Print(strings.Repeat("\n", 20) + "\033[20A")
+// Run runs the script execution UI
 
-	p := tea.NewProgram(InitialModel(targetName, scriptArgs))
+func Run(c *cnf.Cnf, targetName string, scriptArgs []string) error {
+	p := tea.NewProgram(InitialModel(c, targetName, scriptArgs))
 	_, err := p.Run()
 	return err
 }
@@ -146,39 +123,59 @@ func tickCmd() tea.Cmd {
 // Async Commands (tea.Cmd)
 // ============================================================================
 
-func findScriptCmd(name string) tea.Cmd {
+func findScriptCmd(c *cnf.Cnf, name string) tea.Cmd {
 	return func() tea.Msg {
-		time.Sleep(150 * time.Millisecond)
-
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return scriptNotFoundMsg{err: fmt.Errorf("could not locate home directory")}
-		}
-
-		scriptsDir := filepath.Join(home, ".mxs", "scripts")
-		candidates := []string{
-			filepath.Join(scriptsDir, name),
-			filepath.Join(scriptsDir, name+".sh"),
-		}
-
-		for _, path := range candidates {
-			if info, err := os.Stat(path); err == nil && !info.IsDir() {
-				return scriptFoundMsg{path: path}
+		// time.Sleep(250 * time.Millisecond)
+		path := filepath.Join(c.FullScriptsPath, name+".sh")
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			return scriptNotFoundMsg{
+				err: fmt.Errorf("script %s not found", name),
 			}
 		}
+		return scriptFoundMsg{path: path}
+	}
+}
 
-		return scriptNotFoundMsg{
-			err: fmt.Errorf("script '%s' not found in %s", name, scriptsDir),
+type ValidScriptMsg struct{ scriptDesc string }
+
+type InvalidScriptMsg struct{ err error }
+
+func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
+	return func() tea.Msg {
+		path := filepath.Join(c.FullScriptsPath, name+".sh")
+		file, err := os.ReadFile(path)
+		if err != nil {
+			return err
 		}
+
+		scriptDesc, err := c.ValidateScript(string(file))
+		if err != nil {
+			return InvalidScriptMsg{err: err}
+		}
+
+		return ValidScriptMsg{scriptDesc: scriptDesc}
 	}
 }
 
 func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 	return func() tea.Msg {
-		execArgs := append([]string{scriptPath}, args...)
-		// #nosec G204 -- scriptPath from internal execution pipeline
-		cmd := exec.Command("bash", execArgs...)
+		if scriptPath == "" {
+			return executionFinishedMsg{
+				err: fmt.Errorf("cannot execute script: script path is empty"),
+			}
+		}
 
+		var cleanArgs []string
+		for _, arg := range args {
+			if arg != "" {
+				cleanArgs = append(cleanArgs, arg)
+			}
+		}
+
+		execArgs := append([]string{scriptPath}, cleanArgs...)
+
+		// #nosec G204 -- script name without the file extension and script arguments
+    cmd := exec.Command(execArgs[0], execArgs[1:]...)
 		stdout, err := cmd.StdoutPipe()
 		if err != nil {
 			return executionFinishedMsg{err: err}
@@ -192,15 +189,22 @@ func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 			return executionFinishedMsg{err: err}
 		}
 
-		streamReader := func(r io.Reader) {
+		var wg sync.WaitGroup
+		wg.Add(2)
+
+		scanStream := func(r io.Reader) {
+			defer wg.Done()
 			scanner := bufio.NewScanner(r)
 			for scanner.Scan() {
 				sub <- outputLineMsg(scanner.Text())
 			}
 		}
 
-		go streamReader(stdout)
-		go streamReader(stderr)
+		go scanStream(stdout)
+		go scanStream(stderr)
+
+		// Wait for both output streams to flush completely
+		wg.Wait()
 
 		err = cmd.Wait()
 		return executionFinishedMsg{err: err}
@@ -225,32 +229,41 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.String() == "ctrl+c" || msg.String() == "q" {
 			return m, tea.Quit
 		}
-
 	case scriptFoundMsg:
 		m.scriptPath = msg.path
+		m.state = stateRunning
+		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf))
+	case tickMsg:
+		// Re-trigger tickCmd as long as execution is running
+		if m.state == stateRunning {
+			// if len(m.output) == 1 {
+			// 	m.output = append(m.output, "logs")
+			// b.WriteString("=)
+			// }
+			cmds = append(cmds, tickCmd())
+		}
+	case scriptNotFoundMsg:
+		m.state = stateFinished
+		m.err = msg.err
+		return m, tea.Quit
+	case InvalidScriptMsg:
+		m.state = stateFinished
+		m.err = msg.err
+		return m, tea.Quit
+	case ValidScriptMsg:
+		m.scriptDesc = msg.scriptDesc
 		m.state = stateRunning
 		m.startTime = time.Now()
 		cmds = append(cmds,
 			runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
 			waitForActivity(m.sub),
-			tickCmd(), // Start the 80ms stopwatch ticker
+			tickCmd(), // Start the stopwatch
 		)
 
-	case tickMsg:
-		// Re-trigger tickCmd as long as execution is running
-		if m.state == stateRunning {
-			cmds = append(cmds, tickCmd())
-		}
-
-	case scriptNotFoundMsg:
-		m.state = stateFinished
-		m.err = msg.err
-		return m, tea.Quit
-
 	case outputLineMsg:
-		addFormattedScriptMsg(&m, &msg)
-		cmds = append(cmds, waitForActivity(m.sub))
+		m.output = formatScriptLog(m, &msg)
 
+		cmds = append(cmds, waitForActivity(m.sub))
 	case executionFinishedMsg:
 		m.state = stateFinished
 		m.duration = time.Since(m.startTime)
@@ -261,8 +274,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		m.spinner, cmd = m.spinner.Update(msg)
 		cmds = append(cmds, cmd)
+		m.ellipsisSpinner, cmd = m.ellipsisSpinner.Update(msg)
+		cmds = append(cmds, cmd)
 	}
-
 	return m, tea.Batch(cmds...)
 }
 
@@ -272,56 +286,80 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	var b strings.Builder
-
 	switch m.state {
 	case stateSearching:
-		fmt.Fprintf(&b, "%s locating %s in ~/.mxs/scripts...\n",
-			m.spinner.View(),
-			ui.ScriptName.Render(m.targetName))
+		fmt.Fprintf(&b, "locating %s%s\n",
+			ui.ScriptName.Render(m.targetName),
+			m.ellipsisSpinner.View(),
+		)
 
 	case stateRunning:
 		var logs string
 		if len(m.output) == 0 {
-			logs = ui.Subtle.Render("listening for output...")
+			logs = m.ellipsisSpinner.View()
 		} else {
-			logs = strings.Join(m.output, "\n")
+			logs = ui.ScriptName.Render(strings.Join(m.output, "\n"))
 		}
-
-		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
+		fmt.Fprintf(
+			&b,
+			"%s%s\n%s",
+			ui.CreateInfoHeader("desc", ScriptDescStyle, true),
+			ScriptDescStyle.Faint(true).Render(m.scriptDesc),
+			ui.CreateInfoHeader("logs", ui.ScriptName, false),
+		)
+		b.WriteString(ui.RunningBoxStyle.Render(logs))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
-		fmt.Fprintf(&b, "\n%sexecuting %s for %s",
+		fmt.Fprintf(&b, "\n%s executing %s for %s",
 			m.spinner.View(),
-			ui.ScriptName.Render(m.targetName),
+			ui.ScriptName.Bold(true).Render(m.targetName),
 			ui.ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
 		)
 
 	case stateFinished:
 		if m.err != nil {
-			if len(m.output) > 0 {
-				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
-				b.WriteString("\n")
+			if len(m.output) >= 1 {
+				ui.CreateInfoHeader("desc", ScriptDescStyle, true)
+				fmt.Fprintf(
+					&b,
+					"%s%s\n%s",
+					ui.CreateInfoHeader("desc", ScriptDescStyle, true),
+					ScriptDescStyle.Faint(true).Render(m.scriptDesc),
+					ui.CreateInfoHeader("logs", ui.Error, false),
+				)
+				b.WriteString(ui.ErrBoxStyle.
+					Foreground(ui.Error.GetForeground()).
+					Render(strings.Join(m.output, "\n")),
+				)
+				b.WriteString(ui.Error.Render("\n"))
 			}
-
 			b.WriteString(ui.Error.Render("✗"))
 			b.WriteString(" executing ")
 			b.WriteString(ui.Error.Render(m.targetName))
 			b.WriteString(" failed, ")
 			fmt.Fprintf(&b, "%s\n", m.err.Error())
-
 		} else {
-			if len(m.output) > 0 {
-				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
+			if len(m.output) >= 1 {
+				fmt.Fprintf(
+					&b,
+					"%s%s\n%s",
+					ui.CreateInfoHeader("desc", ScriptDescStyle, true),
+					ScriptDescStyle.Faint(true).Render(m.scriptDesc),
+					ui.CreateInfoHeader("logs", ui.Success, false),
+				)
+				b.WriteString(ui.SuccessBoxStyle.
+					Foreground(lg.Color(ui.Lime)).
+					Render(strings.Join(m.output, "\n")),
+				)
 			}
-
 			b.WriteString("\n")
+
 			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("executed %s for ", ui.Success.Render(m.targetName)))
 			if err != nil {
 				return ""
 			}
 			b.WriteString(msg)
-
 			b.WriteString(
 				ui.ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)

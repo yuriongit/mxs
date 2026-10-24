@@ -14,14 +14,14 @@ import (
 )
 
 type Cnf struct {
-	Dir             string
-	ScriptsPath     string
-	FullCnfPath     string
-	FullScriptsPath string
-	ScriptTemplate  string
-	ScriptHeaders   *ScriptHeaders
-	File            *File
-	FileName        string
+	Dir              string
+	ScriptsPath      string
+	FullCnfPath      string
+	FullScriptsPath  string
+	ScriptTemplate   string
+	ScriptDescHeader string
+	File             *File
+	FileName         string
 }
 
 var demoScriptFileName = "demo.sh"
@@ -31,19 +31,14 @@ func NewCnf(homePath string) *Cnf {
 	scriptsDir := filepath.Join(cnfDir, "scripts")
 	fullCnfPath := filepath.Join(homePath, cnfDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)
-	scriptTemplate := `#!mxs-description
+	scriptTemplate := `# mxs-description
 # description
 
 echo "%s"
 
-#!mxs-end
+# mxs-end
 # done`
 	cnfFileName := "mxs.json"
-
-	var scrHeaders = &ScriptHeaders{
-		Description: "#!mxs-description\n# ",
-		Done:        "#!mxs-end\n # done",
-	}
 
 	return &Cnf{
 		cnfDir,
@@ -51,7 +46,7 @@ echo "%s"
 		fullCnfPath,
 		fullScriptsPath,
 		scriptTemplate,
-		scrHeaders,
+		"# mxs-description\n# ",
 		&File{},
 		cnfFileName,
 	}

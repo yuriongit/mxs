@@ -18,7 +18,7 @@ func ListAllScripts(cnf *cnf.Cnf) error {
 		return err
 	}
 
-	renderListAllScriptsView(cnf.ScriptsPath, scriptsDir)
+	renderListAllScriptsView(scriptsDir)
 
 	return nil
 }
@@ -51,16 +51,10 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 			strBuilder.WriteString("\n")
 		}
 
-		if idx == len(scriptFiles)-1 {
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEndingEntrySymbol))
-		} else {
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEntrySymbol))
-		}
-
 		// Remove .sh extension
 		name := strings.TrimSuffix(val.Name(), ".sh")
 		strBuilder.WriteString(ui.ScriptEntryStyle.Render(name))
 	}
 
-	return strBuilder.String(), nil
+	return ui.ScriptsBoxStyle.Render(strBuilder.String()), nil
 }

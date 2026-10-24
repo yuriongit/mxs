@@ -9,6 +9,8 @@ package ui
 import (
 	"errors"
 	"fmt"
+
+	lg "github.com/charmbracelet/lipgloss"
 )
 
 func CreateSuccessMessage(msg string) (string, error) {
@@ -19,4 +21,18 @@ func CreateSuccessMessage(msg string) (string, error) {
 	coloredCheckMark := Success.Render("✓")
 
 	return fmt.Sprintf("%s %s", coloredCheckMark, msg), nil
+}
+
+func CreateInfoHeader(header string, s lg.Style, wall bool) string {
+	pipe := ""
+	if wall {
+		pipe = s.Render("│ ")
+	}
+	return fmt.Sprintf(
+		"%s%s\n%s",
+		// TODO: migrate [style] parameter to color once dark/light mode
+		s.Bold(true).Render(header),
+		Subtle.Render("="),
+		pipe,
+	)
 }

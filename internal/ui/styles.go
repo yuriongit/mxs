@@ -4,22 +4,16 @@ import (
 	lg "github.com/charmbracelet/lipgloss"
 )
 
-// UI components
-var (
-	// Pipe wall
-	Pipe = "│"
-)
-
 // Lip Gloss Styles
 var (
 	// Scripts outputted logs style
-	SubMsgStyle = lg.NewStyle().Faint(true).PaddingLeft(2)
+	SubMsgStyle = lg.NewStyle().Faint(true)
 	// Script description and outro message style
 	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(Blue))
 	// Regular text style (dark mode supported)
 	RegularTextStyle = lg.NewStyle().Foreground(lg.Color(RegularTextColor))
 
-	Subtle = lg.NewStyle().Faint(true).Italic(true)
+	Subtle = lg.NewStyle().Faint(true)
 
 	// Purple script name header
 	ScriptName = lg.NewStyle().
@@ -28,12 +22,14 @@ var (
 	// Base output box style (border color is dynamic per state)
 	BaseOutputBox = lg.NewStyle().
 			Border(lg.NormalBorder()).
-			UnsetBorderLeft().
 			UnsetBorderRight().
-			UnsetBorderTop()
-		// UnsetBorderBottom().
-		// Padding(0, 1)
+			UnsetBorderBottom().
+			UnsetBorderTop().
+			PaddingLeft(1)
+	
 	RunningBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Pink))
+
+	ScriptsBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Blue))
 
 	SuccessBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Lime)).Foreground(lg.Color(Lime))
 	Success         = lg.NewStyle().
@@ -46,22 +42,13 @@ var (
 	// Purple spinner style
 	Spinner = lg.NewStyle().Foreground(lg.Color(Pink))
 
-	DirEntrySymbol = lg.NewStyle().
-			Foreground(lg.Color(Blue)).
-			Faint(true).
-			PaddingLeft(1).
-			Render("├─")
-	DirEndingEntrySymbol = lg.NewStyle().
-				Foreground(lg.Color(Blue)).
-				Faint(true).
-				PaddingLeft(1).
-				Render("└─")
 	ScriptEntryStyle = lg.NewStyle().
 				PaddingRight(1).
-				Foreground(lg.Color(Blue))
+				Foreground(lg.Color(Blue)).
+				Faint(true)
 
 	ScriptsDirStyle = lg.NewStyle().
-			Foreground(lg.Color(Pink)).
+			Foreground(lg.Color(Blue)).
 			PaddingLeft(0).
 			Bold(true)
 )
