@@ -19,6 +19,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
+	"github.com/yuriongit/mxs/internal/cnf"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
@@ -52,6 +53,7 @@ type model struct {
 	targetName string        // Name provided by user (e.g. "gitupd")
 	scriptArgs []string      // Arguments forwarded to script
 	scriptPath string        // Resolved path on disk
+	cnf        *cnf.Cnf
 	state      state         // Current lifecycle state
 	spinner    spinner.Model // Bubbles spinner component
 	output     []string      // Streamed stdout/stderr log buffer
@@ -67,7 +69,7 @@ func (m *model) formatScriptLog(msg outputLineMsg) {
 	m.output = append(m.output, ui.SubMsgStyle.Render(string(msg)))
 }
 
-func InitialModel(targetName string, scriptArgs []string) model {
+func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
 	s.Style = ui.Spinner
@@ -75,6 +77,7 @@ func InitialModel(targetName string, scriptArgs []string) model {
 	return model{
 		targetName: targetName,
 		scriptArgs: scriptArgs,
+		cnf: c,
 		state:      stateSearching,
 		spinner:    s,
 		output:     make([]string, 0),
@@ -90,11 +93,11 @@ func (m model) Init() tea.Cmd {
 }
 
 // Run executes the UI with reserved terminal buffer space to prevent screen scrolling
-func Run(targetName string, scriptArgs []string) error {
+func Run(c *cnf.Cnf, targetName string, scriptArgs []string) error {
 	// Pre-scroll 20 lines so the terminal never scrolls up during rendering
 	fmt.Print(strings.Repeat("\n", 20) + "\033[20A")
 
-	p := tea.NewProgram(InitialModel(targetName, scriptArgs))
+	p := tea.NewProgram(InitialModel(c, targetName, scriptArgs))
 	_, err := p.Run()
 	return err
 }

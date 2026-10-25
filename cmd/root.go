@@ -40,11 +40,10 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-
 		scriptName := args[0]
 		scriptArgs := args[1:]
 
-		p := tea.NewProgram(executor.InitialModel(scriptName, scriptArgs))
+		p := tea.NewProgram(executor.InitialModel(globalApp.Cnf, scriptName, scriptArgs))
 		if _, err := p.Run(); err != nil {
 			log.Fatal("Fatal error running MXS", "err", err)
 		}
