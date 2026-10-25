@@ -48,15 +48,7 @@ var rootCmd = &cobra.Command{
 		if _, err := p.Run(); err != nil {
 			log.Fatal("Fatal error running MXS", "err", err)
 		}
-
-		// Initialize app for all other commands
-		var err error
-		globalApp, err = app.NewApp()
-		if err != nil {
-			return err
-		}
-
-		SetApp(globalApp)
+		
 		return nil
 	},
 }
