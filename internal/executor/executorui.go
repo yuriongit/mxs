@@ -53,6 +53,7 @@ type model struct {
 	targetName string        // Name provided by user (e.g. "gitupd")
 	scriptArgs []string      // Arguments forwarded to script
 	scriptPath string        // Resolved path on disk
+	scriptDesc string
 	cnf        *cnf.Cnf
 	state      state         // Current lifecycle state
 	spinner    spinner.Model // Bubbles spinner component
@@ -140,6 +141,27 @@ func findScriptCmd(name string) tea.Cmd {
 	}
 }
 
+type validScriptMsg struct{ scriptDesc string }
+
+type InvalidScriptMsg struct{ err error }
+
+func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
+	return func() tea.Msg {
+		path := filepath.Join(c.FullScriptsPath, name+".sh")
+		file, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		scriptDesc, err := c.ExtractScriptDescription(string(file))
+		if err != nil {
+			return InvalidScriptMsg{err: err}
+		}
+
+		return validScriptMsg{scriptDesc: scriptDesc}
+	}
+}
+
 func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 	return func() tea.Msg {
 		execArgs := append([]string{scriptPath}, args...)
@@ -184,6 +206,21 @@ func waitForActivity(sub chan tea.Msg) tea.Cmd {
 // Bubble Tea Update Loop
 // ============================================================================
 
+func infoHeader(header string, s lg.Style, wall bool) string {
+	pipe := ""
+	if wall {
+		pipe = s.Render("│ ")
+	}
+	return fmt.Sprintf(
+		"%s%s\n%s",
+		// TODO: migrate [s (style)] parameter to [lg.Color] once dark/light mode
+		// is being integrated
+		s.Bold(true).Render(header),
+		s.Faint(true).Render("="),
+		pipe,
+	)
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
@@ -196,11 +233,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case scriptFoundMsg:
 		m.scriptPath = msg.path
 		m.state = stateRunning
+		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf))
+
+	case InvalidScriptMsg:
+		m.state = stateFinished
+		m.err = msg.err
+		return m, tea.Quit
+
+	case validScriptMsg:
+	  m.state = stateRunning
 		m.startTime = time.Now()
+		m.scriptDesc = msg.scriptDesc
 		cmds = append(cmds,
-			runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
+  		runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
 			waitForActivity(m.sub),
-			tickCmd(), // Start the 80ms stopwatch ticker
+			tickCmd(), // Start the stopwatch
 		)
 
 	case tickMsg:
@@ -251,9 +298,12 @@ func (m model) View() string {
 		if len(m.output) == 0 {
 			logs = ui.Subtle.Render("listening for output...")
 		} else {
-			logs = strings.Join(m.output, "\n")
+		  logs = strings.Join(m.output, "\n")
 		}
 
+		b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+		b.WriteString("\n")
+		b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
 
 		// Live 80ms stopwatch readout
@@ -267,6 +317,9 @@ func (m model) View() string {
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
+			b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+			b.WriteString("\n")
+			b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
@@ -279,6 +332,9 @@ func (m model) View() string {
 
 		} else {
 			if len(m.output) > 0 {
+			b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+			b.WriteString("\n")
+			b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
