@@ -1,6 +1,6 @@
 # MXS
 
-**Current Version:** `v0.2.0-beta`
+**Current Version:** `v0.3.0`
 
 A simple & colored CLI to manage and execute your Bash scripts.
 
