@@ -1,6 +1,6 @@
 # MXS
 
-**Current Version:** `v0.2.0-beta`
+**Current Version:** `v0.3.0`
 
 A simple & colored CLI to manage and execute your Bash scripts.
 
@@ -8,13 +8,12 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 ## Features
 
-1. Script execution
-2. Run a script using it's name (no file extension needed)
-3. List your scripts with `mxs ls` (only `.sh` files, shown without the extension)
-4. Global configuration directory
-5. Execution status reports with exit codes
-6. Structured and colored output, with separate opening and closing messages and
-   logs in between
+1. Script execution: Run a script using it's name (no file extension needed)
+2. Script creation with the `add` command
+3. List your scripts with the `ls` command (`.sh` files, shown without the extension)
+4. Global configuration directory: `~/.mxs`
+5. Execution status reports: Execution time and exit codes
+6. Structured and colored output, with a script description and your script's output
 7. Argument support
 8. Automated installers for Linux and macOS
 
@@ -75,8 +74,8 @@ mxs init
 Run the demo:
 
 ```bash
-mxs demo World
-# mxs demo "Your FirstName"
+mxs demo purple
+# mxs demo "your favorite color"
 ```
 
 ## Preview
@@ -85,8 +84,9 @@ To see a preview of MXS, visit [mxs-cli.vercel.app/preview](https://mxs-cli.verc
 
 ## Documents
 
-- [/docs/architecture.md](./docs/architecture.md)
-- [/docs/planned.md](./docs/planned.md)
+- [Product Requirements Document](./docs/MVP-PRD.md)
+- [Architecture](./docs/architecture.md) (coming soon)
+- [Configuration Directory](./docs/configuration-directory.md) (coming soon)
 
 ## License
 
