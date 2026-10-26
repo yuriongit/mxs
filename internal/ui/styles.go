@@ -32,7 +32,7 @@ var (
 			UnsetBorderBottom().
 			UnsetBorderTop().
 			PaddingLeft(1)
-	
+
 	RunningBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Pink))
 
 	SuccessBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Lime)).Foreground(lg.Color(Lime))

@@ -50,9 +50,9 @@ type tickMsg time.Time // Stopwatch update tick message
 // ============================================================================
 
 type model struct {
-	targetName string        // Name provided by user (e.g. "gitupd")
-	scriptArgs []string      // Arguments forwarded to script
-	scriptPath string        // Resolved path on disk
+	targetName string   // Name provided by user (e.g. "gitupd")
+	scriptArgs []string // Arguments forwarded to script
+	scriptPath string   // Resolved path on disk
 	scriptDesc string
 	cnf        *cnf.Cnf
 	state      state         // Current lifecycle state
@@ -78,7 +78,7 @@ func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	return model{
 		targetName: targetName,
 		scriptArgs: scriptArgs,
-		cnf: c,
+		cnf:        c,
 		state:      stateSearching,
 		spinner:    s,
 		output:     make([]string, 0),
@@ -241,11 +241,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 
 	case validScriptMsg:
-	  m.state = stateRunning
+		m.state = stateRunning
 		m.startTime = time.Now()
 		m.scriptDesc = msg.scriptDesc
 		cmds = append(cmds,
-  		runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
+			runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
 			waitForActivity(m.sub),
 			tickCmd(), // Start the stopwatch
 		)
@@ -298,7 +298,7 @@ func (m model) View() string {
 		if len(m.output) == 0 {
 			logs = ui.Subtle.Render("listening for output...")
 		} else {
-		  logs = strings.Join(m.output, "\n")
+			logs = strings.Join(m.output, "\n")
 		}
 
 		b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
@@ -317,9 +317,9 @@ func (m model) View() string {
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
-			b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-			b.WriteString("\n")
-			b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+				b.WriteString("\n")
+				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
@@ -332,9 +332,9 @@ func (m model) View() string {
 
 		} else {
 			if len(m.output) > 0 {
-			b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-			b.WriteString("\n")
-			b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+				b.WriteString("\n")
+				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
