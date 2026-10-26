@@ -148,6 +148,8 @@ type InvalidScriptMsg struct{ err error }
 func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
 	return func() tea.Msg {
 		path := filepath.Join(c.FullScriptsPath, name+".sh")
+		// #nosec G304 -- variable safe; uses predetermined path from Cnf and then the script name
+		// then the .sh file extension
 		file, err := os.ReadFile(path)
 		if err != nil {
 			return err
