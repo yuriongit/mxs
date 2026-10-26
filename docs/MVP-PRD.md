@@ -75,23 +75,23 @@ other command expects
 
 `mxs add`
 
-- Prompts for the script's name, then for a short description
-- Creates `~/.mxs/scripts/<name>.sh`
-- Saves the name and description to the metadata store (store not chosen yet)
-- Opens the new file in the user's editor so they can write the script
-- Refuses a name that is already in use
+- [x] Prompts for the script's name
+- [x] Creates `~/.mxs/scripts/<name>.sh`
+- [x] Opens the new file in the user's editor so they can write the script
+- [x] Refuses a name that is already in use
 
 #### upd
 
 `mxs upd <name>`, for example `mxs upd demo`
 
-- Prompts for the name, then for the short description
-- Prompts code changes: If "yes", the corresponding script file is opened in the
-  user's editor. If the editor is TUI-based, a new terminal window will open the
-  file. Both routes will use some type of `--wait` flag functionality, then the
-  interactive editing process will end.
-- Updates the metadata store with any changes
-- Prints a clear error if the script does not exist
+- [ ] Prompts for the name, then for the short description
+- [ ] Prompts code changes: If "yes", the corresponding script file is opened in
+      the user's editor. If the editor is TUI-based, a new terminal window will
+      open the file. Both routes will use some type of `--wait` flag functionality,
+      then the
+      interactive editing process will end.
+- [ ] Updates the metadata store with any changes
+- [ ] Prints a clear error if the script does not exist
 
 #### ren
 
