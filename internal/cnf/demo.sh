@@ -1,8 +1,9 @@
+#!/usr/bin/env bash
+# mxs-description
+# paints your output with personality
 set -euo pipefail
 
 COLOR="${1:-}"
-
-echo "◌ paints your output with personality"
 
 if [[ -z "$COLOR" ]]; then
   echo "color required"
@@ -25,8 +26,4 @@ sleep 1
 
 echo "well, that's your first script with mxs"
 
-sleep 1
-
-echo "✓ done"
-
-sleep 0.5
+sleep 1 
