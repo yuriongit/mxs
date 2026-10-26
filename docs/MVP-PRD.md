@@ -86,10 +86,11 @@ other command expects
 `mxs upd <name>`, for example `mxs upd demo`
 
 - [ ] Prompts for the name, then for the short description
-- [ ] Prompts code changes: If "yes", the corresponding script file is opened in the
-  user's editor. If the editor is TUI-based, a new terminal window will open the
-  file. Both routes will use some type of `--wait` flag functionality, then the
-  interactive editing process will end.
+- [ ] Prompts code changes: If "yes", the corresponding script file is opened in
+      the user's editor. If the editor is TUI-based, a new terminal window will
+      open the file. Both routes will use some type of `--wait` flag functionality,
+      then the
+      interactive editing process will end.
 - [ ] Updates the metadata store with any changes
 - [ ] Prints a clear error if the script does not exist
 
