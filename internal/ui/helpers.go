@@ -32,7 +32,7 @@ func CreateInfoHeader(header string, s lg.Style, wall bool) string {
 		"%s%s\n%s",
 		// TODO: migrate [style] parameter to color once dark/light mode
 		s.Bold(true).Render(header),
-		Subtle.Render("="),
+		s.Faint(true).Render("="),
 		pipe,
 	)
 }
