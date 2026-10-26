@@ -19,6 +19,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
+	"github.com/yuriongit/mxs/internal/cnf"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
@@ -49,9 +50,11 @@ type tickMsg time.Time // Stopwatch update tick message
 // ============================================================================
 
 type model struct {
-	targetName string        // Name provided by user (e.g. "gitupd")
-	scriptArgs []string      // Arguments forwarded to script
-	scriptPath string        // Resolved path on disk
+	targetName string   // Name provided by user (e.g. "gitupd")
+	scriptArgs []string // Arguments forwarded to script
+	scriptPath string   // Resolved path on disk
+	scriptDesc string
+	cnf        *cnf.Cnf
 	state      state         // Current lifecycle state
 	spinner    spinner.Model // Bubbles spinner component
 	output     []string      // Streamed stdout/stderr log buffer
@@ -61,49 +64,13 @@ type model struct {
 	sub        chan tea.Msg  // Async channel for streaming output
 }
 
-// addFormattedScriptMsg formats each incoming "message" according to it's order.
-//
-// The script description and closing message (the first and last message) are
-// formatted differently from the remainder of messages (logs). The script's
-// description and closing message and colored in blue.
-//
-// Additionally, if the current message is not the description or the closing
-// message, that message will be structured and styled as a "log" before being
-// appended. Each log is fainted as well and includes a pipe wall to it's left.
-func addFormattedScriptMsg(m *model, msg *outputLineMsg) {
-	isOutroMsg := false
-	currMsgAmt := len(m.output)
-	// Check for the closing message
-	if currMsgAmt > 0 {
-		isOutroMsg = strings.Contains(string(*msg), "✓ ")
-	}
-	// If the current message is the first message, the Logs= header will
-	// be formatted and appended first before any logs appear.
-	//
-	// Additionally, if the current message is not the first, nor the last, that
-	// message will be formatted as a "log" before being appended.
-	//
-	// Currently, a description message and closing message is needed for this
-	// feature to operate as intended.
-	//
-	// ATTENTION: This implementation does not support closing messages within an
-	// error state. Furthermore, the detection of a closing message relies on a
-	// checkmark being included.
-	currLogAmt := len(m.output)
-	if currLogAmt != 0 && !isOutroMsg {
-		// If it's the first message, append the "Msg" header
-		if currLogAmt == 1 {
-			m.output = append(m.output, ui.RegularTextStyle.Faint(true).Render("  logs="))
-		}
-		// If not, it's a regular message. Append the pipe and message
-		m.output = append(m.output, ui.SubMsgStyle.Render(fmt.Sprint(ui.Pipe, " ", string(*msg))))
-	} else {
-		// Format the script description and last message
-		m.output = append(m.output, ui.ScriptDescAndOutroMsgStyle.Render(string(*msg)))
-	}
+// formatScriptLog formats and styles each line of output from the scirpt as a "log".
+// Appends the updated slice into [model.output].
+func (m *model) formatScriptLog(msg outputLineMsg) {
+	m.output = append(m.output, ui.SubMsgStyle.Render(string(msg)))
 }
 
-func InitialModel(targetName string, scriptArgs []string) model {
+func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
 	s.Style = ui.Spinner
@@ -111,6 +78,7 @@ func InitialModel(targetName string, scriptArgs []string) model {
 	return model{
 		targetName: targetName,
 		scriptArgs: scriptArgs,
+		cnf:        c,
 		state:      stateSearching,
 		spinner:    s,
 		output:     make([]string, 0),
@@ -126,11 +94,11 @@ func (m model) Init() tea.Cmd {
 }
 
 // Run executes the UI with reserved terminal buffer space to prevent screen scrolling
-func Run(targetName string, scriptArgs []string) error {
+func Run(c *cnf.Cnf, targetName string, scriptArgs []string) error {
 	// Pre-scroll 20 lines so the terminal never scrolls up during rendering
 	fmt.Print(strings.Repeat("\n", 20) + "\033[20A")
 
-	p := tea.NewProgram(InitialModel(targetName, scriptArgs))
+	p := tea.NewProgram(InitialModel(c, targetName, scriptArgs))
 	_, err := p.Run()
 	return err
 }
@@ -170,6 +138,29 @@ func findScriptCmd(name string) tea.Cmd {
 		return scriptNotFoundMsg{
 			err: fmt.Errorf("script '%s' not found in %s", name, scriptsDir),
 		}
+	}
+}
+
+type validScriptMsg struct{ scriptDesc string }
+
+type InvalidScriptMsg struct{ err error }
+
+func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
+	return func() tea.Msg {
+		path := filepath.Join(c.FullScriptsPath, name+".sh")
+		// #nosec G304 -- variable safe; uses predetermined path from Cnf and then the script name
+		// then the .sh file extension
+		file, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		scriptDesc, err := c.ExtractScriptDescription(string(file))
+		if err != nil {
+			return InvalidScriptMsg{err: err}
+		}
+
+		return validScriptMsg{scriptDesc: scriptDesc}
 	}
 }
 
@@ -217,6 +208,21 @@ func waitForActivity(sub chan tea.Msg) tea.Cmd {
 // Bubble Tea Update Loop
 // ============================================================================
 
+func infoHeader(header string, s lg.Style, wall bool) string {
+	pipe := ""
+	if wall {
+		pipe = s.Render("│ ")
+	}
+	return fmt.Sprintf(
+		"%s%s\n%s",
+		// TODO: migrate [s (style)] parameter to [lg.Color] once dark/light mode
+		// is being integrated
+		s.Bold(true).Render(header),
+		s.Faint(true).Render("="),
+		pipe,
+	)
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
@@ -229,11 +235,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case scriptFoundMsg:
 		m.scriptPath = msg.path
 		m.state = stateRunning
+		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf))
+
+	case InvalidScriptMsg:
+		m.state = stateFinished
+		m.err = msg.err
+		return m, tea.Quit
+
+	case validScriptMsg:
+		m.state = stateRunning
 		m.startTime = time.Now()
+		m.scriptDesc = msg.scriptDesc
 		cmds = append(cmds,
 			runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
 			waitForActivity(m.sub),
-			tickCmd(), // Start the 80ms stopwatch ticker
+			tickCmd(), // Start the stopwatch
 		)
 
 	case tickMsg:
@@ -248,7 +264,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Quit
 
 	case outputLineMsg:
-		addFormattedScriptMsg(&m, &msg)
+		m.formatScriptLog(msg)
 		cmds = append(cmds, waitForActivity(m.sub))
 
 	case executionFinishedMsg:
@@ -287,6 +303,9 @@ func (m model) View() string {
 			logs = strings.Join(m.output, "\n")
 		}
 
+		b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+		b.WriteString("\n")
+		b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
 
 		// Live 80ms stopwatch readout
@@ -300,6 +319,9 @@ func (m model) View() string {
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
+				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+				b.WriteString("\n")
+				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
@@ -312,6 +334,9 @@ func (m model) View() string {
 
 		} else {
 			if len(m.output) > 0 {
+				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+				b.WriteString("\n")
+				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
