@@ -84,8 +84,9 @@ To see a preview of MXS, visit [mxs-cli.vercel.app/preview](https://mxs-cli.verc
 
 ## Documents
 
-- [/docs/architecture.md](./docs/architecture.md)
-- [/docs/planned.md](./docs/planned.md)
+- [Product Requirements Document](./docs/MVP-PRD.md)
+- [Architecture](./docs/architecture.md) (coming soon)
+- [Configuration Directory](./docs/configuration-directory.md) (coming soon)
 
 ## License
 
