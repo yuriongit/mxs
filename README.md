@@ -74,8 +74,8 @@ mxs init
 Run the demo:
 
 ```bash
-mxs demo World
-# mxs demo "Your FirstName"
+mxs demo purple
+# mxs demo "your favorite color"
 ```
 
 ## Preview
