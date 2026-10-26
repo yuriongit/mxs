@@ -3,7 +3,7 @@
 set -euo pipefail
 
 REPO="yuriongit/mxs"
-VERSION="0.2.0"
+VERSION="0.3.0"
 BIN="mxs_${VERSION}_darwin_arm64.tar.gz"
 URL="https://github.com/${REPO}/releases/download/v${VERSION}/${BIN}"
 INSTALL_DIR="/usr/local/bin"
