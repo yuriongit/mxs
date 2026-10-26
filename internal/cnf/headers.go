@@ -14,7 +14,7 @@ import (
 
 // ExtractScriptDescHeader extracts the description in a user's script.
 func (c *Cnf) ExtractScriptDescHeader(file string) (string, error) {
-	_, remaining, found := strings.Cut(file, c.ScriptDescHeader)
+	_, remaining, found := strings.Cut(file, c.ScriptDescription)
 	if !found {
 		return "", errors.New("script description header not found")
 	}
