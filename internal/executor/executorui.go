@@ -65,12 +65,12 @@ type model struct {
 	sub             chan tea.Msg  // Async channel for streaming output
 }
 
-// formatScriptLog formats each incoming "message" according to it's order.
-//
-// Each log is fainted as well and includes a pipe wall to it's left.
-func formatScriptLog(m model, msg *outputLineMsg) []string {
-	return append(m.output, ui.SubMsgStyle.Render(string(*msg)))
+// formatScriptLog formats and styles each line of output from the scirpt as a "log".
+// Appends the updated slice into [model.output].
+func (m *model) formatScriptLog(msg outputLineMsg) {
+	m.output = append(m.output, ui.SubMsgStyle.Render(string(msg)))
 }
+
 
 var ScriptDescStyle = ui.ScriptDescAndOutroMsgStyle
 
@@ -84,6 +84,7 @@ func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	ellipsisSpinner.Style = ui.Subtle
 
 	return model{
+<<<<<<< HEAD
 		cnf:             c,
 		targetName:      targetName,
 		scriptArgs:      scriptArgs,
@@ -93,6 +94,15 @@ func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 		ellipsisSpinner: ellipsisSpinner,
 		output:          make([]string, 0),
 		sub:             make(chan tea.Msg),
+=======
+		targetName: targetName,
+		scriptArgs: scriptArgs,
+		cnf:        c,
+		state:      stateSearching,
+		spinner:    s,
+		output:     make([]string, 0),
+		sub:        make(chan tea.Msg),
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 	}
 }
 
@@ -104,9 +114,17 @@ func (m model) Init() tea.Cmd {
 	)
 }
 
+<<<<<<< HEAD
 // Run runs the script execution UI
 
 func Run(c *cnf.Cnf, targetName string, scriptArgs []string) error {
+=======
+// Run executes the UI with reserved terminal buffer space to prevent screen scrolling
+func Run(c *cnf.Cnf, targetName string, scriptArgs []string) error {
+	// Pre-scroll 20 lines so the terminal never scrolls up during rendering
+	fmt.Print(strings.Repeat("\n", 20) + "\033[20A")
+
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 	p := tea.NewProgram(InitialModel(c, targetName, scriptArgs))
 	_, err := p.Run()
 	return err
@@ -154,6 +172,29 @@ func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
 		}
 
 		return ValidScriptMsg{scriptDesc: scriptDesc}
+	}
+}
+
+type validScriptMsg struct{ scriptDesc string }
+
+type InvalidScriptMsg struct{ err error }
+
+func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
+	return func() tea.Msg {
+		path := filepath.Join(c.FullScriptsPath, name+".sh")
+		// #nosec G304 -- variable safe; uses predetermined path from Cnf and then the script name
+		// then the .sh file extension
+		file, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+
+		scriptDesc, err := c.ExtractScriptDescription(string(file))
+		if err != nil {
+			return InvalidScriptMsg{err: err}
+		}
+
+		return validScriptMsg{scriptDesc: scriptDesc}
 	}
 }
 
@@ -221,6 +262,21 @@ func waitForActivity(sub chan tea.Msg) tea.Cmd {
 // Bubble Tea Update Loop
 // ============================================================================
 
+func infoHeader(header string, s lg.Style, wall bool) string {
+	pipe := ""
+	if wall {
+		pipe = s.Render("│ ")
+	}
+	return fmt.Sprintf(
+		"%s%s\n%s",
+		// TODO: migrate [s (style)] parameter to [lg.Color] once dark/light mode
+		// is being integrated
+		s.Bold(true).Render(header),
+		s.Faint(true).Render("="),
+		pipe,
+	)
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
@@ -233,6 +289,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.scriptPath = msg.path
 		m.state = stateRunning
 		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf))
+<<<<<<< HEAD
 	case tickMsg:
 		// Re-trigger tickCmd as long as execution is running
 		if m.state == stateRunning {
@@ -246,14 +303,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.state = stateFinished
 		m.err = msg.err
 		return m, tea.Quit
+=======
+
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 	case InvalidScriptMsg:
 		m.state = stateFinished
 		m.err = msg.err
 		return m, tea.Quit
+<<<<<<< HEAD
 	case ValidScriptMsg:
 		m.scriptDesc = msg.scriptDesc
+=======
+
+	case validScriptMsg:
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 		m.state = stateRunning
 		m.startTime = time.Now()
+		m.scriptDesc = msg.scriptDesc
 		cmds = append(cmds,
 			runScriptCmd(m.scriptPath, m.scriptArgs, m.sub),
 			waitForActivity(m.sub),
@@ -261,7 +327,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		)
 
 	case outputLineMsg:
+<<<<<<< HEAD
 		m.output = formatScriptLog(m, &msg)
+=======
+		m.formatScriptLog(msg)
+		cmds = append(cmds, waitForActivity(m.sub))
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 
 		cmds = append(cmds, waitForActivity(m.sub))
 	case executionFinishedMsg:
@@ -300,6 +371,7 @@ func (m model) View() string {
 		} else {
 			logs = ui.ScriptName.Render(strings.Join(m.output, "\n"))
 		}
+<<<<<<< HEAD
 		fmt.Fprintf(
 			&b,
 			"%s%s\n%s",
@@ -308,6 +380,13 @@ func (m model) View() string {
 			ui.CreateInfoHeader("logs", ui.ScriptName, false),
 		)
 		b.WriteString(ui.RunningBoxStyle.Render(logs))
+=======
+
+		b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+		b.WriteString("\n")
+		b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
@@ -319,6 +398,7 @@ func (m model) View() string {
 
 	case stateFinished:
 		if m.err != nil {
+<<<<<<< HEAD
 			if len(m.output) >= 1 {
 				ui.CreateInfoHeader("desc", ScriptDescStyle, true)
 				fmt.Fprintf(
@@ -333,6 +413,14 @@ func (m model) View() string {
 					Render(strings.Join(m.output, "\n")),
 				)
 				b.WriteString(ui.Error.Render("\n"))
+=======
+			if len(m.output) > 0 {
+				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+				b.WriteString("\n")
+				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
+				b.WriteString("\n")
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 			}
 			b.WriteString(ui.Error.Render("✗"))
 			b.WriteString(" executing ")
@@ -340,6 +428,7 @@ func (m model) View() string {
 			b.WriteString(" failed, ")
 			fmt.Fprintf(&b, "%s\n", m.err.Error())
 		} else {
+<<<<<<< HEAD
 			if len(m.output) >= 1 {
 				fmt.Fprintf(
 					&b,
@@ -352,6 +441,13 @@ func (m model) View() string {
 					Foreground(lg.Color(ui.Lime)).
 					Render(strings.Join(m.output, "\n")),
 				)
+=======
+			if len(m.output) > 0 {
+				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
+				b.WriteString("\n")
+				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
+>>>>>>> 72da175 (feat(exec): integrate script descriptions (#48))
 			}
 			b.WriteString("\n")
 

@@ -26,7 +26,7 @@ var (
 			UnsetBorderBottom().
 			UnsetBorderTop().
 			PaddingLeft(1)
-	
+
 	RunningBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Pink))
 
 	ScriptsBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Blue))
