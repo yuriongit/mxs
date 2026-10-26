@@ -13,7 +13,7 @@ var (
 // Lip Gloss Styles
 var (
 	// Scripts outputted logs style
-	SubMsgStyle = lg.NewStyle().Faint(true).PaddingLeft(2)
+	SubMsgStyle = lg.NewStyle().Faint(true)
 	// Script description and outro message style
 	ScriptDescAndOutroMsgStyle = lg.NewStyle().Foreground(lg.Color(Blue))
 	// Regular text style (dark mode supported)
@@ -28,11 +28,11 @@ var (
 	// Base output box style (border color is dynamic per state)
 	BaseOutputBox = lg.NewStyle().
 			Border(lg.NormalBorder()).
-			UnsetBorderLeft().
 			UnsetBorderRight().
-			UnsetBorderTop()
-		// UnsetBorderBottom().
-		// Padding(0, 1)
+			UnsetBorderBottom().
+			UnsetBorderTop().
+			PaddingLeft(1)
+	
 	RunningBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Pink))
 
 	SuccessBoxStyle = BaseOutputBox.BorderForeground(lg.Color(Lime)).Foreground(lg.Color(Lime))
