@@ -75,11 +75,10 @@ other command expects
 
 `mxs add`
 
-- [ ] Prompts for the script's name, then for a short description
-- [ ] Creates `~/.mxs/scripts/<name>.sh`
-- [ ] Saves the name and description to the metadata store (store not chosen yet)
-- [ ] Opens the new file in the user's editor so they can write the script
-- [ ] Refuses a name that is already in use
+- [x] Prompts for the script's name
+- [x] Creates `~/.mxs/scripts/<name>.sh`
+- [x] Opens the new file in the user's editor so they can write the script
+- [x] Refuses a name that is already in use
 
 #### upd
 
