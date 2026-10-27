@@ -70,7 +70,7 @@ type model struct {
 // formatScriptLog formats and styles each line of output from the scirpt as a "log".
 // Appends the updated slice into [model.output].
 func (m *model) formatScriptLog(msg outputLineMsg) {
-	m.output = append(m.output, ui.SubMsgStyle.Render(string(msg)))
+	m.output = append(m.output, ui.Log.Render(string(msg)))
 }
 
 func InitialModel(c *cnf.Cnf, scr *scr.Scr, targetName string, scriptArgs []string) model {
@@ -304,7 +304,7 @@ func (m model) View() string {
 	switch m.state {
 	case stateSearching:
 		fmt.Fprintf(&b, "locating %s%s\n",
-			ui.ScriptName.Render(m.targetName),
+			ui.ScrName.Render(m.targetName),
 			m.ellipsisSpinner.View(),
 		)
 
@@ -313,62 +313,68 @@ func (m model) View() string {
 		if len(m.output) == 0 {
 			logs = m.ellipsisSpinner.View()
 		} else {
-			logs = ui.ScriptName.Render(strings.Join(m.output, "\n"))
+			logs = ui.ScrName.Render(strings.Join(m.output, "\n"))
 		}
 		fmt.Fprintf(
 			&b,
 			"%s%s\n%s",
-			infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
-			ui.ScriptDescAndOutroMsgStyle.Faint(true).Render(m.scriptDesc),
-			infoHeader("logs", ui.ScriptName, false),
+			infoHeader("desc", ui.Primary, true),
+			ui.Primary.Faint(true).Render(m.scriptDesc),
+			infoHeader("logs", ui.ScrName, false),
 		)
-		b.WriteString(ui.RunningBoxStyle.Render(logs))
+		// TODO: group all of separate b.WriteString writes
+		// into one [fmt.Fprintf] statements
+		b.WriteString(ui.ExecBox.Render(logs))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
 		fmt.Fprintf(&b, "\n%s executing %s for %s",
 			m.spinner.View(),
-			ui.ScriptName.Render(m.targetName),
-			ui.ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
+			ui.ScrName.Render(m.targetName),
+			ui.Primary.Render(elapsed.String()),
 		)
 
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
-					infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
-					ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
-					infoHeader("logs", ui.Error, false),
+					infoHeader("desc", ui.Primary, true),
+					ui.Primary.Render(m.scriptDesc),
+					infoHeader("logs", ui.Err, false),
 				)
-				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
+				// TODO: group all of separate b.WriteString writes
+				// into one [fmt.Fprintf] statements
+				b.WriteString(ui.ErrBox.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
 
-			b.WriteString(ui.Error.Render("✗"))
+			// TODO: group all of separate b.WriteString writes
+			// into one [fmt.Fprintf] statements
+			b.WriteString(ui.Err.Render("✗"))
 			b.WriteString(" executing ")
-			b.WriteString(ui.Error.Render(m.targetName))
+			b.WriteString(ui.Err.Render(m.targetName))
 			b.WriteString(" failed, ")
 			fmt.Fprintf(&b, "%s\n", m.err.Error())
 
 		} else {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
-					infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
-					ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
-					infoHeader("logs", ui.Success, false),
+					infoHeader("desc", ui.Primary, true),
+					ui.Primary.Render(m.scriptDesc),
+					infoHeader("logs", ui.Succ, false),
 				)
-				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
+				// TODO: group all of separate b.WriteString writes
+				// into one [fmt.Fprintf] statements
+				b.WriteString(ui.SuccBox.Render(strings.Join(m.output, "\n")))
 			}
 
+			// TODO: group all of separate b.WriteString writes
+			// into one [fmt.Fprintf] statements
 			b.WriteString("\n")
-			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("executed %s for ", ui.Success.Render(m.targetName)))
-			if err != nil {
-				return ""
-			}
-			b.WriteString(msg)
+			b.WriteString(ui.CreateSuccMsg(fmt.Sprintf("executed %s for ", ui.Succ.Render(m.targetName))))
 
 			b.WriteString(
-				ui.ScriptDescAndOutroMsgStyle.Render(m.duration.Round(time.Millisecond).String(), "\n"),
+				ui.Primary.Render(m.duration.Round(time.Millisecond).String(), "\n"),
 			)
 		}
 	}

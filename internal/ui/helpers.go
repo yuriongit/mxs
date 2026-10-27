@@ -1,22 +1,22 @@
 /*
-Package ui provides all UI components for MXS.
+Package ui provides all styles and UI components for MXS.
 
-It provides color constants for Lipgloss styles,
-colors, and UI components.
+It provides color constants for Lipgloss styles, colors,
+and UI components.
 */
 package ui
 
 import (
-	"errors"
 	"fmt"
+	"log"
 )
 
-func CreateSuccessMessage(msg string) (string, error) {
+// CreateSuccMsg takes in a success message and returns it with
+// a checkmark ([Checkmark]) at the start.
+func CreateSuccMsg(msg string) string {
 	if msg == "" {
-		return "", errors.New("success message cannot be empty")
+		log.Fatal("success message cannot be empty")
 	}
 
-	coloredCheckMark := Success.Render("✓")
-
-	return fmt.Sprintf("%s %s", coloredCheckMark, msg), nil
+	return fmt.Sprintf("%s %s", Checkmark, msg)
 }

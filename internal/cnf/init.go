@@ -33,12 +33,7 @@ func (c *Cnf) InitCnfDir() error {
 			if !info.IsDir() {
 				return fmt.Errorf("%s exists but is not a directory", directory.name)
 			}
-			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("found existing %s directory", directory.name))
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(msg)
+			fmt.Println(ui.CreateSuccMsg(fmt.Sprintf("found existing %s directory", directory.name)))
 		case os.IsNotExist(err):
 			if err := os.MkdirAll(directory.path, 0700); err != nil {
 				return fmt.Errorf(
@@ -47,12 +42,7 @@ func (c *Cnf) InitCnfDir() error {
 					err,
 				)
 			}
-			msg, err := ui.CreateSuccessMessage(fmt.Sprintf("created %s directory", directory.name))
-			if err != nil {
-				return err
-			}
-
-			fmt.Println(msg)
+			fmt.Println(ui.CreateSuccMsg(fmt.Sprintf("created %s directory", directory.name)))
 		default:
 			return fmt.Errorf("failed to check %s directory: %w", directory.name, err)
 		}
@@ -81,11 +71,7 @@ func (c *Cnf) SetupDemoScript() error {
 	file, err := os.OpenFile(fullDemoScriptPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0700)
 	switch {
 	case os.IsExist(err):
-		msg, err := ui.CreateSuccessMessage("found existing demo script")
-		if err != nil {
-			return err
-		}
-		fmt.Println(msg)
+		fmt.Println(ui.CreateSuccMsg("found existing demo script"))
 		return nil
 	case err != nil:
 		return fmt.Errorf("failed to check or create demo script: %w", err)
@@ -98,12 +84,7 @@ func (c *Cnf) SetupDemoScript() error {
 	if writeErr != nil {
 		return fmt.Errorf("failed to write demo script: %w", writeErr)
 	}
-	msg, err := ui.CreateSuccessMessage("created demo script")
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(msg)
+	fmt.Println(ui.CreateSuccMsg("created demo script"))
 
 	return nil
 }
@@ -120,11 +101,7 @@ func (c *Cnf) CreateCnfFile() error {
 	file, err := os.OpenFile(fullCnfFilePath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 	switch {
 	case os.IsExist(err):
-		msg, err := ui.CreateSuccessMessage("found existing configuration file")
-		if err != nil {
-			return err
-		}
-		fmt.Println(msg)
+		fmt.Println(ui.CreateSuccMsg("found existing configuration file"))
 		return nil
 	case err != nil:
 		return fmt.Errorf("failed to check or create configuration file: %w", err)
@@ -137,12 +114,7 @@ func (c *Cnf) CreateCnfFile() error {
 	if writeErr != nil {
 		return fmt.Errorf("failed to write configuration file: %w", writeErr)
 	}
-	msg, err := ui.CreateSuccessMessage("created configuration file")
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(msg)
+	fmt.Println(ui.CreateSuccMsg("created configuration file"))
 
 	return nil
 }

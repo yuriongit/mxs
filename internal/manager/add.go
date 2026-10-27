@@ -83,13 +83,9 @@ func OpenEditorForScript(name *string, scriptPath string) (msg string, err error
 		return "", err
 	}
 
-	msg, err = ui.CreateSuccessMessage(fmt.Sprintf("created %s and opened %s for editing", ui.ScriptName.Render(*name), ui.ScriptDescAndOutroMsgStyle.Render(editor)))
-	if err != nil {
-		return "", err
-	}
-
-	return msg, nil
+	return ui.CreateSuccMsg(fmt.Sprintf(
+		"created %s and opened %s for editing",
+		ui.ScrName.Render(*name),
+		ui.Primary.Render(editor)),
+	), nil
 }
-
-// TODO: Create success message helper
-// TODO: Lowercase all messages

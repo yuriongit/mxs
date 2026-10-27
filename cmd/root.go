@@ -58,7 +58,7 @@ func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
 		// TODO: Style error mark symbol with ui.Error style
-		errorMark := ui.Error.Render("✗")
+		errorMark := ui.Err.Render("✗")
 		fmt.Fprintf(os.Stderr, "%s %s\n", errorMark, err.Error())
 		return
 	}
