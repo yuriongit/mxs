@@ -13,6 +13,10 @@ import (
 // AddNewScript validates the script name, creates the script file,
 // opens it in the configured editor, and outputs a success message.
 func AddNewScript(cnf *cnf.Cnf, scr *scr.Scr, scriptName *string) error {
+	if err := cnf.HasCnfDir("scripts"); err != nil {
+		return err
+	}
+  
 	if err := validateScriptName(scriptName); err != nil {
 		return err
 	}

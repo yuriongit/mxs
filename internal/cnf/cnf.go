@@ -42,7 +42,7 @@ func NewCnf(homePath string) *Cnf {
 	}
 }
 
-func (c *Cnf) hasCnfDirectory(subDir string) error {
+func (c *Cnf) HasCnfDir(subDir string) error {
 	switch subDir {
 	case "":
 		if _, err := os.ReadDir(c.FullCnfPath); err != nil {

@@ -16,12 +16,6 @@ import (
 // Create returns the script's full path or an error if 
 // creation fails.
 func (s *Scr) Create(cnf *cnf.Cnf,scriptName *string) (scriptPath string, err error) {
-  // TODO: Move Cnf directory existence check out of [Scr.Create]
-  // TODO: Rename and maybe export following method
-	if err := cnf.HasCnfDir("scripts"); err != nil {
-		return "", err
-	}
-
 	fileName := *scriptName + ".sh"
 	fullFilePath := filepath.Join(cnf.FullScriptsPath, fileName)
 
