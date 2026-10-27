@@ -1,3 +1,4 @@
+// Package scr manages script data, creation, validation, and related operations.
 package scr
 
 import (
