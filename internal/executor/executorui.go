@@ -50,18 +50,19 @@ type tickMsg time.Time // Stopwatch update tick message
 // ============================================================================
 
 type model struct {
-	targetName string   // Name provided by user (e.g. "gitupd")
-	scriptArgs []string // Arguments forwarded to script
-	scriptPath string   // Resolved path on disk
-	scriptDesc string
-	cnf        *cnf.Cnf
-	state      state         // Current lifecycle state
-	spinner    spinner.Model // Bubbles spinner component
-	output     []string      // Streamed stdout/stderr log buffer
-	err        error         // Execution error, if any
-	startTime  time.Time     // Timer start
-	duration   time.Duration // Total elapsed run time
-	sub        chan tea.Msg  // Async channel for streaming output
+	targetName      string   // Name provided by user (e.g. "gitupd")
+	scriptArgs      []string // Arguments forwarded to script
+	scriptPath      string   // Resolved path on disk
+	scriptDesc      string
+	cnf             *cnf.Cnf
+	state           state         // Current lifecycle state
+	spinner         spinner.Model // Bubbles spinner component
+	ellipsisSpinner spinner.Model
+	output          []string      // Streamed stdout/stderr log buffer
+	err             error         // Execution error, if any
+	startTime       time.Time     // Timer start
+	duration        time.Duration // Total elapsed run time
+	sub             chan tea.Msg  // Async channel for streaming output
 }
 
 // formatScriptLog formats and styles each line of output from the scirpt as a "log".
@@ -72,23 +73,29 @@ func (m *model) formatScriptLog(msg outputLineMsg) {
 
 func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	s := spinner.New()
-	s.Spinner = spinner.Dot
+	s.Spinner = spinner.MiniDot
 	s.Style = ui.Spinner
 
+	ellipsisSpinner := spinner.New()
+	ellipsisSpinner.Spinner = spinner.Ellipsis
+	ellipsisSpinner.Style = ui.Subtle
+
 	return model{
-		targetName: targetName,
-		scriptArgs: scriptArgs,
-		cnf:        c,
-		state:      stateSearching,
-		spinner:    s,
-		output:     make([]string, 0),
-		sub:        make(chan tea.Msg),
+		targetName:      targetName,
+		scriptArgs:      scriptArgs,
+		cnf:             c,
+		state:           stateSearching,
+		spinner:         s,
+		ellipsisSpinner: ellipsisSpinner,
+		output:          make([]string, 0),
+		sub:             make(chan tea.Msg),
 	}
 }
 
 func (m model) Init() tea.Cmd {
 	return tea.Batch(
 		m.spinner.Tick,
+		m.ellipsisSpinner.Tick,
 		findScriptCmd(m.targetName),
 	)
 }
@@ -277,6 +284,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		m.spinner, cmd = m.spinner.Update(msg)
 		cmds = append(cmds, cmd)
+		m.ellipsisSpinner, cmd = m.ellipsisSpinner.Update(msg)
+		cmds = append(cmds, cmd)
 	}
 
 	return m, tea.Batch(cmds...)
@@ -291,26 +300,30 @@ func (m model) View() string {
 
 	switch m.state {
 	case stateSearching:
-		fmt.Fprintf(&b, "%s locating %s in ~/.mxs/scripts...\n",
-			m.spinner.View(),
-			ui.ScriptName.Render(m.targetName))
+		fmt.Fprintf(&b, "locating %s%s\n",
+			ui.ScriptName.Render(m.targetName),
+			m.ellipsisSpinner.View(),
+		)
 
 	case stateRunning:
 		var logs string
 		if len(m.output) == 0 {
-			logs = ui.Subtle.Render("listening for output...")
+			logs = m.ellipsisSpinner.View()
 		} else {
-			logs = strings.Join(m.output, "\n")
+			logs = ui.ScriptName.Render(strings.Join(m.output, "\n"))
 		}
-
-		b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-		b.WriteString("\n")
-		b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
-		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
+		fmt.Fprintf(
+			&b,
+			"%s%s\n%s",
+			infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
+			ui.ScriptDescAndOutroMsgStyle.Faint(true).Render(m.scriptDesc),
+			infoHeader("logs", ui.ScriptName, false),
+		)
+		b.WriteString(ui.RunningBoxStyle.Render(logs))
 
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
-		fmt.Fprintf(&b, "\n%sexecuting %s for %s",
+		fmt.Fprintf(&b, "\n%s executing %s for %s",
 			m.spinner.View(),
 			ui.ScriptName.Render(m.targetName),
 			ui.ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
@@ -319,9 +332,11 @@ func (m model) View() string {
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
-				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-				b.WriteString("\n")
-				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+				fmt.Fprintf(&b, "%s%s\n%s",
+					infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
+					ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
+					infoHeader("logs", ui.Error, false),
+				)
 				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
@@ -334,9 +349,11 @@ func (m model) View() string {
 
 		} else {
 			if len(m.output) > 0 {
-				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-				b.WriteString("\n")
-				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+				fmt.Fprintf(&b, "%s%s\n%s",
+					infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
+					ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
+					infoHeader("logs", ui.Success, false),
+				)
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
