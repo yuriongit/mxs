@@ -73,7 +73,7 @@ func (m *model) formatScriptLog(msg outputLineMsg) {
 
 func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	s := spinner.New()
-	s.Spinner = spinner.Dot
+	s.Spinner = spinner.MiniDot
 	s.Style = ui.Spinner
 
 	ellipsisSpinner := spinner.New()
@@ -295,9 +295,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // Bubble Tea View Renderer
 // ============================================================================
 
+
 func (m model) View() string {
 	var b strings.Builder
-
+	
 	switch m.state {
 	case stateSearching:
   	fmt.Fprintf(&b, "locating %s%s\n",
@@ -323,7 +324,7 @@ func (m model) View() string {
 		
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
-		fmt.Fprintf(&b, "\n%sexecuting %s for %s",
+		fmt.Fprintf(&b, "\n%s executing %s for %s",
 			m.spinner.View(),
 			ui.ScriptName.Render(m.targetName),
 			ui.ScriptDescAndOutroMsgStyle.Render(elapsed.String()),
