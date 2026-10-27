@@ -6,16 +6,17 @@ import (
 	"os/exec"
 
 	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/scr"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
 // AddNewScript validates the script name, creates the script file,
 // opens it in the configured editor, and outputs a success message.
-func AddNewScript(cnf *cnf.Cnf, scriptName *string) error {
+func AddNewScript(cnf *cnf.Cnf, scr *scr.Scr, scriptName *string) error {
 	if err := validateScriptName(scriptName); err != nil {
 		return err
 	}
-	scriptPath, err := cnf.CreateNewScript(scriptName)
+	scriptPath, err := scr.Create(cnf, scriptName)
 	if err != nil {
 		return err
 	}
