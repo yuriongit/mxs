@@ -50,19 +50,19 @@ type tickMsg time.Time // Stopwatch update tick message
 // ============================================================================
 
 type model struct {
-	targetName string   // Name provided by user (e.g. "gitupd")
-	scriptArgs []string // Arguments forwarded to script
-	scriptPath string   // Resolved path on disk
-	scriptDesc string
-	cnf        *cnf.Cnf
-	state      state         // Current lifecycle state
-	spinner    spinner.Model // Bubbles spinner component
-	ellipsisSpinner spinner.Model 
-	output     []string      // Streamed stdout/stderr log buffer
-	err        error         // Execution error, if any
-	startTime  time.Time     // Timer start
-	duration   time.Duration // Total elapsed run time
-	sub        chan tea.Msg  // Async channel for streaming output
+	targetName      string   // Name provided by user (e.g. "gitupd")
+	scriptArgs      []string // Arguments forwarded to script
+	scriptPath      string   // Resolved path on disk
+	scriptDesc      string
+	cnf             *cnf.Cnf
+	state           state         // Current lifecycle state
+	spinner         spinner.Model // Bubbles spinner component
+	ellipsisSpinner spinner.Model
+	output          []string      // Streamed stdout/stderr log buffer
+	err             error         // Execution error, if any
+	startTime       time.Time     // Timer start
+	duration        time.Duration // Total elapsed run time
+	sub             chan tea.Msg  // Async channel for streaming output
 }
 
 // formatScriptLog formats and styles each line of output from the scirpt as a "log".
@@ -81,14 +81,14 @@ func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	ellipsisSpinner.Style = ui.Subtle
 
 	return model{
-		targetName: targetName,
-		scriptArgs: scriptArgs,
-		cnf:        c,
-		state:      stateSearching,
-		spinner:    s,
+		targetName:      targetName,
+		scriptArgs:      scriptArgs,
+		cnf:             c,
+		state:           stateSearching,
+		spinner:         s,
 		ellipsisSpinner: ellipsisSpinner,
-		output:     make([]string, 0),
-		sub:        make(chan tea.Msg),
+		output:          make([]string, 0),
+		sub:             make(chan tea.Msg),
 	}
 }
 
@@ -295,18 +295,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // Bubble Tea View Renderer
 // ============================================================================
 
-
 func (m model) View() string {
 	var b strings.Builder
-	
+
 	switch m.state {
 	case stateSearching:
-  	fmt.Fprintf(&b, "locating %s%s\n",
-  		ui.ScriptName.Render(m.targetName),
-  		m.ellipsisSpinner.View(),
-  	)
+		fmt.Fprintf(&b, "locating %s%s\n",
+			ui.ScriptName.Render(m.targetName),
+			m.ellipsisSpinner.View(),
+		)
 
-   case stateRunning:
+	case stateRunning:
 		var logs string
 		if len(m.output) == 0 {
 			logs = m.ellipsisSpinner.View()
@@ -321,7 +320,7 @@ func (m model) View() string {
 			infoHeader("logs", ui.ScriptName, false),
 		)
 		b.WriteString(ui.RunningBoxStyle.Render(logs))
-		
+
 		// Live 80ms stopwatch readout
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
 		fmt.Fprintf(&b, "\n%s executing %s for %s",
@@ -333,11 +332,11 @@ func (m model) View() string {
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
-     	  fmt.Fprintf(&b, "%s%s\n%s",
-  				infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
-          ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
-          infoHeader("logs", ui.Error, false),
-   			)
+				fmt.Fprintf(&b, "%s%s\n%s",
+					infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
+					ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
+					infoHeader("logs", ui.Error, false),
+				)
 				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
@@ -350,11 +349,11 @@ func (m model) View() string {
 
 		} else {
 			if len(m.output) > 0 {
-			  fmt.Fprintf(&b, "%s%s\n%s",
-  				infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
-          ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
-          infoHeader("logs", ui.Success, false),
-					)
+				fmt.Fprintf(&b, "%s%s\n%s",
+					infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),
+					ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
+					infoHeader("logs", ui.Success, false),
+				)
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
