@@ -16,7 +16,7 @@ func AddNewScript(cnf *cnf.Cnf, scr *scr.Scr, scriptName *string) error {
 	if err := cnf.HasCnfDir("scripts"); err != nil {
 		return err
 	}
-  
+
 	if err := validateScriptName(scriptName); err != nil {
 		return err
 	}

@@ -9,13 +9,13 @@ import (
 )
 
 // Create creates a new script with executable permissions
-// (0700 mode). The script is already written with a small 
-// template that includes the Bash shebang, script header, 
+// (0700 mode). The script is already written with a small
+// template that includes the Bash shebang, script header,
 // and a statement that echos the script name.
 //
-// Create returns the script's full path or an error if 
+// Create returns the script's full path or an error if
 // creation fails.
-func (s *Scr) Create(cnf *cnf.Cnf,scriptName *string) (scriptPath string, err error) {
+func (s *Scr) Create(cnf *cnf.Cnf, scriptName *string) (scriptPath string, err error) {
 	fileName := *scriptName + ".sh"
 	fullFilePath := filepath.Join(cnf.FullScriptsPath, fileName)
 
