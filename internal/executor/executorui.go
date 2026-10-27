@@ -303,9 +303,11 @@ func (m model) View() string {
 			logs = strings.Join(m.output, "\n")
 		}
 
-		b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-		b.WriteString("\n")
-		b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+		fmt.Fprintf(&b, "%s%s\n%s",
+			infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
+      ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
+      infoHeader("logs", ui.Subtle.Italic(false), false),
+		)
 		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
 
 		// Live 80ms stopwatch readout
@@ -319,9 +321,11 @@ func (m model) View() string {
 	case stateFinished:
 		if m.err != nil {
 			if len(m.output) > 0 {
-				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-				b.WriteString("\n")
-				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+     	  fmt.Fprintf(&b, "%s%s\n%s",
+  				infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
+          ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
+          infoHeader("logs", ui.Subtle.Italic(false), false),
+   			)
 				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
@@ -334,9 +338,11 @@ func (m model) View() string {
 
 		} else {
 			if len(m.output) > 0 {
-				b.WriteString(ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc))
-				b.WriteString("\n")
-				b.WriteString(infoHeader("logs", ui.Subtle.Italic(false), false))
+			  fmt.Fprintf(&b, "%s%s\n%s",
+  				infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
+          ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
+          infoHeader("logs", ui.Subtle.Italic(false), false),
+					)
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
 
