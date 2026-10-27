@@ -57,6 +57,7 @@ type model struct {
 	cnf        *cnf.Cnf
 	state      state         // Current lifecycle state
 	spinner    spinner.Model // Bubbles spinner component
+	ellipsisSpinner spinner.Model 
 	output     []string      // Streamed stdout/stderr log buffer
 	err        error         // Execution error, if any
 	startTime  time.Time     // Timer start
@@ -75,12 +76,17 @@ func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 	s.Spinner = spinner.Dot
 	s.Style = ui.Spinner
 
+	ellipsisSpinner := spinner.New()
+	ellipsisSpinner.Spinner = spinner.Ellipsis
+	ellipsisSpinner.Style = ui.Subtle
+
 	return model{
 		targetName: targetName,
 		scriptArgs: scriptArgs,
 		cnf:        c,
 		state:      stateSearching,
 		spinner:    s,
+		ellipsisSpinner: ellipsisSpinner,
 		output:     make([]string, 0),
 		sub:        make(chan tea.Msg),
 	}
