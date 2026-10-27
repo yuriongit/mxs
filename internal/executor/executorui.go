@@ -306,7 +306,7 @@ func (m model) View() string {
 		fmt.Fprintf(&b, "%s%s\n%s",
 			infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
       ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
-      infoHeader("logs", ui.Subtle.Italic(false), false),
+      infoHeader("logs", ui.ScriptName, false),
 		)
 		b.WriteString(ui.RunningBoxStyle.Faint(true).Foreground(lg.Color(ui.Pink)).Render(logs))
 
@@ -324,7 +324,7 @@ func (m model) View() string {
      	  fmt.Fprintf(&b, "%s%s\n%s",
   				infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
           ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
-          infoHeader("logs", ui.Subtle.Italic(false), false),
+          infoHeader("logs", ui.Error, false),
    			)
 				b.WriteString(ui.ErrBoxStyle.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
@@ -341,7 +341,7 @@ func (m model) View() string {
 			  fmt.Fprintf(&b, "%s%s\n%s",
   				infoHeader("desc", ui.ScriptDescAndOutroMsgStyle, true),	
           ui.ScriptDescAndOutroMsgStyle.Render(m.scriptDesc),
-          infoHeader("logs", ui.Subtle.Italic(false), false),
+          infoHeader("logs", ui.Success, false),
 					)
 				b.WriteString(ui.SuccessBoxStyle.Render(strings.Join(m.output, "\n")))
 			}
