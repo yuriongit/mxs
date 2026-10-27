@@ -20,6 +20,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
 	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/scr"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
@@ -55,6 +56,7 @@ type model struct {
 	scriptPath      string   // Resolved path on disk
 	scriptDesc      string
 	cnf             *cnf.Cnf
+	scr             *scr.Scr
 	state           state         // Current lifecycle state
 	spinner         spinner.Model // Bubbles spinner component
 	ellipsisSpinner spinner.Model
@@ -71,7 +73,7 @@ func (m *model) formatScriptLog(msg outputLineMsg) {
 	m.output = append(m.output, ui.SubMsgStyle.Render(string(msg)))
 }
 
-func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
+func InitialModel(c *cnf.Cnf, scr *scr.Scr, targetName string, scriptArgs []string) model {
 	s := spinner.New()
 	s.Spinner = spinner.MiniDot
 	s.Style = ui.Spinner
@@ -84,6 +86,7 @@ func InitialModel(c *cnf.Cnf, targetName string, scriptArgs []string) model {
 		targetName:      targetName,
 		scriptArgs:      scriptArgs,
 		cnf:             c,
+		scr:             scr,
 		state:           stateSearching,
 		spinner:         s,
 		ellipsisSpinner: ellipsisSpinner,
@@ -101,11 +104,11 @@ func (m model) Init() tea.Cmd {
 }
 
 // Run executes the UI with reserved terminal buffer space to prevent screen scrolling
-func Run(c *cnf.Cnf, targetName string, scriptArgs []string) error {
+func Run(c *cnf.Cnf, scr *scr.Scr, targetName string, scriptArgs []string) error {
 	// Pre-scroll 20 lines so the terminal never scrolls up during rendering
 	fmt.Print(strings.Repeat("\n", 20) + "\033[20A")
 
-	p := tea.NewProgram(InitialModel(c, targetName, scriptArgs))
+	p := tea.NewProgram(InitialModel(c, scr, targetName, scriptArgs))
 	_, err := p.Run()
 	return err
 }
@@ -152,7 +155,7 @@ type validScriptMsg struct{ scriptDesc string }
 
 type InvalidScriptMsg struct{ err error }
 
-func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
+func validateScriptCmd(name string, c *cnf.Cnf, scr *scr.Scr) tea.Cmd {
 	return func() tea.Msg {
 		path := filepath.Join(c.FullScriptsPath, name+".sh")
 		// #nosec G304 -- variable safe; uses predetermined path from Cnf and then the script name
@@ -162,7 +165,7 @@ func validateScriptCmd(name string, c *cnf.Cnf) tea.Cmd {
 			return err
 		}
 
-		scriptDesc, err := c.ExtractScriptDescription(string(file))
+		scriptDesc, err := scr.ExtractDesc(string(file))
 		if err != nil {
 			return InvalidScriptMsg{err: err}
 		}
@@ -242,7 +245,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case scriptFoundMsg:
 		m.scriptPath = msg.path
 		m.state = stateRunning
-		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf))
+		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf, m.scr))
 
 	case InvalidScriptMsg:
 		m.state = stateFinished

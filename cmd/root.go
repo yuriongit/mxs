@@ -43,7 +43,7 @@ var rootCmd = &cobra.Command{
 		scriptName := args[0]
 		scriptArgs := args[1:]
 
-		p := tea.NewProgram(executor.InitialModel(globalApp.Cnf, scriptName, scriptArgs))
+		p := tea.NewProgram(executor.InitialModel(globalApp.Cnf, globalApp.Scr, scriptName, scriptArgs))
 		if _, err := p.Run(); err != nil {
 			log.Fatal("Fatal error running MXS", "err", err)
 		}

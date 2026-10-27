@@ -15,27 +15,21 @@ import (
 )
 
 type Cnf struct {
-	Dir               string
-	ScriptsPath       string
-	FullCnfPath       string
-	FullScriptsPath   string
-	ScriptTemplate    string
-	ScriptDescription string
-	File              *File
-	FileName          string
+	Dir             string
+	ScriptsPath     string
+	FullCnfPath     string
+	FullScriptsPath string
+	File            *File
+	FileName        string
 }
 
 var demoScriptFileName = "demo.sh"
-
-//go:embed script-template.sh
-var scriptTemplateContents string
 
 func NewCnf(homePath string) *Cnf {
 	cnfDir := ".mxs"
 	scriptsDir := filepath.Join(cnfDir, "scripts")
 	fullCnfPath := filepath.Join(homePath, cnfDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)
-	scriptTemplate := scriptTemplateContents
 	cnfFileName := "mxs.json"
 
 	return &Cnf{
@@ -43,14 +37,12 @@ func NewCnf(homePath string) *Cnf {
 		scriptsDir,
 		fullCnfPath,
 		fullScriptsPath,
-		scriptTemplate,
-		"# mxs-description\n# ",
 		&File{},
 		cnfFileName,
 	}
 }
 
-func (c *Cnf) hasCnfDirectory(subDir string) error {
+func (c *Cnf) HasCnfDir(subDir string) error {
 	switch subDir {
 	case "":
 		if _, err := os.ReadDir(c.FullCnfPath); err != nil {
