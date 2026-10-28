@@ -1,11 +1,11 @@
 /*
-Package cnf provides all the functionality
+Package cfg provides all the functionality
 for MXS' config. Manages the application's
 configuration and script directory.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 */
-package cnf
+package cfg
 
 import (
 	"encoding/json"
@@ -34,8 +34,8 @@ type Editor struct {
 }
 
 // Load reads and validates the configuration file.
-func (f *File) Load(cnf *Cnf, validate *validator.Validate) error {
-	if err := f.unmarshal(cnf); err != nil {
+func (f *File) Load(cfg *Cfg, validate *validator.Validate) error {
+	if err := f.unmarshal(cfg); err != nil {
 		return err
 	}
 
@@ -46,10 +46,10 @@ func (f *File) Load(cnf *Cnf, validate *validator.Validate) error {
 	return nil
 }
 
-func (f *File) unmarshal(cnf *Cnf) error {
-	cnfFilePath := filepath.Join(cnf.FullCnfPath, cnf.FileName)
+func (f *File) unmarshal(cfg *Cfg) error {
+	cfgFilePath := filepath.Join(cfg.FullCfgPath, cfg.FileName)
 	//#nosec: G304 -- safe from user input; variable uses predetermined values
-	rawJSON, err := os.ReadFile(cnfFilePath)
+	rawJSON, err := os.ReadFile(cfgFilePath)
 	if err != nil {
 		return fmt.Errorf("reading configuration file: %w", err)
 	}

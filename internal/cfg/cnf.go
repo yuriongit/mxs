@@ -1,11 +1,11 @@
 /*
-Package cnf provides all the functionality
+Package cfg provides all the functionality
 for MXS' config. Manages the application's
 configuration and script directory.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 */
-package cnf
+package cfg
 
 import (
 	_ "embed" // used to embed files into the binary.
@@ -14,11 +14,11 @@ import (
 	"path/filepath"
 )
 
-// Cnf manages application configuration and configuration directories.
-type Cnf struct {
+// Cfg manages application configuration and configuration directories.
+type Cfg struct {
 	Dir             string
 	ScriptsPath     string
-	FullCnfPath     string
+	FullCfgPath     string
 	FullScriptsPath string
 	File            *File
 	FileName        string
@@ -26,31 +26,31 @@ type Cnf struct {
 
 var demoScriptFileName = "demo.sh"
 
-// NewCnf instantiates a new [Cnf].
-func NewCnf(homePath string) *Cnf {
-	cnfDir := ".mxs"
-	scriptsDir := filepath.Join(cnfDir, "scripts")
-	fullCnfPath := filepath.Join(homePath, cnfDir)
+// NewCfg instantiates a new [Cfg].
+func NewCfg(homePath string) *Cfg {
+	cfgDir := ".mxs"
+	scriptsDir := filepath.Join(cfgDir, "scripts")
+	fullCfgPath := filepath.Join(homePath, cfgDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)
-	cnfFileName := "mxs.json"
+	cfgFileName := "mxs.json"
 
-	return &Cnf{
-		cnfDir,
+	return &Cfg{
+		cfgDir,
 		scriptsDir,
-		fullCnfPath,
+		fullCfgPath,
 		fullScriptsPath,
 		&File{},
-		cnfFileName,
+		cfgFileName,
 	}
 }
 
-// HasCnfDir checks if the configuration directory or any sub-directory exists.
+// HasCfgDir checks if the configuration directory or any sub-directory exists.
 //
 // Currently, availabe sub-directories are only limited to the scripts folder.
-func (c *Cnf) HasCnfDir(subDir string) error {
+func (c *Cfg) HasCfgDir(subDir string) error {
 	switch subDir {
 	case "":
-		if _, err := os.ReadDir(c.FullCnfPath); err != nil {
+		if _, err := os.ReadDir(c.FullCfgPath); err != nil {
 			return err
 		}
 	case "scripts":

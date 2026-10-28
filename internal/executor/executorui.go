@@ -19,7 +19,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	lg "github.com/charmbracelet/lipgloss"
-	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/scr"
 	"github.com/yuriongit/mxs/internal/ui"
 )
@@ -57,7 +57,7 @@ type model struct {
 	scriptArgs      []string // Arguments forwarded to script
 	scriptPath      string   // Resolved path on disk
 	scriptDesc      string
-	cnf             *cnf.Cnf
+	cfg             *cfg.Cfg
 	scr             *scr.Scr
 	state           state         // Current lifecycle state
 	spinner         spinner.Model // Bubbles spinner component
@@ -79,7 +79,7 @@ func (m *model) formatScriptLog(msg outputLineMsg) {
 //
 //nolint:revive // unexported-return
 func InitialModel(
-	c *cnf.Cnf,
+	c *cfg.Cfg,
 	scr *scr.Scr,
 	targetName string,
 	scriptArgs []string,
@@ -95,7 +95,7 @@ func InitialModel(
 	return model{
 		targetName:      targetName,
 		scriptArgs:      scriptArgs,
-		cnf:             c,
+		cfg:             c,
 		scr:             scr,
 		state:           stateSearching,
 		spinner:         s,
@@ -114,7 +114,7 @@ func (m model) Init() tea.Cmd {
 }
 
 // Run executes the UI with reserved terminal buffer space to prevent screen scrolling
-func Run(c *cnf.Cnf, scr *scr.Scr, targetName string, scriptArgs []string) error {
+func Run(c *cfg.Cfg, scr *scr.Scr, targetName string, scriptArgs []string) error {
 	// Pre-scroll 20 lines so the terminal never scrolls up during rendering
 	fmt.Print(strings.Repeat("\n", 20) + "\033[20A")
 
@@ -161,10 +161,10 @@ func findScriptCmd(name string) tea.Cmd {
 	}
 }
 
-func validateScriptCmd(name string, c *cnf.Cnf, scr *scr.Scr) tea.Cmd {
+func validateScriptCmd(name string, c *cfg.Cfg, scr *scr.Scr) tea.Cmd {
 	return func() tea.Msg {
 		path := filepath.Join(c.FullScriptsPath, name+".sh")
-		// #nosec G304 -- variable safe; uses predetermined path from Cnf and then the script name
+		// #nosec G304 -- variable safe; uses predetermined path from Cfg and then the script name
 		// then the .sh file extension
 		file, err := os.ReadFile(path)
 		if err != nil {
@@ -251,7 +251,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case scriptFoundMsg:
 		m.scriptPath = msg.path
 		m.state = stateRunning
-		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf, m.scr))
+		cmds = append(cmds, validateScriptCmd(m.targetName, m.cfg, m.scr))
 
 	case invalidScriptMsg:
 		m.state = stateFinished

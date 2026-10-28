@@ -20,7 +20,7 @@ var addCmd = &cobra.Command{
 		app := GetApp() // TODO: Use GlobalApp instead
 		scriptName := args[0]
 
-		return scr.AddNewScript(app.Cnf, app.Scr, &scriptName)
+		return scr.AddNewScript(app.Cfg, app.Scr, &scriptName)
 	},
 }
 

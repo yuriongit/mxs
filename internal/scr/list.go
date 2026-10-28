@@ -7,26 +7,26 @@ import (
 	"os"
 	"strings"
 
-	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
 // ListAllScripts lists out all scripts in the configuration directory.
-func ListAllScripts(cnf *cnf.Cnf) error {
-	scriptsDir, err := buildScriptsDirContents(cnf)
+func ListAllScripts(cfg *cfg.Cfg) error {
+	scriptsDir, err := buildScriptsDirContents(cfg)
 	if err != nil {
 		return err
 	}
 
-	renderListAllScriptsView(cnf.ScriptsPath, scriptsDir)
+	renderListAllScriptsView(cfg.ScriptsPath, scriptsDir)
 
 	return nil
 }
 
-func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
+func buildScriptsDirContents(cfg *cfg.Cfg) (string, error) {
 	strBuilder := strings.Builder{}
 
-	raw, err := os.ReadDir(cnf.FullScriptsPath)
+	raw, err := os.ReadDir(cfg.FullScriptsPath)
 	if err != nil {
 		return "", err
 	} else if len(raw) == 0 {
