@@ -39,7 +39,7 @@ var rootCmd = &cobra.Command{
 		SetApp(globalApp)
 		return nil
 	},
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(_ *cobra.Command, args []string) error {
 		scriptName := args[0]
 		scriptArgs := args[1:]
 

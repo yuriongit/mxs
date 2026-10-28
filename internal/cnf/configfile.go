@@ -25,11 +25,15 @@ type File struct {
 	Editor *Editor `json:"editor" validate:"required"`
 }
 
+// Editor defines the needed information for editor usage.
+//
+// Needed for the add and upcoming upd command.
 type Editor struct {
 	NameAsCommand string `json:"name_as_command" validate:"required"`
 	UIType        string `json:"ui_type" validate:"required,oneof=tui gui"`
 }
 
+// Load reads and validates the configuration file.
 func (f *File) Load(cnf *Cnf, validate *validator.Validate) error {
 	if err := f.unmarshal(cnf); err != nil {
 		return err

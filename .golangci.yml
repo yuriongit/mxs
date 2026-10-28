@@ -11,16 +11,6 @@ linters:
     - nilerr
     - revive
 
-  settings:
-    staticcheck:
-      # Disables ST1005 while keeping all other staticcheck rules active
-      checks: ["all", "-ST1005"]
-    revive:
-      rules:
-        # Disables error-strings check in revive
-        - name: error-strings
-          disabled: true
-
 formatters:
   enable:
     - gofmt

@@ -12,6 +12,7 @@ import (
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
+// ListAllScripts lists out all scripts in the configuration directory.
 func ListAllScripts(cnf *cnf.Cnf) error {
 	scriptsDir, err := buildScriptsDirContents(cnf)
 	if err != nil {
@@ -30,7 +31,7 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 	if err != nil {
 		return "", err
 	} else if len(raw) == 0 {
-		return "", errors.New("No existing scripts")
+		return "", errors.New("no existing scripts")
 	}
 
 	// Collect only .sh files
@@ -42,7 +43,7 @@ func buildScriptsDirContents(cnf *cnf.Cnf) (string, error) {
 	}
 
 	if len(scriptFiles) == 0 {
-		return "", errors.New("No .sh scripts found")
+		return "", errors.New("no .sh scripts found")
 	}
 
 	// Render with correct symbols
