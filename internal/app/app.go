@@ -13,6 +13,7 @@ import (
 	"github.com/yuriongit/mxs/internal/scr"
 )
 
+// App holds MXS' core dependencies.
 type App struct {
 	HomePath  *string
 	Cnf       *cnf.Cnf
@@ -21,6 +22,9 @@ type App struct {
 	Validator *validator.Validate
 }
 
+// NewApp instantiates a new [App] struct.
+//
+// Returns the pointer to the created [App] struct.
 func NewApp() (*App, error) {
 	homePath, err := os.UserHomeDir()
 	if err != nil {

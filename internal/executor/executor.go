@@ -14,8 +14,10 @@ import (
 	"github.com/yuriongit/mxs/internal/cnf"
 )
 
+// Executor handles command execution for the CLI tool.
 type Executor struct{}
 
+// NewExecutor instantiates a new [Executor].
 func NewExecutor() *Executor {
 	return &Executor{}
 }

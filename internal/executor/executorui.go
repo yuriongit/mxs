@@ -42,6 +42,8 @@ const (
 
 type scriptFoundMsg struct{ path string }
 type scriptNotFoundMsg struct{ err error }
+type validScriptMsg struct{ scriptDesc string }
+type invalidScriptMsg struct{ err error }
 type outputLineMsg string
 type executionFinishedMsg struct{ err error }
 type tickMsg time.Time // Stopwatch update tick message
@@ -73,7 +75,15 @@ func (m *model) formatScriptLog(msg outputLineMsg) {
 	m.output = append(m.output, ui.Log.Render(string(msg)))
 }
 
-func InitialModel(c *cnf.Cnf, scr *scr.Scr, targetName string, scriptArgs []string) model {
+// InitialModel creates the initial TUI model for script execution.
+//
+//nolint:revive // unexported-return
+func InitialModel(
+	c *cnf.Cnf,
+	scr *scr.Scr,
+	targetName string,
+	scriptArgs []string,
+) model {
 	s := spinner.New()
 	s.Spinner = spinner.MiniDot
 	s.Style = ui.Spinner
@@ -151,10 +161,6 @@ func findScriptCmd(name string) tea.Cmd {
 	}
 }
 
-type validScriptMsg struct{ scriptDesc string }
-
-type InvalidScriptMsg struct{ err error }
-
 func validateScriptCmd(name string, c *cnf.Cnf, scr *scr.Scr) tea.Cmd {
 	return func() tea.Msg {
 		path := filepath.Join(c.FullScriptsPath, name+".sh")
@@ -167,7 +173,7 @@ func validateScriptCmd(name string, c *cnf.Cnf, scr *scr.Scr) tea.Cmd {
 
 		scriptDesc, err := scr.ExtractDesc(string(file))
 		if err != nil {
-			return InvalidScriptMsg{err: err}
+			return invalidScriptMsg{err: err}
 		}
 
 		return validScriptMsg{scriptDesc: scriptDesc}
@@ -247,7 +253,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.state = stateRunning
 		cmds = append(cmds, validateScriptCmd(m.targetName, m.cnf, m.scr))
 
-	case InvalidScriptMsg:
+	case invalidScriptMsg:
 		m.state = stateFinished
 		m.err = msg.err
 		return m, tea.Quit

@@ -8,12 +8,13 @@ Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 package cnf
 
 import (
-	_ "embed"
+	_ "embed" // used to embed files into the binary.
 	"errors"
 	"os"
 	"path/filepath"
 )
 
+// Cnf manages application configuration and configuration directories.
 type Cnf struct {
 	Dir             string
 	ScriptsPath     string
@@ -25,6 +26,7 @@ type Cnf struct {
 
 var demoScriptFileName = "demo.sh"
 
+// NewCnf instantiates a new [Cnf].
 func NewCnf(homePath string) *Cnf {
 	cnfDir := ".mxs"
 	scriptsDir := filepath.Join(cnfDir, "scripts")
@@ -42,6 +44,9 @@ func NewCnf(homePath string) *Cnf {
 	}
 }
 
+// HasCnfDir checks if the configuration directory or any sub-directory exists.
+//
+// Currently, availabe sub-directories are only limited to the scripts folder.
 func (c *Cnf) HasCnfDir(subDir string) error {
 	switch subDir {
 	case "":

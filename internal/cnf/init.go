@@ -16,6 +16,8 @@ import (
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
+// InitCnfDir creates the configuration and scripts directories if they
+// don't already exist.
 func (c *Cnf) InitCnfDir() error {
 	directories := []struct {
 		path string
