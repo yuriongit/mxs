@@ -1,6 +1,5 @@
-// Package manager provides managerial (CRUD) operations
-// for scripts.
-package manager
+// Package scr manages script data, creation, validation, and related operations.
+package scr
 
 import (
 	"errors"

@@ -7,7 +7,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/yuriongit/mxs/internal/manager"
+	"github.com/yuriongit/mxs/internal/scr"
 )
 
 // addCmd represents the ls command
@@ -20,7 +20,7 @@ var addCmd = &cobra.Command{
 		app := GetApp() // TODO: Use GlobalApp instead
 		scriptName := args[0]
 
-		return manager.AddNewScript(app.Cnf, app.Scr, &scriptName)
+		return scr.AddNewScript(app.Cnf, app.Scr, &scriptName)
 	},
 }
 

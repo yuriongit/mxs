@@ -7,7 +7,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/yuriongit/mxs/internal/manager"
+	"github.com/yuriongit/mxs/internal/scr"
 )
 
 // lsCmd represents the ls command
@@ -18,7 +18,7 @@ var lsCmd = &cobra.Command{
 	RunE: func(_ *cobra.Command, _ []string) error {
 		app := GetApp() // TODO: Use GlobalApp variable
 
-		return manager.ListAllScripts(app.Cnf)
+		return scr.ListAllScripts(app.Cnf)
 	},
 }
 
