@@ -224,21 +224,6 @@ func waitForActivity(sub chan tea.Msg) tea.Cmd {
 // Bubble Tea Update Loop
 // ============================================================================
 
-func infoHeader(header string, s lg.Style, wall bool) string {
-	pipe := ""
-	if wall {
-		pipe = s.Render("│ ")
-	}
-	return fmt.Sprintf(
-		"%s%s\n%s",
-		// TODO: migrate [s (style)] parameter to [lg.Color] once dark/light mode
-		// is being integrated
-		s.Bold(true).Render(header),
-		s.Faint(true).Render("="),
-		pipe,
-	)
-}
-
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
@@ -324,9 +309,9 @@ func (m model) View() string {
 		fmt.Fprintf(
 			&b,
 			"%s%s\n%s",
-			infoHeader("desc", ui.Primary, true),
+			ui.CreateInfoHeader("desc", ui.Primary, true),
 			ui.Primary.Faint(true).Render(m.scriptDesc),
-			infoHeader("logs", ui.ScrName, false),
+			ui.CreateInfoHeader("logs", ui.ScrName, false),
 		)
 		// TODO: group all of separate b.WriteString writes
 		// into one [fmt.Fprintf] statements
@@ -344,9 +329,9 @@ func (m model) View() string {
 		if m.err != nil {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
-					infoHeader("desc", ui.Primary, true),
+					ui.CreateInfoHeader("desc", ui.Primary, true),
 					ui.Primary.Render(m.scriptDesc),
-					infoHeader("logs", ui.Err, false),
+					ui.CreateInfoHeader("logs", ui.Err, false),
 				)
 				// TODO: group all of separate b.WriteString writes
 				// into one [fmt.Fprintf] statements
@@ -365,9 +350,9 @@ func (m model) View() string {
 		} else {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
-					infoHeader("desc", ui.Primary, true),
+					ui.CreateInfoHeader("desc", ui.Primary, true),
 					ui.Primary.Render(m.scriptDesc),
-					infoHeader("logs", ui.Succ, false),
+					ui.CreateInfoHeader("logs", ui.Succ, false),
 				)
 				// TODO: group all of separate b.WriteString writes
 				// into one [fmt.Fprintf] statements
