@@ -23,6 +23,8 @@ func CreateSuccMsg(msg string) string {
 	return fmt.Sprintf("%s %s", Checkmark, msg)
 }
 
+// CreateInfoHeader creates a header with an equals symbol and an optional
+// wall (pipe symbol).
 func CreateInfoHeader(header string, s lg.Style, wall bool) string {
 	pipe := ""
 	if wall {
