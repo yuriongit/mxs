@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/ui"
 )
@@ -18,7 +19,7 @@ func ListAllScripts(cfg *cfg.Cfg) error {
 		return err
 	}
 
-	renderListAllScriptsView(cfg.ScriptsPath, scriptsDir)
+	renderListAllScriptsView(scriptsDir)
 
 	return nil
 }
@@ -51,16 +52,10 @@ func buildScriptsDirContents(cfg *cfg.Cfg) (string, error) {
 			strBuilder.WriteString("\n")
 		}
 
-		if idx == len(scriptFiles)-1 {
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEndingEntrySymbol))
-		} else {
-			strBuilder.WriteString(ui.ScriptEntryStyle.Render(ui.DirEntrySymbol))
-		}
-
 		// Remove .sh extension
 		name := strings.TrimSuffix(val.Name(), ".sh")
-		strBuilder.WriteString(ui.ScriptEntryStyle.Render(name))
+		strBuilder.WriteString(name)
 	}
 
-	return strBuilder.String(), nil
+	return ui.BaseBox.BorderForeground(lipgloss.Color(ui.Blue)).Foreground(lipgloss.Color(ui.Blue)).Render(strBuilder.String()), nil
 }
