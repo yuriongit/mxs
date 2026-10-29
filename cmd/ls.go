@@ -18,7 +18,7 @@ var lsCmd = &cobra.Command{
 	RunE: func(_ *cobra.Command, _ []string) error {
 		app := GetApp() // TODO: Use GlobalApp variable
 
-		return scr.ListAllScripts(app.Cfg)
+		return scr.ListAllScripts(app.Cfg, app.Scr, false)
 	},
 }
 

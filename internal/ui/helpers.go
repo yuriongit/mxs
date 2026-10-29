@@ -9,6 +9,7 @@ package ui
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	lg "github.com/charmbracelet/lipgloss"
 )
@@ -38,4 +39,39 @@ func CreateInfoHeader(header string, s lg.Style, wall bool) string {
 		s.Faint(true).Render("="),
 		pipe,
 	)
+}
+
+// ColumnPair represents a two-column row with individual styles for each cell.
+type ColumnPair struct {
+	Left      string
+	Right     string
+	LeftStyle lg.Style
+}
+
+// FormatAlignedColumns aligns two-column pairs dynamically based on the longest key.
+// gap adds extra space between the left and right columns.
+func FormatAlignedColumns(rows []ColumnPair, gap int) string {
+	maxLen := 0
+	for _, row := range rows {
+		if len(row.Left) > maxLen {
+			maxLen = len(row.Left)
+		}
+	}
+
+	var strBuilder strings.Builder
+	for idx, row := range rows {
+		if idx > 0 {
+			strBuilder.WriteString("\n")
+		}
+
+		if row.Right != "" {
+			// Apply dynamic width to left style to align column 2
+			leftStyle := row.LeftStyle.Width(maxLen + gap)
+			fmt.Fprintf(&strBuilder, "%s%s", leftStyle.Render(row.Left), row.Right)
+		} else {
+			strBuilder.WriteString(row.LeftStyle.Render(row.Left))
+		}
+	}
+
+	return strBuilder.String()
 }
