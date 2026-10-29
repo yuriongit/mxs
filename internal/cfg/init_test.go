@@ -1,11 +1,11 @@
 /*
-Package cnf provides all the functionality
+Package cfg provides all the functionality
 for MXS' config. Manages the application's
 configuration and script directory.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 */
-package cnf
+package cfg
 
 import (
 	"os"
@@ -13,68 +13,68 @@ import (
 	"testing"
 )
 
-func TestCnfInitCnfDirCreatesDirectories(t *testing.T) {
+func TestCfgInitCfgDirCreatesDirectories(t *testing.T) {
 	homeDir := t.TempDir()
-	config := NewCnf(homeDir)
+	config := NewCfg(homeDir)
 
-	if err := config.InitCnfDir(); err != nil {
-		t.Fatalf("InitCnfDir() returned unexpected error: %v", err)
+	if err := config.InitCfgDir(); err != nil {
+		t.Fatalf("InitCfgDir() returned unexpected error: %v", err)
 	}
 
-	assertDirectory(t, config.FullCnfPath)
+	assertDirectory(t, config.FullCfgPath)
 	assertDirectory(t, config.FullScriptsPath)
 	assertDemoScriptExists(t, config.FullScriptsPath)
 }
 
-func TestCnfInitCnfDirWhenDirectoriesAlreadyExist(t *testing.T) {
+func TestCfgInitCfgDirWhenDirectoriesAlreadyExist(t *testing.T) {
 	homeDir := t.TempDir()
-	config := NewCnf(homeDir)
+	config := NewCfg(homeDir)
 
 	if err := os.MkdirAll(config.FullScriptsPath, 0700); err != nil {
 		t.Fatalf("failed to create test directories: %v", err)
 	}
 
-	if err := config.InitCnfDir(); err != nil {
-		t.Fatalf("InitCnfDir() returned unexpected error: %v", err)
+	if err := config.InitCfgDir(); err != nil {
+		t.Fatalf("InitCfgDir() returned unexpected error: %v", err)
 	}
 
-	assertDirectory(t, config.FullCnfPath)
+	assertDirectory(t, config.FullCfgPath)
 	assertDirectory(t, config.FullScriptsPath)
 	assertDemoScriptExists(t, config.FullScriptsPath)
 }
 
-func TestCnfInitCnfDirCreatesMissingScriptsDirectory(t *testing.T) {
+func TestCfgInitCfgDirCreatesMissingScriptsDirectory(t *testing.T) {
 	homeDir := t.TempDir()
-	config := NewCnf(homeDir)
+	config := NewCfg(homeDir)
 
-	if err := os.Mkdir(config.FullCnfPath, 0700); err != nil {
+	if err := os.Mkdir(config.FullCfgPath, 0700); err != nil {
 		t.Fatalf("failed to create base configuration directory: %v", err)
 	}
 
-	if err := config.InitCnfDir(); err != nil {
-		t.Fatalf("InitCnfDir() returned unexpected error: %v", err)
+	if err := config.InitCfgDir(); err != nil {
+		t.Fatalf("InitCfgDir() returned unexpected error: %v", err)
 	}
 
-	assertDirectory(t, config.FullCnfPath)
+	assertDirectory(t, config.FullCfgPath)
 	assertDirectory(t, config.FullScriptsPath)
 	assertDemoScriptExists(t, config.FullScriptsPath)
 }
 
-func TestCnfInitCnfDirFailsWhenBasePathIsFile(t *testing.T) {
+func TestCfgInitCfgDirFailsWhenBasePathIsFile(t *testing.T) {
 	homeDir := t.TempDir()
-	config := NewCnf(homeDir)
+	config := NewCfg(homeDir)
 
 	if err := os.WriteFile(
-		config.FullCnfPath,
+		config.FullCfgPath,
 		[]byte("not a directory"),
 		0600,
 	); err != nil {
 		t.Fatalf("failed to create base path file: %v", err)
 	}
 
-	err := config.InitCnfDir()
+	err := config.InitCfgDir()
 	if err == nil {
-		t.Fatal("InitCnfDir() returned nil when base path was a file")
+		t.Fatal("InitCfgDir() returned nil when base path was a file")
 	}
 
 	expected := "~/.mxs exists but is not a directory"
@@ -83,11 +83,11 @@ func TestCnfInitCnfDirFailsWhenBasePathIsFile(t *testing.T) {
 	}
 }
 
-func TestCnfInitCnfDirFailsWhenScriptsPathIsFile(t *testing.T) {
+func TestCfgInitCfgDirFailsWhenScriptsPathIsFile(t *testing.T) {
 	homeDir := t.TempDir()
-	config := NewCnf(homeDir)
+	config := NewCfg(homeDir)
 
-	if err := os.Mkdir(config.FullCnfPath, 0700); err != nil {
+	if err := os.Mkdir(config.FullCfgPath, 0700); err != nil {
 		t.Fatalf("failed to create base configuration directory: %v", err)
 	}
 
@@ -99,31 +99,31 @@ func TestCnfInitCnfDirFailsWhenScriptsPathIsFile(t *testing.T) {
 		t.Fatalf("failed to create scripts path file: %v", err)
 	}
 
-	err := config.InitCnfDir()
+	err := config.InitCfgDir()
 	if err == nil {
-		t.Fatal("InitCnfDir() returned nil when scripts path was a file")
+		t.Fatal("InitCfgDir() returned nil when scripts path was a file")
 	}
 
-	// Updated to match actual error message from InitCnfDir
+	// Updated to match actual error message from InitCfgDir
 	expected := "~/.mxs/scripts exists but is not a directory"
 	if err.Error() != expected {
 		t.Fatalf("error = %q, want %q", err.Error(), expected)
 	}
 }
 
-func TestCnfInitCnfDirIsIdempotent(t *testing.T) {
+func TestCfgInitCfgDirIsIdempotent(t *testing.T) {
 	homeDir := t.TempDir()
-	config := NewCnf(homeDir)
+	config := NewCfg(homeDir)
 
-	if err := config.InitCnfDir(); err != nil {
-		t.Fatalf("first InitCnfDir() call failed: %v", err)
+	if err := config.InitCfgDir(); err != nil {
+		t.Fatalf("first InitCfgDir() call failed: %v", err)
 	}
 
-	if err := config.InitCnfDir(); err != nil {
-		t.Fatalf("second InitCnfDir() call failed: %v", err)
+	if err := config.InitCfgDir(); err != nil {
+		t.Fatalf("second InitCfgDir() call failed: %v", err)
 	}
 
-	assertDirectory(t, config.FullCnfPath)
+	assertDirectory(t, config.FullCfgPath)
 	assertDirectory(t, config.FullScriptsPath)
 	assertDemoScriptExists(t, config.FullScriptsPath)
 }

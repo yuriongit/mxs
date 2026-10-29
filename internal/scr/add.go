@@ -7,21 +7,21 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
 // AddNewScript validates the script name, creates the script file,
 // opens it in the configured editor, and outputs a success message.
-func AddNewScript(cnf *cnf.Cnf, scr *Scr, scriptName *string) error {
-	if err := cnf.HasCnfDir("scripts"); err != nil {
+func AddNewScript(cfg *cfg.Cfg, scr *Scr, scriptName *string) error {
+	if err := cfg.HasCfgDir("scripts"); err != nil {
 		return err
 	}
 
 	if err := validateScriptName(scriptName); err != nil {
 		return err
 	}
-	scriptPath, err := scr.Create(cnf, scriptName)
+	scriptPath, err := scr.Create(cfg, scriptName)
 	if err != nil {
 		return err
 	}
@@ -98,9 +98,9 @@ func OpenEditorForScript(name *string, scriptPath string) (msg string, err error
 //
 // Create returns the script's full path or an error if
 // creation fails.
-func (s *Scr) Create(cnf *cnf.Cnf, scriptName *string) (scriptPath string, err error) {
+func (s *Scr) Create(cfg *cfg.Cfg, scriptName *string) (scriptPath string, err error) {
 	fileName := *scriptName + ".sh"
-	fullFilePath := filepath.Join(cnf.FullScriptsPath, fileName)
+	fullFilePath := filepath.Join(cfg.FullScriptsPath, fileName)
 
 	// Create the file with executable permissions (0700) without overwriting an existing one
 	// #nosec G304 G302 -- Create's an executable script with a validated script file path
@@ -114,7 +114,7 @@ func (s *Scr) Create(cnf *cnf.Cnf, scriptName *string) (scriptPath string, err e
 	}
 
 	// Close the file handle to prevent resource leaks
-	return filepath.Join(cnf.FullScriptsPath, fileName), file.Close()
+	return filepath.Join(cfg.FullScriptsPath, fileName), file.Close()
 }
 
 // writeTemplate fills out the script template with the script name.

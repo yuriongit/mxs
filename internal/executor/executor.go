@@ -11,7 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cfg"
 )
 
 // Executor handles command execution for the CLI tool.
@@ -27,14 +27,14 @@ PrepScript verifies the script exists and prepares
 the script for future execution.
 */
 func (e *Executor) PrepScript(
-	cnf *cnf.Cnf,
+	cfg *cfg.Cfg,
 	scriptName string,
 ) (scriptCmd *exec.Cmd, err error) {
 	// Attach the file extension.
 	fileNameWithExt := e.attachFileExt(scriptName)
 
 	// Build the full path to the script in the scripts directory.
-	fullScriptPath := filepath.Join(cnf.FullScriptsPath, fileNameWithExt)
+	fullScriptPath := filepath.Join(cfg.FullScriptsPath, fileNameWithExt)
 
 	// Check if the script exists.
 	if err := e.isScript(fullScriptPath); err != nil {
@@ -44,8 +44,8 @@ func (e *Executor) PrepScript(
 	// Execute the script relative to the scripts directory without
 	// changing the process-wide working directory.
 	// #nosec G204 -- scriptPath validated by isScript() above
-	scriptCmd = exec.Command(filepath.Join(cnf.FullScriptsPath, fileNameWithExt))
-	scriptCmd.Dir = cnf.FullScriptsPath
+	scriptCmd = exec.Command(filepath.Join(cfg.FullScriptsPath, fileNameWithExt))
+	scriptCmd.Dir = cfg.FullScriptsPath
 
 	return scriptCmd, nil
 }

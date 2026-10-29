@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/executor"
 	"github.com/yuriongit/mxs/internal/scr"
 )
@@ -16,7 +16,7 @@ import (
 // App holds MXS' core dependencies.
 type App struct {
 	HomePath  *string
-	Cnf       *cnf.Cnf
+	Cfg       *cfg.Cfg
 	Scr       *scr.Scr
 	Executor  *executor.Executor
 	Validator *validator.Validate
@@ -31,7 +31,7 @@ func NewApp() (*App, error) {
 		return nil, err
 	}
 
-	cnf := cnf.NewCnf(homePath)
+	cfg := cfg.NewCfg(homePath)
 	scr := scr.New()
 	executor := executor.NewExecutor()
 
@@ -39,7 +39,7 @@ func NewApp() (*App, error) {
 
 	return &App{
 		&homePath,
-		cnf,
+		cfg,
 		scr,
 		executor,
 		validator,

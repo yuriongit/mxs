@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cfg"
 )
 
 func TestExecutorPrepScript(t *testing.T) {
@@ -32,7 +32,7 @@ func TestExecutorPrepScript(t *testing.T) {
 			t.Fatalf("failed to get current working directory: %v", err)
 		}
 
-		config := cnf.NewCnf(homeDir)
+		config := cfg.NewCfg(homeDir)
 		executor := NewExecutor()
 
 		command, err := executor.PrepScript(config, "backup")
@@ -115,7 +115,7 @@ func TestExecutorPrepScript(t *testing.T) {
 
 	t.Run("returns an error when scripts directory does not exist", func(t *testing.T) {
 		homeDir := t.TempDir()
-		config := cnf.NewCnf(homeDir)
+		config := cfg.NewCfg(homeDir)
 		executor := NewExecutor()
 
 		command, err := executor.PrepScript(config, "backup")
@@ -145,7 +145,7 @@ func TestExecutorPrepScript(t *testing.T) {
 			t.Fatalf("failed to create scripts directory: %v", err)
 		}
 
-		config := cnf.NewCnf(homeDir)
+		config := cfg.NewCfg(homeDir)
 		executor := NewExecutor()
 
 		command, err := executor.PrepScript(config, "missing")

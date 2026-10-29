@@ -17,7 +17,7 @@ var initCmd = &cobra.Command{
 	RunE: func(_ *cobra.Command, _ []string) error {
 		ptrApp := GetApp()
 
-		return ptrApp.Cnf.InitCnfDir()
+		return ptrApp.Cfg.InitCfgDir()
 	},
 }
 

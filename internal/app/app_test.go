@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/yuriongit/mxs/internal/cnf"
+	"github.com/yuriongit/mxs/internal/cfg"
 )
 
 func TestNewApp(t *testing.T) {
@@ -37,28 +37,28 @@ func TestNewApp(t *testing.T) {
 		)
 	}
 
-	if app.Cnf == nil {
-		t.Fatal("App.Cnf is nil")
+	if app.Cfg == nil {
+		t.Fatal("App.Cfg is nil")
 	}
 
 	if app.Executor == nil {
 		t.Fatal("App.Executor is nil")
 	}
 
-	expectedCnfPath := filepath.Join(homePath, ".mxs")
-	if app.Cnf.FullCnfPath != expectedCnfPath {
+	expectedCfgPath := filepath.Join(homePath, ".mxs")
+	if app.Cfg.FullCfgPath != expectedCfgPath {
 		t.Fatalf(
-			"App.Cnf.FullCnfPath = %q, want %q",
-			app.Cnf.FullCnfPath,
-			expectedCnfPath,
+			"App.Cfg.FullCfgPath = %q, want %q",
+			app.Cfg.FullCfgPath,
+			expectedCfgPath,
 		)
 	}
 
 	expectedScriptsPath := filepath.Join(homePath, ".mxs", "scripts")
-	if app.Cnf.FullScriptsPath != expectedScriptsPath {
+	if app.Cfg.FullScriptsPath != expectedScriptsPath {
 		t.Fatalf(
-			"App.Cnf.FullScriptsPath = %q, want %q",
-			app.Cnf.FullScriptsPath,
+			"App.Cfg.FullScriptsPath = %q, want %q",
+			app.Cfg.FullScriptsPath,
 			expectedScriptsPath,
 		)
 	}
@@ -73,36 +73,36 @@ func TestNewAppInitializesExpectedDependencies(t *testing.T) {
 		t.Fatalf("NewApp() returned unexpected error: %v", err)
 	}
 
-	expectedCnf := cnf.NewCnf(homePath)
+	expectedCfg := cfg.NewCfg(homePath)
 	if *app.HomePath != homePath {
 		t.Fatalf("HomePath = %q, want %q", *app.HomePath, homePath)
 	}
 
-	if app.Cnf.Dir != expectedCnf.Dir {
-		t.Fatalf("Cnf.Dir = %q, want %q", app.Cnf.Dir, expectedCnf.Dir)
+	if app.Cfg.Dir != expectedCfg.Dir {
+		t.Fatalf("Cfg.Dir = %q, want %q", app.Cfg.Dir, expectedCfg.Dir)
 	}
 
-	if app.Cnf.ScriptsPath != expectedCnf.ScriptsPath {
+	if app.Cfg.ScriptsPath != expectedCfg.ScriptsPath {
 		t.Fatalf(
-			"Cnf.ScriptsPath = %q, want %q",
-			app.Cnf.ScriptsPath,
-			expectedCnf.ScriptsPath,
+			"Cfg.ScriptsPath = %q, want %q",
+			app.Cfg.ScriptsPath,
+			expectedCfg.ScriptsPath,
 		)
 	}
 
-	if app.Cnf.FullCnfPath != expectedCnf.FullCnfPath {
+	if app.Cfg.FullCfgPath != expectedCfg.FullCfgPath {
 		t.Fatalf(
-			"Cnf.FullCnfPath = %q, want %q",
-			app.Cnf.FullCnfPath,
-			expectedCnf.FullCnfPath,
+			"Cfg.FullCfgPath = %q, want %q",
+			app.Cfg.FullCfgPath,
+			expectedCfg.FullCfgPath,
 		)
 	}
 
-	if app.Cnf.FullScriptsPath != expectedCnf.FullScriptsPath {
+	if app.Cfg.FullScriptsPath != expectedCfg.FullScriptsPath {
 		t.Fatalf(
-			"Cnf.FullScriptsPath = %q, want %q",
-			app.Cnf.FullScriptsPath,
-			expectedCnf.FullScriptsPath,
+			"Cfg.FullScriptsPath = %q, want %q",
+			app.Cfg.FullScriptsPath,
+			expectedCfg.FullScriptsPath,
 		)
 	}
 
@@ -119,10 +119,10 @@ func TestNewAppDoesNotCreateDirectories(t *testing.T) {
 		t.Fatalf("NewApp() returned unexpected error: %v", err)
 	}
 
-	cnfPath := filepath.Join(homePath, ".mxs")
-	scriptsPath := filepath.Join(cnfPath, "scripts")
+	cfgPath := filepath.Join(homePath, ".mxs")
+	scriptsPath := filepath.Join(cfgPath, "scripts")
 
-	if _, err := os.Stat(cnfPath); !os.IsNotExist(err) {
+	if _, err := os.Stat(cfgPath); !os.IsNotExist(err) {
 		t.Fatalf(
 			"configuration directory was created by NewApp(); stat error = %v",
 			err,

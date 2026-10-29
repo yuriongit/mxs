@@ -6,11 +6,11 @@ Add custom configured colors: If there's any errors
 in the config, they must first be resolved. Until
 then, a script will not run.
 
-Add this functionality to the cnf package.
+Add this functionality to the cfg package.
 
 These following colors will have a default color.
 
-Also, in the cnf file, add a themes section:
+Also, in the cfg file, add a themes section:
 
 ```json
 theme: {

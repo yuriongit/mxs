@@ -1,11 +1,11 @@
 /*
-Package cnf provides all the functionality
+Package cfg provides all the functionality
 for MXS' config. Manages the application's
 configuration and script directory.
 
 Copyright © 2026 Yuri Okeren <yuri.dev44@outlook.com>.
 */
-package cnf
+package cfg
 
 import (
 	_ "embed"
@@ -16,14 +16,14 @@ import (
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
-// InitCnfDir creates the configuration and scripts directories if they
+// InitCfgDir creates the configuration and scripts directories if they
 // don't already exist.
-func (c *Cnf) InitCnfDir() error {
+func (c *Cfg) InitCfgDir() error {
 	directories := []struct {
 		path string
 		name string
 	}{
-		{path: c.FullCnfPath, name: fmt.Sprintf("~/%s", c.Dir)},
+		{path: c.FullCfgPath, name: fmt.Sprintf("~/%s", c.Dir)},
 		{path: c.FullScriptsPath, name: fmt.Sprintf("~/%s", c.ScriptsPath)},
 	}
 
@@ -50,7 +50,7 @@ func (c *Cnf) InitCnfDir() error {
 		}
 	}
 
-	if err := c.CreateCnfFile(); err != nil {
+	if err := c.CreateCfgFile(); err != nil {
 		return err
 	}
 
@@ -65,7 +65,7 @@ func (c *Cnf) InitCnfDir() error {
 var demoScriptContent string
 
 // SetupDemoScript creates the demo script.
-func (c *Cnf) SetupDemoScript() error {
+func (c *Cfg) SetupDemoScript() error {
 	fullDemoScriptPath := filepath.Join(c.FullScriptsPath, demoScriptFileName)
 
 	// os.O_EXCL creates the file atomically or fails if it already exists
@@ -92,15 +92,15 @@ func (c *Cnf) SetupDemoScript() error {
 }
 
 //go:embed mxs.json
-var cnfFileTemplate string
+var cfgFileTemplate string
 
-// CreateCnfFile creates a templatized MXS configurationf file
-func (c *Cnf) CreateCnfFile() error {
-	fullCnfFilePath := filepath.Join(c.FullCnfPath, c.FileName)
+// CreateCfgFile creates a templatized MXS configurationf file
+func (c *Cfg) CreateCfgFile() error {
+	fullCfgFilePath := filepath.Join(c.FullCfgPath, c.FileName)
 
 	// os.O_EXCL creates the file atomically or fails if it already exists
 	// #nosec G304 G302 -- fullDemoScriptPath built from config path with hardcoded filename && enables script execution
-	file, err := os.OpenFile(fullCnfFilePath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	file, err := os.OpenFile(fullCfgFilePath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
 	switch {
 	case os.IsExist(err):
 		fmt.Println(ui.CreateSuccMsg("found existing configuration file"))
@@ -109,7 +109,7 @@ func (c *Cnf) CreateCnfFile() error {
 		return fmt.Errorf("failed to check or create configuration file: %w", err)
 	}
 
-	_, writeErr := file.WriteString(cnfFileTemplate)
+	_, writeErr := file.WriteString(cfgFileTemplate)
 	if err := file.Close(); err != nil {
 		return fmt.Errorf("failed to close configuration file: %w", err)
 	}
