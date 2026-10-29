@@ -7,9 +7,9 @@ import (
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
-func renderListAllScriptsView(scriptsDirName string, scriptsDir string) {
-	fmt.Printf("%s\n%s\n",
-		ui.ScriptsDirStyle.Render("~/"+scriptsDirName+"/"),
+func renderListAllScriptsView(scriptsDir string) {
+	fmt.Printf("%s%s\n",
+		ui.CreateInfoHeader("scripts", ui.Primary, false),
 		scriptsDir,
 	)
 }

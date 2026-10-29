@@ -51,26 +51,4 @@ var (
 
 	// Primary spinner style that uses [Pink]
 	Spinner = lg.NewStyle().Foreground(lg.Color(Pink))
-
-	// DirEntrySymbol styles a branch connector.
-	DirEntrySymbol = lg.NewStyle().
-			Foreground(lg.Color(Blue)).
-			Faint(true).
-			PaddingLeft(1).
-			Render("├─")
-	// DirEndingEntrySymbol styles the last branch connector.
-	DirEndingEntrySymbol = lg.NewStyle().
-				Foreground(lg.Color(Blue)).
-				Faint(true).
-				PaddingLeft(1).
-				Render("└─")
-	// ScriptEntryStyle styles a script entry.
-	ScriptEntryStyle = lg.NewStyle().
-				PaddingRight(1).
-				Foreground(lg.Color(Blue))
-	// ScriptsDirStyle styles the scripts directory label.
-	ScriptsDirStyle = lg.NewStyle().
-			Foreground(lg.Color(Pink)).
-			PaddingLeft(0).
-			Bold(true)
 )
