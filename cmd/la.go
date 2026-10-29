@@ -16,7 +16,7 @@ var laCmd = &cobra.Command{
 	Short: "Lists all scripts with verbose output",
 	Long:  "TODO: Implement later",
 	RunE: func(_ *cobra.Command, _ []string) error {
-		return scr.ListAllScripts(globalApp.Cfg, true) // true = verbose
+		return scr.ListAllScripts(globalApp.Cfg, globalApp.Scr, true) // true = verbose
 	},
 }
 
