@@ -272,6 +272,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.state = stateFinished
 		m.duration = time.Since(m.startTime)
 		m.err = msg.err
+		// Best-effort history write; it must never mask the script's result.
+		_ = m.cfg.RecordLastExecuted(m.targetName, m.startTime)
 		return m, tea.Quit
 
 	case spinner.TickMsg:
