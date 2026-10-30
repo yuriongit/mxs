@@ -42,10 +42,15 @@ func CreateInfoHeader(header string, s lg.Style, wall bool) string {
 }
 
 // ColumnPair represents a two-column row with individual styles for each cell.
+//
+// LeftPrefix is an optional unstyled-for-width segment rendered before Left
+// with its own style (e.g. a metadata tag).
 type ColumnPair struct {
-	Left      string
-	Right     string
-	LeftStyle lg.Style
+	Left            string
+	Right           string
+	LeftStyle       lg.Style
+	LeftPrefix      string
+	LeftPrefixStyle lg.Style
 }
 
 // FormatAlignedColumns aligns two-column pairs dynamically based on the longest key.
@@ -53,8 +58,8 @@ type ColumnPair struct {
 func FormatAlignedColumns(rows []ColumnPair, gap int) string {
 	maxLen := 0
 	for _, row := range rows {
-		if len(row.Left) > maxLen {
-			maxLen = len(row.Left)
+		if width := len(row.LeftPrefix) + len(row.Left); width > maxLen {
+			maxLen = width
 		}
 	}
 
@@ -66,10 +71,21 @@ func FormatAlignedColumns(rows []ColumnPair, gap int) string {
 
 		if row.Right != "" {
 			// Apply dynamic width to left style to align column 2
-			leftStyle := row.LeftStyle.Width(maxLen + gap)
-			fmt.Fprintf(&strBuilder, "%s%s", leftStyle.Render(row.Left), row.Right)
+			leftStyle := row.LeftStyle.Width(maxLen + gap - len(row.LeftPrefix))
+			fmt.Fprintf(
+				&strBuilder,
+				"%s%s%s",
+				row.LeftPrefixStyle.Render(row.LeftPrefix),
+				leftStyle.Render(row.Left),
+				row.Right,
+			)
 		} else {
-			strBuilder.WriteString(row.LeftStyle.Render(row.Left))
+			fmt.Fprintf(
+				&strBuilder,
+				"%s%s",
+				row.LeftPrefixStyle.Render(row.LeftPrefix),
+				row.LeftStyle.Render(row.Left),
+			)
 		}
 	}
 
