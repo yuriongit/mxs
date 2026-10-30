@@ -1,6 +1,6 @@
 # MXS PRD
 
-Oct 17, 2026
+Oct 30, 2026
 
 ## 1. Overview
 
@@ -73,9 +73,9 @@ other command expects
 
 #### add
 
-`mxs add`
+`mxs add <name>`
 
-- [x] Prompts for the script's name
+- [x] Accepts the script's name as an argument
 - [x] Creates `~/.mxs/scripts/<name>.sh`
 - [x] Opens the new file in the user's editor so they can write the script
 - [x] Refuses a name that is already in use
@@ -116,6 +116,17 @@ other command expects
 - [x] Shows each name without the `.sh` suffix, to avoid confusion when running,
       renaming,
       or updating a script
+- [x] Renders the list in a colored box under a scripts header
+- [x] Ignores any file in the folder that does not end in `.sh`
+- [x] Prints a clear error if no scripts exist
+
+#### la
+
+`mxs la`
+
+- [x] Lists the `.sh` files in `~/.mxs/scripts`
+- [x] Shows each name without the `.sh` suffix
+- [x] Shows each script's description next to its name
 - [x] Ignores any file in the folder that does not end in `.sh`
 - [x] Prints a clear error if no scripts exist
 
@@ -124,8 +135,7 @@ other command expects
 MXS has no usage tracking, so these are checks the author can run directly. The
 numeric targets are starting points and can change
 
-- [ ] All six commands (`add`, `upd`, `ren`, `rm`, `ls`) work end to end on a fresh
-      install
+- [ ] All six commands (`add`, `upd`, `ren`, `rm`, `ls`, `la`) fully functional
 - [ ] A new script can be added and run in under one minute
 - [ ] Every name printed by `ls` is accepted as-is by `upd`, `ren` and `rm`
 - [ ] `ren` and `rm` never leave the script file and its metadata out of sync, covered
@@ -153,7 +163,7 @@ numeric targets are starting points and can change
 - Q: Should `rm` ask for confirmation before deleting?
   - A:Yes
 - Should `ls` show each script's description next to its name?
-  - No, there should be a `la` command for that
+  - No, `mxs la` does this. Implemented in v0.4.0.
 - Which editor does MXS open: `$EDITOR`, `$VISUAL`, or a fallback if neither is
   set?
   - A: `$EDITOR` as primary, with `$VISUAL` as the fallback. No other fallbacks
