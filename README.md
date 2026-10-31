@@ -1,6 +1,6 @@
 # MXS
 
-**Current Version:** `v0.3.0`
+**Current Version:** `v0.4.0`
 
 A simple & colored CLI to manage and execute your Bash scripts.
 
@@ -8,14 +8,15 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 ## Features
 
-1. Script execution: Run a script using it's name (no file extension needed)
+1. Script execution: Run a script using its name (no file extension needed)
 2. Script creation with the `add` command
 3. List your scripts with the `ls` command (`.sh` files, shown without the extension)
-4. Global configuration directory: `~/.mxs`
-5. Execution status reports: Execution time and exit codes
-6. Structured and colored output, with a script description and your script's output
-7. Argument support
-8. Automated installers for Linux and macOS
+4. Verbose listing with the `la` command, including each script's description
+5. Global configuration directory: `~/.mxs`
+6. Structured execution UI: live spinner, streamed logs, and execution time
+7. Script descriptions shown alongside your script's output
+8. Argument support
+9. Automated installers for Linux and macOS
 
 ## Configuration
 
