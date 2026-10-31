@@ -9,7 +9,6 @@ package executor
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -199,15 +198,22 @@ func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 			return executionFinishedMsg{err: err}
 		}
 
-		streamReader := func(r io.Reader) {
-			scanner := bufio.NewScanner(r)
+		// Consolidate stdout/stderr into a single goroutine to prevent race
+		// condition from concurrent writes to the same channel.
+		go func() {
+			defer stdout.Close()
+			defer stderr.Close()
+
+			scanner := bufio.NewScanner(stdout)
 			for scanner.Scan() {
 				sub <- outputLineMsg(scanner.Text())
 			}
-		}
 
-		go streamReader(stdout)
-		go streamReader(stderr)
+			scanner = bufio.NewScanner(stderr)
+			for scanner.Scan() {
+				sub <- outputLineMsg(scanner.Text())
+			}
+		}()
 
 		err = cmd.Wait()
 		return executionFinishedMsg{err: err}
