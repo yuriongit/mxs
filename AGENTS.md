@@ -28,4 +28,4 @@ Module: `github.com/yuriongit/mxs`. Go 1.27.1.
 
 - Tests colocated as `*_test.go`.
 - User scripts live in `~/.mxs/scripts/*.sh`.
-- Version is 0.4.0 under development. Do not bump version numbers; the maintainer handles releases.
+- Version is 0.4.1 under development (working on v0.4.1). Do not bump version numbers; the maintainer handles releases.
