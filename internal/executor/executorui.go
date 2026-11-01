@@ -119,7 +119,10 @@ func Run(c *cfg.Cfg, scr *scr.Scr, targetName string, scriptArgs []string) error
 
 	p := tea.NewProgram(InitialModel(c, scr, targetName, scriptArgs))
 	_, err := p.Run()
-	return err
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // 80ms timer tick for smooth stopwatch updates
@@ -198,17 +201,15 @@ func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 			return executionFinishedMsg{err: err}
 		}
 
-		// Consolidate stdout/stderr into a single goroutine to prevent race
-		// condition from concurrent writes to the same channel.
+		// Use a single goroutine to read both stdout and stderr sequentially
+		// to prevent channel write contention
 		go func() {
-			defer stdout.Close()
-			defer stderr.Close()
-
+			// Read stdout first
 			scanner := bufio.NewScanner(stdout)
 			for scanner.Scan() {
 				sub <- outputLineMsg(scanner.Text())
 			}
-
+			// Then read stderr
 			scanner = bufio.NewScanner(stderr)
 			for scanner.Scan() {
 				sub <- outputLineMsg(scanner.Text())
