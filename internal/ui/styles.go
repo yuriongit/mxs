@@ -7,7 +7,7 @@ and UI components.
 package ui
 
 import (
-	lg "github.com/charmbracelet/lipgloss"
+	lg "charm.land/lipgloss/v2"
 )
 
 // Lipgloss Styles

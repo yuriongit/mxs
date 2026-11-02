@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	lg "github.com/charmbracelet/lipgloss"
+	lg "charm.land/lipgloss/v2"
 	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/ui"
 )

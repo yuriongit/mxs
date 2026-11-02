@@ -16,9 +16,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/charmbracelet/bubbles/spinner"
-	tea "github.com/charmbracelet/bubbletea"
-	lg "github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/spinner"
+
+	tea "charm.land/bubbletea/v2"
 	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/scr"
 	"github.com/yuriongit/mxs/internal/ui"
@@ -240,7 +240,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if msg.String() == "ctrl+c" || msg.String() == "q" {
 			return m, tea.Quit
 		}
@@ -303,7 +303,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // Bubble Tea View Renderer
 // ============================================================================
 
-func (m model) View() string {
+func (m model) View() tea.View {
 	var b strings.Builder
 
 	switch m.state {
@@ -384,5 +384,7 @@ func (m model) View() string {
 		}
 	}
 
-	return b.String()
+	return tea.View{
+		Content: b.String(),
+	}
 }

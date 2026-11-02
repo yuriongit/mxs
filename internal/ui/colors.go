@@ -6,6 +6,8 @@ and UI components.
 */
 package ui
 
+import lg "charm.land/lipgloss/v2"
+
 // Color constants.
 const (
 	// Lime color
