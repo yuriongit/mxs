@@ -7,13 +7,13 @@ The screens directory contains terminal user interfaces used by the application.
 package executor
 
 import (
-	"bufio"
+	"bytes"
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
@@ -180,36 +180,48 @@ func validateScriptCmd(name string, c *cfg.Cfg, scr *scr.Scr) tea.Cmd {
 	}
 }
 
+// lineWriter forwards complete lines from the command's stdout and stderr
+// streams to the TUI output channel. A single instance is shared by both
+// streams so writes are serialized through a mutex and lines keep the order
+// in which the streams produced them, without concurrent channel writes.
+type lineWriter struct {
+	mu  sync.Mutex
+	sub chan tea.Msg
+	buf []byte
+}
+
+// Write buffers incoming bytes and forwards each complete line to the
+// output channel. Partial lines are held until the terminating newline
+// arrives so line boundaries are never split.
+func (w *lineWriter) Write(p []byte) (int, error) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	w.buf = append(w.buf, p...)
+	for {
+		idx := bytes.IndexByte(w.buf, '\n')
+		if idx < 0 {
+			break
+		}
+		line := strings.TrimSuffix(string(w.buf[:idx]), "\r")
+		w.buf = w.buf[idx+1:]
+		w.sub <- outputLineMsg(line)
+	}
+
+	return len(p), nil
+}
+
 func runScriptCmd(scriptPath string, args []string, sub chan tea.Msg) tea.Cmd {
 	return func() tea.Msg {
 		execArgs := append([]string{scriptPath}, args...)
 		// #nosec G204 -- scriptPath from internal execution pipeline
 		cmd := exec.Command("bash", execArgs...)
 
-		stdout, err := cmd.StdoutPipe()
-		if err != nil {
-			return executionFinishedMsg{err: err}
-		}
-		stderr, err := cmd.StderrPipe()
-		if err != nil {
-			return executionFinishedMsg{err: err}
-		}
+		writer := &lineWriter{sub: sub}
+		cmd.Stdout = writer
+		cmd.Stderr = writer
 
-		if err := cmd.Start(); err != nil {
-			return executionFinishedMsg{err: err}
-		}
-
-		streamReader := func(r io.Reader) {
-			scanner := bufio.NewScanner(r)
-			for scanner.Scan() {
-				sub <- outputLineMsg(scanner.Text())
-			}
-		}
-
-		go streamReader(stdout)
-		go streamReader(stderr)
-
-		err = cmd.Wait()
+		err := cmd.Run()
 		return executionFinishedMsg{err: err}
 	}
 }
