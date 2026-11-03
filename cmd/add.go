@@ -22,7 +22,7 @@ var addCmd = &cobra.Command{
 
 		desc, err := cmd.Flags().GetString("desc")
 		if err != nil {
-  		return err
+			return err
 		}
 
 		return scr.AddNewScript(app.Cfg, app.Scr, desc, scriptName)
