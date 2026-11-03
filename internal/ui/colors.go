@@ -6,14 +6,16 @@ and UI components.
 */
 package ui
 
+import lg "charm.land/lipgloss/v2"
+
 // Color constants.
-const (
-	// Lime color
-	Lime = "#B6FF6E"
-	// Pink color
-	Pink = "#FF6EB7"
-	// Red color
-	Red = "#FF5E7C"
-	// Blue color
-	Blue = "#6eb6ff"
+var (
+	// ANSI Green
+	Green = lg.Color("2")
+	// ANSI Blue
+	Blue = lg.Color("4")
+	// ANSI Red
+	Red = lg.Color("1")
+	// ANSI Magenta
+	Magenta = lg.Color("5")
 )

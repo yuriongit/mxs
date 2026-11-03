@@ -11,7 +11,7 @@ import (
 	"log"
 	"strings"
 
-	lg "github.com/charmbracelet/lipgloss"
+	lg "charm.land/lipgloss/v2"
 )
 
 // CreateSuccMsg takes in a success message and returns it with
