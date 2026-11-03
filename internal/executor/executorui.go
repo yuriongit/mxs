@@ -349,7 +349,7 @@ func (m model) View() tea.View {
 				)
 				// TODO: group all of separate b.WriteString writes
 				// into one [fmt.Fprintf] statements
-				b.WriteString(ui.ErrBox.Foreground(lg.Color(ui.Red)).Render(strings.Join(m.output, "\n")))
+				b.WriteString(ui.ErrBox.Render(strings.Join(m.output, "\n")))
 				b.WriteString("\n")
 			}
 
