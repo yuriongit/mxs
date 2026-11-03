@@ -78,9 +78,11 @@ func confirmRemoval(scriptName string, in io.Reader) bool {
 	)
 
 	line, err := bufio.NewReader(in).ReadString('\n')
-	if err != nil {
-		// EOF, empty input, or any other read error means no confirmation
-		// was obtained; fail closed by aborting.
+	// ReadString returns the data read together with io.EOF when the input has
+	// no trailing newline (e.g. `printf 'y'`). Honor that data instead of
+	// treating it as an empty/aborted response; only fail closed when we truly
+	// read nothing (empty input or a non-EOF read error).
+	if err != nil && err != io.EOF && line == "" {
 		return false
 	}
 

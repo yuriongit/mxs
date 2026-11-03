@@ -93,6 +93,37 @@ func TestRemoveScriptEOFAbortsWithoutDeleting(t *testing.T) {
 	}
 }
 
+// TestRemoveScriptConfirmWithoutTrailingNewline ensures a bare "y" with no
+// newline (e.g. `printf 'y' | mxs rm`) still proceeds, since ReadString
+// returns the data together with io.EOF in that case.
+func TestRemoveScriptConfirmWithoutTrailingNewline(t *testing.T) {
+	config, scriptPath := newScriptFixture(t, "backup")
+
+	if err := RemoveScript(config, "backup", false, strings.NewReader("y")); err != nil {
+		t.Fatalf("RemoveScript() with bare 'y' returned unexpected error: %v", err)
+	}
+
+	if _, err := os.Stat(scriptPath); !os.IsNotExist(err) {
+		t.Fatalf("script file still exists after bare 'y' confirmation")
+	}
+}
+
+// TestRemoveScriptConfirmVariations confirms the accepted answers are
+// case-insensitive and tolerant of surrounding whitespace.
+func TestRemoveScriptConfirmVariations(t *testing.T) {
+	for _, input := range []string{"Y\n", "yes\n", "YES\n", "  y  \n", " Yes \n"} {
+		config, scriptPath := newScriptFixture(t, "backup")
+
+		if err := RemoveScript(config, "backup", false, strings.NewReader(input)); err != nil {
+			t.Fatalf("RemoveScript() with %q returned unexpected error: %v", input, err)
+		}
+
+		if _, err := os.Stat(scriptPath); !os.IsNotExist(err) {
+			t.Fatalf("script file still exists after confirmation %q", input)
+		}
+	}
+}
+
 func TestRemoveScriptForceSkipsConfirmation(t *testing.T) {
 	config, scriptPath := newScriptFixture(t, "backup")
 
