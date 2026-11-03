@@ -15,18 +15,25 @@ var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Creates a new script",
 	Long:  "TODO: Implement later",
-	Args:  cobra.ExactArgs(1),
-	RunE: func(_ *cobra.Command, args []string) error {
+	Args:  cobra.MaximumNArgs(2),
+	RunE: func(cmd *cobra.Command, args []string) error {
 		app := GetApp() // TODO: Use GlobalApp instead
 		scriptName := args[0]
 
-		return scr.AddNewScript(app.Cfg, app.Scr, &scriptName)
+		desc, err := cmd.Flags().GetString("desc")
+		if err != nil {
+			return err
+		}
+
+		return scr.AddNewScript(app.Cfg, app.Scr, desc, scriptName)
 	},
 }
 
 func init() {
 	addCmd.SilenceErrors = true
 	addCmd.SilenceUsage = true
+
+	addCmd.Flags().StringP("desc", "d", "description", "script description")
 
 	rootCmd.AddCommand(addCmd)
 }
