@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # mxs-description
-# %s
+# description
 
 echo "%s"

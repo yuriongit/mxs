@@ -13,7 +13,7 @@ import (
 
 // AddNewScript validates the script name, creates the script file,
 // opens it in the configured editor, and outputs a success message.
-func AddNewScript(cfg *cfg.Cfg, scr *Scr, desc, scriptName string) error {
+func AddNewScript(cfg *cfg.Cfg, scr *Scr, scriptName *string) error {
 	if err := cfg.HasCfgDir("scripts"); err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func AddNewScript(cfg *cfg.Cfg, scr *Scr, desc, scriptName string) error {
 	if err := validateScriptName(scriptName); err != nil {
 		return err
 	}
-	scriptPath, err := scr.Create(cfg, scriptName, desc)
+	scriptPath, err := scr.Create(cfg, scriptName)
 	if err != nil {
 		return err
 	}
@@ -36,23 +36,23 @@ func AddNewScript(cfg *cfg.Cfg, scr *Scr, desc, scriptName string) error {
 }
 
 // validateScriptName checks that the script name meets the required naming rules.
-func validateScriptName(name string) error {
+func validateScriptName(name *string) error {
 	// Check length
-	if len(name) == 0 {
+	if len(*name) == 0 {
 		return fmt.Errorf("script name required")
 	}
-	if len(name) > 63 {
-		return fmt.Errorf("script name must be 63 characters or less (got %d)", len(name))
+	if len(*name) > 63 {
+		return fmt.Errorf("script name must be 63 characters or less (got %d)", len(*name))
 	}
 
 	// Check first character (must be lowercase letter, +, -)
-	firstChar := rune((name)[0])
+	firstChar := rune((*name)[0])
 	if firstChar != '+' && firstChar != '-' && (firstChar < 'a' || firstChar > 'z') {
 		return fmt.Errorf("script name must start with a lowercase letter or '+' (got '%c')", firstChar)
 	}
 
 	// Check all characters
-	for i, ch := range name {
+	for i, ch := range *name {
 		isLowercase := ch >= 'a' && ch <= 'z'
 		isDigit := ch >= '0' && ch <= '9'
 		isHyphen := ch == '-'
@@ -69,7 +69,7 @@ func validateScriptName(name string) error {
 
 // OpenEditorForScript launches the configured editor with the script file.
 // It returns a success message or an error if the editor cannot be launched.
-func OpenEditorForScript(name string, scriptPath string) (msg string, err error) {
+func OpenEditorForScript(name *string, scriptPath string) (msg string, err error) {
 	editorEnvName := "EDITOR"
 
 	editor, ok := os.LookupEnv(editorEnvName)
@@ -86,7 +86,7 @@ func OpenEditorForScript(name string, scriptPath string) (msg string, err error)
 
 	return ui.CreateSuccMsg(fmt.Sprintf(
 		"created %s and opened %s for editing",
-		ui.ScrName.Render(name),
+		ui.ScrName.Render(*name),
 		ui.Primary.Render(editor)),
 	), nil
 }
@@ -98,12 +98,8 @@ func OpenEditorForScript(name string, scriptPath string) (msg string, err error)
 //
 // Create returns the script's full path or an error if
 // creation fails.
-func (s *Scr) Create(cfg *cfg.Cfg, scriptName, desc string) (scriptPath string, err error) {
-	if desc == "" {
-		desc = "description"
-	}
-
-	fileName := scriptName + ".sh"
+func (s *Scr) Create(cfg *cfg.Cfg, scriptName *string) (scriptPath string, err error) {
+	fileName := *scriptName + ".sh"
 	fullFilePath := filepath.Join(cfg.FullScriptsPath, fileName)
 
 	// Create the file with executable permissions (0700) without overwriting an existing one
@@ -113,7 +109,7 @@ func (s *Scr) Create(cfg *cfg.Cfg, scriptName, desc string) (scriptPath string, 
 		return "", err
 	}
 
-	if _, err := file.WriteString(s.writeTemplate(desc, scriptName)); err != nil {
+	if _, err := file.WriteString(s.writeTemplate(*scriptName)); err != nil {
 		return "", err
 	}
 
@@ -122,8 +118,8 @@ func (s *Scr) Create(cfg *cfg.Cfg, scriptName, desc string) (scriptPath string, 
 }
 
 // writeTemplate fills out the script template with the script name.
-func (s *Scr) writeTemplate(desc, scriptName string) string {
+func (s *Scr) writeTemplate(scriptName string) string {
 	return fmt.Sprintf(
-		s.Template, desc, scriptName,
+		s.Template, scriptName,
 	)
 }
