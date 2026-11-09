@@ -40,13 +40,13 @@ func ListAllScripts(config *cfg.Cfg, scr *Scr, verbose bool) error {
 
 // lastExecPrefix builds the last-executed tag and its style for a script.
 //
-// Scripts with no recorded execution use [ui.Subtle] for the tag.
+// Scripts with no recorded execution use [ui.DefaultSubtle] for the tag.
 func lastExecPrefix(name string, history cfg.LastExecuted) (string, lg.Style) {
 	if executedAt, ok := history[name]; ok && !executedAt.IsZero() {
 		return fmt.Sprintf("l-exec: %s - ", executedAt.Format(lastExecTimeLayout)), lg.NewStyle()
 	}
 
-	return "l-exec: never executed (n/a) - ", ui.Subtle
+	return "l-exec: never executed (n/a) - ", ui.DefaultSubtle
 }
 
 func buildScriptsDirContents(
@@ -88,7 +88,7 @@ func buildScriptsDirContents(
 
 			desc, extractDescErr := scr.ExtractDesc(string(file))
 			if extractDescErr != nil {
-				desc = ui.Subtle.Render("n/a")
+				desc = ui.DefaultSubtle.Render("n/a")
 			}
 
 			prefix, prefixStyle := lastExecPrefix(name, history)

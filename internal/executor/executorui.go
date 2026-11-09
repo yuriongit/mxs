@@ -90,7 +90,7 @@ func InitialModel(
 
 	ellipsisSpinner := spinner.New()
 	ellipsisSpinner.Spinner = spinner.Ellipsis
-	ellipsisSpinner.Style = ui.Subtle
+	ellipsisSpinner.Style = ui.DefaultSubtle
 
 	return model{
 		targetName:      targetName,
@@ -309,7 +309,7 @@ func (m model) View() tea.View {
 	switch m.state {
 	case stateSearching:
 		fmt.Fprintf(&b, "locating %s%s\n",
-			ui.ScrName.Render(m.targetName),
+			ui.ScriptReference.Render(m.targetName),
 			m.ellipsisSpinner.View(),
 		)
 
@@ -318,14 +318,14 @@ func (m model) View() tea.View {
 		if len(m.output) == 0 {
 			logs = m.ellipsisSpinner.View()
 		} else {
-			logs = ui.ScrName.Render(strings.Join(m.output, "\n"))
+			logs = ui.Default.Render(strings.Join(m.output, "\n"))
 		}
 		fmt.Fprintf(
 			&b,
 			"%s%s\n%s",
 			ui.CreateInfoHeader("desc", ui.Primary, true),
 			ui.Primary.Faint(true).Render(m.scriptDesc),
-			ui.CreateInfoHeader("logs", ui.ScrName, false),
+			ui.CreateInfoHeader("logs", ui.Exec, false),
 		)
 		// TODO: group all of separate b.WriteString writes
 		// into one [fmt.Fprintf] statements
@@ -335,7 +335,7 @@ func (m model) View() tea.View {
 		elapsed := time.Since(m.startTime).Round(10 * time.Millisecond)
 		fmt.Fprintf(&b, "\n%s executing %s for %s",
 			m.spinner.View(),
-			ui.ScrName.Render(m.targetName),
+			ui.ScriptReference.Render(m.targetName),
 			ui.Primary.Render(elapsed.String()),
 		)
 
