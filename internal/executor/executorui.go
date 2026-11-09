@@ -69,10 +69,10 @@ type model struct {
 	sub             chan tea.Msg  // Async channel for streaming output
 }
 
-// formatScriptLog formats and styles each line of output from the scirpt as a "log".
+// formatScriptLog formats and styles each line of output from the script as a "log".
 // Appends the updated slice into [model.output].
 func (m *model) formatScriptLog(msg outputLineMsg) {
-	m.output = append(m.output, ui.Log.Render(string(msg)))
+	m.output = append(m.output, ui.Default.Faint(true).Render("- ")+ui.Default.Faint(true).Render(string(msg)))
 }
 
 // InitialModel creates the initial TUI model for script execution.
@@ -344,7 +344,7 @@ func (m model) View() tea.View {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
 					ui.CreateInfoHeader("desc", ui.Primary, true),
-					ui.Primary.Render(m.scriptDesc),
+     			ui.Primary.Faint(true).Render(m.scriptDesc),
 					ui.CreateInfoHeader("logs", ui.Err, false),
 				)
 				// TODO: group all of separate b.WriteString writes
@@ -365,7 +365,7 @@ func (m model) View() tea.View {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
 					ui.CreateInfoHeader("desc", ui.Primary, true),
-					ui.Primary.Render(m.scriptDesc),
+     			ui.Primary.Faint(true).Render(m.scriptDesc),
 					ui.CreateInfoHeader("logs", ui.Succ, false),
 				)
 				// TODO: group all of separate b.WriteString writes
