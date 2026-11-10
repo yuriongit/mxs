@@ -344,7 +344,7 @@ func (m model) View() tea.View {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
 					ui.CreateInfoHeader("desc", ui.Primary, true),
-     			ui.Primary.Faint(true).Render(m.scriptDesc),
+					ui.Primary.Faint(true).Render(m.scriptDesc),
 					ui.CreateInfoHeader("logs", ui.Err, false),
 				)
 				// TODO: group all of separate b.WriteString writes
@@ -365,7 +365,7 @@ func (m model) View() tea.View {
 			if len(m.output) > 0 {
 				fmt.Fprintf(&b, "%s%s\n%s",
 					ui.CreateInfoHeader("desc", ui.Primary, true),
-     			ui.Primary.Faint(true).Render(m.scriptDesc),
+					ui.Primary.Faint(true).Render(m.scriptDesc),
 					ui.CreateInfoHeader("logs", ui.Succ, false),
 				)
 				// TODO: group all of separate b.WriteString writes
