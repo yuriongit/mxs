@@ -86,7 +86,7 @@ func OpenEditorForScript(name *string, scriptPath string) (msg string, err error
 
 	return ui.CreateSuccMsg(fmt.Sprintf(
 		"created %s and opened %s for editing",
-		ui.ScrName.Render(*name),
+		ui.ScriptReference.Render(*name),
 		ui.Primary.Render(editor)),
 	), nil
 }
