@@ -13,7 +13,7 @@ func TestLastExecPrefix(t *testing.T) {
 	history := cfg.LastExecuted{"backup": executedAt}
 
 	prefix, _ := lastExecPrefix("backup", history)
-	if want := "l-exec: 11:10am on Oct/30/26 - "; prefix != want {
+	if want := "l-exec: 11:10am on oct/30/26 - "; prefix != want {
 		t.Fatalf("prefix = %q, want %q", prefix, want)
 	}
 
