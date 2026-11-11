@@ -15,7 +15,7 @@ import (
 )
 
 // lastExecTimeLayout is the display format for a script's last execution time.
-const lastExecTimeLayout = "03:04pm on Jan/02/06"
+const lastExecTimeLayout = "3:04pm on Jan/02/06"
 
 // ListAllScripts lists out all scripts in the configuration directory.
 func ListAllScripts(config *cfg.Cfg, scr *Scr, verbose bool) error {
@@ -43,7 +43,7 @@ func ListAllScripts(config *cfg.Cfg, scr *Scr, verbose bool) error {
 // Scripts with no recorded execution use [ui.DefaultSubtle] for the tag.
 func lastExecPrefix(name string, history cfg.LastExecuted) (string, lg.Style) {
 	if executedAt, ok := history[name]; ok && !executedAt.IsZero() {
-		return fmt.Sprintf("l-exec: %s - ", strings.ToLower(executedAt.Format(lastExecTimeLayout))), lg.NewStyle()
+		return fmt.Sprintf("l-exec: %s - ", executedAt.Format(lastExecTimeLayout)), lg.NewStyle()
 	}
 
 	return "l-exec: never executed (n/a) - ", ui.DefaultSubtle
