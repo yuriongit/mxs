@@ -1,34 +1,17 @@
-# Dark & Light Mode, TUI Editor Support
+# Demo list tape wait interval fix
 
-This release ships first-class dark and light themes for the execution UI through
-ANSI-native colors, and teaches the `add` command to hand scripts off to
-terminal-based (TUI) editors such as Neovim.
+This release fixes the demo tape for the `list` command, which was missing a wait
+interval and therefore did not clear or run commands correctly.
 
 To install or upgrade MXS: **[mxs-cli.vercel.app/install](https://mxs-cli.vercel.app/install)**
 
 ---
 
-## ✨ What's New
-
-- **Dark & light mode:** The execution UI now renders through ANSI colors, so it
-  follows the terminal's theme instead of hard-coded color values.
-- **`add` TUI editor support:** `mxs add <name>` now opens the user's editor
-  through the config file, launching GUI editors directly or handing off to TUI
-  editors (e.g. Neovim) via the terminal's standard streams.
-
 ## 🛠️ Fixes & Improvements
 
-- **Dependency migration:** Migrated UI dependencies from `charmbracelet/*` to
-  `charm.land/*` (v2).
-- **Faint execution logs:** Script output and descriptions now render in a faint
-  style, keeping the execution screen clean.
-- **`la` last-executed time format:** Timestamps now render lowercase `am/pm` with
-  zero-padded hours and minutes.
-
-## 📚 Documentation
-
-- Updated the README and PRD to cover the v0.5.0 features, and added demo tapes for
-  the `add`, `exec`, `init` and `list` commands.
+- **Demo tape wait interval:** Increased the wait interval in the `list` demo tape so
+  recordings clear and commands run correctly, and switched to Vim's `:wq` close command
+  after creating a script.
 
 ## 📚 Changelog
 
