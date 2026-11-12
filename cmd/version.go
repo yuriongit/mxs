@@ -14,8 +14,8 @@ import (
 // versionCmd represents the ls command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Prints version of MXS",
-	Long:  "TODO: Implement later",
+	Short: "Prints the version of MXS",
+	Long:  "Prints the version of MXS",
 	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println(globalApp.Version)
 	},

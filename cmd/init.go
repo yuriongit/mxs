@@ -12,8 +12,8 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Initializes MXS' config",
-	Long:  "TODO: Implement later",
+	Short: "Initialize configuration directory",
+	Long:  "Creates and initializes the configuration directory",
 	RunE: func(_ *cobra.Command, _ []string) error {
 		ptrApp := GetApp()
 
