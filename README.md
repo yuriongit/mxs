@@ -6,6 +6,10 @@ A simple & colored CLI to manage and execute your Bash scripts.
 
 [mxs-cli.vercel.app](https://mxs-cli.vercel.app)
 
+<p>
+    <img src="./demos/exec/exec.gif" width="100%" alt="Script Execution Example">
+</p>
+
 ## Features
 
 1. Script execution: Run a script using its name (no file extension needed)
