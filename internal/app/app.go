@@ -15,6 +15,7 @@ import (
 
 // App holds MXS' core dependencies.
 type App struct {
+	Version   string
 	HomePath  *string
 	Cfg       *cfg.Cfg
 	Scr       *scr.Scr
@@ -26,6 +27,8 @@ type App struct {
 //
 // Returns the pointer to the created [App] struct.
 func NewApp() (*App, error) {
+	version := "v0.5.1"
+
 	homePath, err := os.UserHomeDir()
 	if err != nil {
 		return nil, err
@@ -38,6 +41,7 @@ func NewApp() (*App, error) {
 	validator := validator.New()
 
 	return &App{
+		version,
 		&homePath,
 		cfg,
 		scr,
