@@ -1,5 +1,7 @@
 FROM ghcr.io/charmbracelet/vhs
 
-COPY mxs /usr/local/bin/mxs
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends vim \
+  && rm -rf /var/lib/apt/lists/*
 
-ENV EDITOR=cat
+COPY mxs /usr/local/bin/mxs
