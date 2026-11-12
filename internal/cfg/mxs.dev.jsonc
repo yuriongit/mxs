@@ -1,8 +1,0 @@
-{
-  // Local version of mxs.json (as .jsonc) for development
-  "$schema": "https://raw.githubusercontent.com/yuriongit/mxs/main/internal/cfg/mxs.schema.json",
-  "editor": {
-    "name_as_command": "zed",
-    "ui_type": "gui"
-  }
-}

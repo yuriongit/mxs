@@ -1,6 +1,7 @@
 Output "./demos/add/add.gif"
 
 Require mxs
+Require vim
 
 Set Shell "bash"
 Set FontSize 26
@@ -18,4 +19,6 @@ Sleep 250ms
 # Demonstration
 Show
 Type "mxs add foo" Sleep 500ms Enter
+Sleep 2s
+Type ":wq" Sleep 500ms Enter
 Sleep 5s

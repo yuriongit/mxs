@@ -1,7 +1,7 @@
 {
-  "$schema": "https://raw.githubusercontent.com/yuriongit/mxs/main/internal/cfg/mxs.schema.json",
+  "$schema": "https://raw.githubusercontent.com/yuriongit/mxs/v0.4.1/internal/cfg/mxs.schema.json",
   "editor": {
-    "name_as_command": "zed",
-    "ui_type": "gui"
+    "name_as_command": "vim",
+    "ui_type": "tui"
   }
 }

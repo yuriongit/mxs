@@ -12,7 +12,7 @@
       "properties": {
         "name_as_command": {
           "type": "string",
-          "description": "Editor name as command (e.g. 'zed', 'nvim', 'code')",
+          "description": "Editor name as command (e.g. 'zed', 'nvim', 'code') - Needs to be in PATH",
           "minLength": 1,
           "pattern": ".*\\S.*"
         },
