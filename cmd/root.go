@@ -21,7 +21,7 @@ var globalApp *app.App
 
 var rootCmd = &cobra.Command{
 	Use:   "mxs <script-name> [args...]",
-	Short: "A CLI tool with AI capabilities for managing and executing scripts",
+	Short: "A small, simple & colored CLI to manage and execute your Bash scripts.",
 	Args:  cobra.MinimumNArgs(1),
 	PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 		// Skip app init for "init" command
