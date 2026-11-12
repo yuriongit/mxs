@@ -7,13 +7,14 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/yuriongit/mxs/internal/cfg"
 	"github.com/yuriongit/mxs/internal/ui"
 )
 
 // AddNewScript validates the script name, creates the script file,
 // opens it in the configured editor, and outputs a success message.
-func AddNewScript(cfg *cfg.Cfg, scr *Scr, scriptName *string) error {
+func AddNewScript(validator *validator.Validate, cfg *cfg.Cfg, scr *Scr, scriptName *string) error {
 	if err := cfg.HasCfgDir("scripts"); err != nil {
 		return err
 	}
@@ -25,7 +26,7 @@ func AddNewScript(cfg *cfg.Cfg, scr *Scr, scriptName *string) error {
 	if err != nil {
 		return err
 	}
-	msg, err := OpenEditorForScript(scriptName, scriptPath)
+	msg, err := OpenEditorForScript(validator, cfg, scriptName, scriptPath)
 	if err != nil {
 		return err
 	}
@@ -69,26 +70,54 @@ func validateScriptName(name *string) error {
 
 // OpenEditorForScript launches the configured editor with the script file.
 // It returns a success message or an error if the editor cannot be launched.
-func OpenEditorForScript(name *string, scriptPath string) (msg string, err error) {
-	editorEnvName := "EDITOR"
-
-	editor, ok := os.LookupEnv(editorEnvName)
-	if !ok {
-		fmt.Println()
-		return "", fmt.Errorf("failed to retrieve %s", editorEnvName)
-	}
-
-	// #nosec G204 -- opens editor with $EDITOR variable, which does not derive from user input
-	cmd := exec.Command(editor, scriptPath)
-	if err := cmd.Start(); err != nil {
+func OpenEditorForScript(validator *validator.Validate, cfg *cfg.Cfg, name *string, scriptPath string) (msg string, err error) {
+	if err := cfg.File.Load(cfg, validator); err != nil {
 		return "", err
 	}
+	if cfg.File == nil {
+		return "", fmt.Errorf("cfg file is a nil pointer")
+	}
 
-	return ui.CreateSuccMsg(fmt.Sprintf(
-		"created %s and opened %s for editing",
-		ui.ScriptReference.Render(*name),
-		ui.Primary.Render(editor)),
-	), nil
+	editor := cfg.File.Editor
+
+	// #nosec G204 -- comes from the user's config file for their own editor command
+	// (additionally, MXS will only run on their hardware)
+	cmd := exec.Command(editor.NameAsCommand, scriptPath)
+
+	switch editor.UIType {
+	case "gui":
+		if err := cmd.Start(); err != nil {
+			return "", err
+		}
+		return ui.CreateSuccMsg(fmt.Sprintf(
+			"created %s and opened %s for editing",
+			ui.ScriptReference.Render(*name),
+			ui.Primary.Render(editor.NameAsCommand)),
+		), nil
+	case "tui":
+		// Temporarily reassigns parent's standard input, output, and error streams to child process (e.g, hands off to Neovim, then returns back to parent)
+		// Bubbletea is not being used here, Cobra is, so this is fine.
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		// When Bubbletea is being used, it provides tea.ExecProcess() which is
+		// specifically for launching external terminal apps, it does the following:
+		//  1. Suspends Bubble Tea's rendering
+		//  2. Releases its terminal input handling
+		//  3. Executes the external process
+		//  4. Restores the terminal when the process exits
+
+		if err := cmd.Run(); err != nil {
+			return "", err
+		}
+		return ui.CreateSuccMsg(fmt.Sprintf(
+			"created %s and opened %s for editing",
+			ui.ScriptReference.Render(*name),
+			ui.Primary.Render(editor.NameAsCommand)),
+		), nil
+	default:
+		return
+	}
 }
 
 // Create creates a new script with executable permissions
