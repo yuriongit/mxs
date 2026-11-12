@@ -11,10 +11,11 @@ Set Height 900
 # Setup
 Hide
 Type "mxs init" Enter
+Sleep 250ms
 Type "mxs add foo" Enter
-Type "mxs add bar" Enter
-Type "mxs bar" Enter
-Sleep 500ms
+Type ":wq" Enter Sleep 250ms
+Type "mxs demo" Enter
+Sleep 250ms
 Type "clear" Enter
 Sleep 250ms
 
