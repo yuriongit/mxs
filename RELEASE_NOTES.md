@@ -1,30 +1,34 @@
-# Preserve interleaved stdout and stderr output
+# Dark & Light Mode, TUI Editor Support
 
-This release fixes a race condition in the executor where concurrent `stdout` and
-`stderr` readers could garble or reorder output when a script writes to both
-streams. Both streams are now read by a single goroutine through a shared line
-writer, so output lines are forwarded in the order the streams produced them.
+This release ships first-class dark and light themes for the execution UI through
+ANSI-native colors, and teaches the `add` command to hand scripts off to
+terminal-based (TUI) editors such as Neovim.
 
 To install or upgrade MXS: **[mxs-cli.vercel.app/install](https://mxs-cli.vercel.app/install)**
 
 ---
 
+## ✨ What's New
+
+- **Dark & light mode:** The execution UI now renders through ANSI colors, so it
+  follows the terminal's theme instead of hard-coded color values.
+- **`add` TUI editor support:** `mxs add <name>` now opens the user's editor
+  through the config file, launching GUI editors directly or handing off to TUI
+  editors (e.g. Neovim) via the terminal's standard streams.
+
 ## 🛠️ Fixes & Improvements
 
-- **Interleaved output preserved:** The executor now reads `stdout` and `stderr`
-  from a single goroutine using a mutex-serialized line writer, eliminating the
-  race from concurrent channel writes and preserving the order lines arrived in.
-- **Simplified pipe handling:** Replaced manual `StdoutPipe`/`StderrPipe` scanning
-  with `cmd.Stdout`/`cmd.Stderr` + `cmd.Run()`, so the runtime owns pipe cleanup
-  and non-zero exit errors surface cleanly.
-- **Executor output tests:** Added tests for partial-line buffering and streamed
-  line ordering, including interleaved output.
+- **Dependency migration:** Migrated UI dependencies from `charmbracelet/*` to
+  `charm.land/*` (v2).
+- **Faint execution logs:** Script output and descriptions now render in a faint
+  style, keeping the execution screen clean.
+- **`la` last-executed time format:** Timestamps now render lowercase `am/pm` with
+  zero-padded hours and minutes.
 
 ## 📚 Documentation
 
-- **Developer workflow:** Hardened `AGENTS.md` with security guardrails for git
-  credentials, testing/CI requirements, and PR/merge guidelines, plus emergency
-  procedures for accidental `main` pushes and credential breaches.
+- Updated the README and PRD to cover the v0.5.0 features, and added demo tapes for
+  the `add`, `exec`, `init` and `list` commands.
 
 ## 📚 Changelog
 
