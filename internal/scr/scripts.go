@@ -23,3 +23,8 @@ func New() *Scr {
 		DescHeader: "# mxs-description\n# ",
 	}
 }
+
+var (
+	// TemplateDesc is the templates boilerplate description.
+	TemplateDesc = "replace me!"
+)

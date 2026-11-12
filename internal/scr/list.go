@@ -89,6 +89,8 @@ func buildScriptsDirContents(
 			desc, extractDescErr := scr.ExtractDesc(string(file))
 			if extractDescErr != nil {
 				desc = ui.DefaultSubtle.Render("n/a")
+			} else if desc == TemplateDesc {
+				desc = ui.DefaultSubtle.Render(desc)
 			}
 
 			prefix, prefixStyle := lastExecPrefix(name, history)

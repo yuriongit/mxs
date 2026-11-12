@@ -120,6 +120,6 @@ func (s *Scr) Create(cfg *cfg.Cfg, scriptName *string) (scriptPath string, err e
 // writeTemplate fills out the script template with the script name.
 func (s *Scr) writeTemplate(scriptName string) string {
 	return fmt.Sprintf(
-		s.Template, scriptName,
+		s.Template, TemplateDesc, scriptName,
 	)
 }
