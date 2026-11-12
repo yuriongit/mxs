@@ -14,7 +14,7 @@ import (
 var lsCmd = &cobra.Command{
 	Use:   "ls",
 	Short: "Lists all scripts",
-	Long:  "TODO: Implement later",
+	Long:  "Lists all scripts",
 	RunE: func(_ *cobra.Command, _ []string) error {
 		app := GetApp() // TODO: Use GlobalApp variable
 

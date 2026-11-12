@@ -14,7 +14,7 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Creates a new script",
-	Long:  "TODO: Implement later",
+	Long:  "Creates a new Bash script from MXS' built-in template",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(_ *cobra.Command, args []string) error {
 		scriptName := args[0]

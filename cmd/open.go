@@ -13,8 +13,8 @@ import (
 // openCmd represents the ls command
 var openCmd = &cobra.Command{
 	Use:   "open",
-	Short: "Opens a new script",
-	Long:  "TODO: Implement later",
+	Short: "Opens a script",
+	Long:  "Opens an existing script in the user's configured editor",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(_ *cobra.Command, args []string) error {
 		scriptName := args[0]

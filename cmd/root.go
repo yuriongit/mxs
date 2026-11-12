@@ -21,7 +21,8 @@ var globalApp *app.App
 
 var rootCmd = &cobra.Command{
 	Use:   "mxs <script-name> [args...]",
-	Short: "A CLI tool with AI capabilities for managing and executing scripts",
+	Short: "A small, simple & colored CLI to manage and execute your Bash scripts.",
+	Long:  "A small, simple & colored CLI to manage and execute your Bash scripts.",
 	Args:  cobra.MinimumNArgs(1),
 	PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 		// Skip app init for "init" command
@@ -45,7 +46,7 @@ var rootCmd = &cobra.Command{
 
 		p := tea.NewProgram(executor.InitialModel(globalApp.Cfg, globalApp.Scr, scriptName, scriptArgs))
 		if _, err := p.Run(); err != nil {
-			log.Fatal("Fatal error running MXS", "err", err)
+			log.Fatal("fatal error running MXS", "err", err)
 		}
 
 		return nil
