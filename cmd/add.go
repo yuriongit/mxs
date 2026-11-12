@@ -17,10 +17,9 @@ var addCmd = &cobra.Command{
 	Long:  "TODO: Implement later",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(_ *cobra.Command, args []string) error {
-		app := GetApp() // TODO: Use GlobalApp instead
 		scriptName := args[0]
 
-		return scr.AddNewScript(app.Validator, app.Cfg, app.Scr, &scriptName)
+		return scr.AddNewScript(globalApp.Validator, globalApp.Cfg, globalApp.Scr, &scriptName)
 	},
 }
 
