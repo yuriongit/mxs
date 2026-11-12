@@ -19,7 +19,7 @@ var addCmd = &cobra.Command{
 	RunE: func(_ *cobra.Command, args []string) error {
 		scriptName := args[0]
 
-		return scr.AddNewScript(globalApp.Validator, globalApp.Cfg, globalApp.Scr, &scriptName)
+		return scr.AddNewScript(globalApp.Validator, globalApp.Cfg, globalApp.Scr, scriptName)
 	},
 }
 
