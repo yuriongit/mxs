@@ -35,7 +35,7 @@ func NewApp() (*App, error) {
 	scr := scr.New()
 	executor := executor.NewExecutor()
 
-	validator := &validator.Validate{}
+	validator := validator.New()
 
 	return &App{
 		&homePath,
