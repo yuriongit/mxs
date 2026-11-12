@@ -62,10 +62,4 @@ func Execute() {
 		fmt.Fprintf(os.Stderr, "%s %s\n", errorMark, err.Error())
 		return
 	}
-
-	// Global cleanup
-	// if globalApp != nil {
-	// 	globalApp.Cancel()
-	// 	globalApp.Database.Pool.Close()
-	// }
 }
