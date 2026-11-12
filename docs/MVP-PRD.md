@@ -1,6 +1,6 @@
 # MXS PRD
 
-Oct 30, 2026
+Nov 12, 2026
 
 ## 1. Overview
 
@@ -30,6 +30,7 @@ or run it without digging up its path
 - Store a short description with each script
 - Use the user's own editor for writing code instead of building one
 - Keep the command set small and the behavior predictable
+- Follow the user's terminal theme with ANSI-based execution UI colors
 
 ### Non-goals
 
@@ -78,6 +79,7 @@ other command expects
 - [x] Accepts the script's name as an argument
 - [x] Creates `~/.mxs/scripts/<name>.sh`
 - [x] Opens the new file in the user's editor so they can write the script
+- [x] Opens GUI and TUI editors (e.g. Neovim) through the `editor` config entry
 - [x] Refuses a name that is already in use
 
 #### upd
@@ -164,10 +166,10 @@ numeric targets are starting points and can change
   - A:Yes
 - Should `ls` show each script's description next to its name?
   - No, `mxs la` does this. Implemented in v0.4.0.
-- Which editor does MXS open: `$EDITOR`, `$VISUAL`, or a fallback if neither is
-  set?
-  - A: `$EDITOR` as primary, with `$VISUAL` as the fallback. No other fallbacks
-    will be provided.
+- Which editor does MXS open?
+  - A: The editor is read from the config file (`editor.name_as_command` with an
+    `editor.ui_type` set to `gui` or `tui`), which supports GUI and TUI editors such
+    as Neovim. No fallback editors will be provided.
 - Q: What characters are allowed in a script name (spaces, slashes, leading periods)?
   - A: Script names are allowed to be in the form lowercase characters, and can
     contain symbols other than periods, spaces, and slashes.
