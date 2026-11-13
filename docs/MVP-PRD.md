@@ -1,12 +1,12 @@
 # MXS PRD
 
-Nov 12, 2026
+Nov 13, 2026
 
 ## 1. Overview
 
 MXS is a command-line tool for running and managing Bash scripts. Scripts are kept
 as `.sh` files in `~/.mxs/scripts` and run by name from any directory. MXS also
-adds, updates, renames, removes and lists scripts, so you never have to manage
+adds, opens, renames, removes and lists scripts, so you never have to manage
 that folder by hand.
 
 ## 2. Problem it solves
@@ -25,7 +25,7 @@ or run it without digging up its path
 
 - Keep all personal scripts in one place: `~/.mxs/scripts`
 - Run any script by name from any directory
-- Cover the full script life cycle with short commands: add, update, rename, remove,
+- Cover the full script life cycle with short commands: add, open, rename, remove,
   list
 - Store a short description with each script
 - Use the user's own editor for writing code instead of building one
@@ -68,7 +68,7 @@ Running a script by name is the main use of MXS. The command is `mxs <name>`
 
 ### 5.2 Script management (CRUD)
 
-These commands create, read, update and delete scripts. Names are always shown and
+These commands create, read, open and delete scripts. Names are always shown and
 accepted without the `.sh` suffix, so the name printed by `ls` is the name every
 other command expects
 
@@ -82,18 +82,13 @@ other command expects
 - [x] Opens GUI and TUI editors (e.g. Neovim) through the `editor` config entry
 - [x] Refuses a name that is already in use
 
-#### upd
+#### open
 
-`mxs upd <name>`, for example `mxs upd demo`
+`mxs open <name>`, for example `mxs open demo`
 
-- [ ] Prompts for the name, then for the short description
-- [ ] Prompts code changes: If "yes", the corresponding script file is opened in
-      the user's editor. If the editor is TUI-based, a new terminal window will
-      open the file. Both routes will use some type of `--wait` flag functionality,
-      then the
-      interactive editing process will end.
-- [ ] Updates the metadata store with any changes
-- [ ] Prints a clear error if the script does not exist
+- [x] Opens `~/.mxs/scripts/<name>.sh` in the user's configured editor
+- [x] Supports GUI and TUI editors (e.g. Neovim) via the `editor` config entry
+- [x] Prints a clear error if the script does not exist
 
 #### ren
 
@@ -117,7 +112,7 @@ other command expects
 - [x] Lists the `.sh` files in `~/.mxs/scripts`
 - [x] Shows each name without the `.sh` suffix, to avoid confusion when running,
       renaming,
-      or updating a script
+      or opening a script
 - [x] Renders the list in a colored box under a scripts header
 - [x] Ignores any file in the folder that does not end in `.sh`
 - [x] Prints a clear error if no scripts exist
@@ -137,9 +132,9 @@ other command expects
 MXS has no usage tracking, so these are checks the author can run directly. The
 numeric targets are starting points and can change
 
-- [ ] All six commands (`add`, `upd`, `ren`, `rm`, `ls`, `la`) fully functional
+- [ ] All six commands (`add`, `open`, `ren`, `rm`, `ls`, `la`) fully functional
 - [ ] A new script can be added and run in under one minute
-- [ ] Every name printed by `ls` is accepted as-is by `upd`, `ren` and `rm`
+- [ ] Every name printed by `ls` is accepted as-is by `open`, `ren` and `rm`
 - [ ] `ren` and `rm` never leave the script file and its metadata out of sync, covered
       by tests
 - [ ] MXS adds less than 100 ms before a script starts running
@@ -151,12 +146,6 @@ numeric targets are starting points and can change
   - Maybe SQLite
 - Q: What is the command that runs a script: `exec`, `run`, or just `mxs <name>`?
   - A: `mxs <name`
-- Q: `upd` prompts for the name and `ren` also changes it. Should `upd` keep the
-- name prompt, or leave renaming to `ren`?
-  - A: Both should remain. Why? Well, `ren` provides a smoother UX because the user
-    doesn't need to enter an interactive state just to rename a single script.
-    Rather, when updating a script, the `upd` command provides the user with all
-    that customizability
 - Q: What happens to a `.sh` file added to the folder by hand? It shows up in `ls`
   but has no description?
   - A: Not entirely sure right now. I think maybe each script should be registered
