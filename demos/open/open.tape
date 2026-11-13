@@ -3,7 +3,7 @@ Output "./demos/open/open.gif"
 Require mxs
 
 Set Shell "bash"
-Set FontSize 26
+Set FontSize 32
 
 Set Width 1800
 Set Height 900
