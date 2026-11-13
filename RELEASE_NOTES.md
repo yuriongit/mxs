@@ -1,17 +1,28 @@
-# Demo list tape wait interval fix
+# Open Command, Version Command & Demo Refresh
 
-This release fixes the demo tape for the `list` command, which was missing a wait
-interval and therefore did not clear or run commands correctly.
+This release adds the `open` command for launching an existing script in the user's
+editor, adds a `version` command for printing the MXS version, and refreshes the demo
+recordings.
 
 To install or upgrade MXS: **[mxs-cli.vercel.app/install](https://mxs-cli.vercel.app/install)**
 
 ---
 
+## ✨ What's New
+
+- **`open` command:** Open an existing script in the user's configured editor, with
+  support for GUI and TUI editors (e.g. Neovim).
+- **`version` command:** Print the current version of MXS.
+
 ## 🛠️ Fixes & Improvements
 
-- **Demo tape wait interval:** Increased the wait interval in the `list` demo tape so
-  recordings clear and commands run correctly, and switched to Vim's `:wq` close command
-  after creating a script.
+- **Command descriptions:** Updated the MXS overview, error, and command descriptions.
+- **Demo refresh:** Updated demo tapes and GIFs, increasing the font size and
+  decreasing the framerate.
+
+## 📚 Documentation
+
+- Updated the PRD with the new `open` command, and refreshed the README feature list.
 
 ## 📚 Changelog
 
