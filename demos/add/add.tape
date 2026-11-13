@@ -7,6 +7,8 @@ Set Shell "bash"
 Set FontSize 32
 
 Set Width 1800
+
+Set Framerate 15
 Set Height 900
 
 # Setup
