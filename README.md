@@ -1,6 +1,6 @@
 # MXS
 
-**Current Version:** `v0.5.0`
+**Current Version:** `v0.6.0`
 
 A simple & colored CLI to manage and execute your Bash scripts.
 
@@ -23,6 +23,7 @@ A simple & colored CLI to manage and execute your Bash scripts.
 9. Automated installers for Linux and macOS
 10. Dark & light mode with ANSI colors
 11. Editor support via the config file, including TUI editors (e.g. Neovim)
+12. Open command to open a script in your editor
 
 ## Configuration
 
