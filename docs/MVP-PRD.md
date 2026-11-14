@@ -90,6 +90,14 @@ other command expects
 - [x] Supports GUI and TUI editors (e.g. Neovim) via the `editor` config entry
 - [x] Prints a clear error if the script does not exist
 
+#### cfg
+
+`mxs cfg`
+
+- [x] Opens the MXS configuration file in the user's editor
+- [x] Supports GUI and TUI editors (e.g. Neovim) via the `editor` config entry
+- [x] Prints a clear error if the configuration file cannot be opened
+
 #### ren
 
 `mxs ren <old> <new>`, for example `mxs ren lorem ipsum`
