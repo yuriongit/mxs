@@ -13,4 +13,4 @@ Set Height 900
 # Demonstration
 Show 
 Type "mxs init" Sleep 500ms Enter
-Sleep 5s
+Sleep 3s

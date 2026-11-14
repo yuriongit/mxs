@@ -21,8 +21,8 @@ Sleep 250ms
 # Demonstration
 Show
 Type "mxs demo" Sleep 500ms Enter
-Sleep 2s
-
+Sleep 1.5s
 Ctrl+L
+
 Type "mxs demo purple" Sleep 500ms Enter
-Sleep 10s
+Sleep 8s

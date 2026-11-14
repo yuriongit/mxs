@@ -24,7 +24,7 @@ Sleep 250ms
 # Demonstration
 Show
 Type "mxs ls" Sleep 500ms Enter
-Sleep 2s
+Sleep 1.5s
 
 Type "mxs la" Sleep 500ms Enter
-Sleep 5s
+Sleep 3s

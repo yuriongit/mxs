@@ -37,9 +37,9 @@ Sleep 1s
 Set TypingSpeed 50ms
 Escape
 Type ":wq" Enter Sleep 500ms
-Sleep 0.5s
+Sleep 0.25s
+Ctrl+L
 
-Type "clear" Enter Sleep 500ms
-Sleep 0.75s
+Sleep 0.5s
 Type "mxs foo" Sleep 500ms Enter
-Sleep 5s
+Sleep 3s
