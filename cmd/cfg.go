@@ -14,8 +14,8 @@ import (
 // cfgCmd represents the ls command
 var cfgCmd = &cobra.Command{
 	Use:   "cfg",
-	Short: "Opens MXS' configuration file",
-	Long:  "Opens the MXS' configuration file in the configured editor",
+	Short: "Opens configuration file",
+	Long:  "Opens the MXS configuration file in the configured editor",
 	RunE: func(_ *cobra.Command, _ []string) error {
 		msg, err := globalApp.Cfg.File.Open(globalApp.Cfg, globalApp.Validator)
 		if err != nil {
