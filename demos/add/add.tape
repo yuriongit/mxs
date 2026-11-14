@@ -23,4 +23,4 @@ Show
 Type "mxs add foo" Sleep 500ms Enter
 Sleep 2s
 Type ":wq" Sleep 500ms Enter
-Sleep 5s
+Sleep 3s
