@@ -13,7 +13,13 @@ import (
 
 // OpenEditor launches the configured editor with the script file.
 // It returns a success message or an error if the editor cannot be launched.
-func OpenEditor(purpose string, validator *validator.Validate, cfg *cfg.Cfg, name string, scriptPath string) (msg string, err error) {
+func OpenEditor(
+	purpose string,
+	validator *validator.Validate,
+	cfg *cfg.Cfg,
+	name string,
+	scriptPath string,
+) (msg string, err error) {
 	if err := cfg.File.Load(cfg, validator); err != nil {
 		return "", err
 	}

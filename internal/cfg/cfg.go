@@ -22,6 +22,7 @@ type Cfg struct {
 	FullScriptsPath string
 	File            *File
 	FileName        string
+	FilePath        string
 }
 
 var demoScriptFileName = "demo.sh"
@@ -33,6 +34,7 @@ func NewCfg(homePath string) *Cfg {
 	fullCfgPath := filepath.Join(homePath, cfgDir)
 	fullScriptsPath := filepath.Join(homePath, scriptsDir)
 	cfgFileName := "mxs.json"
+	cfgFilePath := filepath.Join(fullCfgPath, cfgFileName)
 
 	return &Cfg{
 		cfgDir,
@@ -41,6 +43,7 @@ func NewCfg(homePath string) *Cfg {
 		fullScriptsPath,
 		&File{},
 		cfgFileName,
+		cfgFilePath,
 	}
 }
 
