@@ -82,17 +82,18 @@ func (f *File) Open(cfg *Cfg, validator *validator.Validate) (msg string, err er
 	//
 	// Additionally, cfg.FilePath is already predetermined in the cfg package (trusted & safe).
 	cmd := exec.Command(editor.NameAsCommand, cfg.FilePath)
+	succMsg := ui.CreateSuccMsg(fmt.Sprintf(
+		"opened %s with %s",
+		ui.ConfigReference,
+		ui.Primary.Render(editor.NameAsCommand)),
+	)
 
 	switch editor.UIType {
 	case "gui":
 		if err := cmd.Start(); err != nil {
 			return "", err
 		}
-		return ui.CreateSuccMsg(fmt.Sprintf(
-			"opened %s with %s",
-			ui.ScriptReference.Render("config"),
-			ui.Primary.Render(editor.NameAsCommand)),
-		), nil
+		return succMsg, nil
 	case "tui":
 		// Temporarily reassigns parent's standard input, output, and error streams to child process (e.g, hands off to Neovim, then returns back to parent)
 		// Bubbletea is not being used here, Cobra is, so this is fine.
@@ -109,11 +110,7 @@ func (f *File) Open(cfg *Cfg, validator *validator.Validate) (msg string, err er
 		if err := cmd.Run(); err != nil {
 			return "", err
 		}
-		return ui.CreateSuccMsg(fmt.Sprintf(
-			"opened %s with %s",
-			ui.ScriptReference.Render("config"),
-			ui.Primary.Render(editor.NameAsCommand)),
-		), nil
+		return succMsg, nil
 	default:
 		return
 	}
