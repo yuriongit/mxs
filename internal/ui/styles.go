@@ -46,6 +46,20 @@ var (
 			Foreground(Blue)
 )
 
+// Background styles.
+var (
+	// highlighted should have a background when being used.
+	highlighted = Default.Padding(0, 1, 0, 1)
+
+	// ConfigReference is "config" highlighted with a [Magenta] background (uses [highlighted] style).
+	// It's purpose is to signify that "config" is not a file, but a speciaL reference specifically
+	// mentioning the user's actual configuration file (no other file will receive any type of
+	// highlighted reference obviously).
+	//
+	// Usage: e.g., "opened 'config' with vim"
+	ConfigReference = highlighted.Foreground(lg.Color("15")).Background(Magenta).Render("config")
+)
+
 // Box styles.
 var (
 	// BaseBox is the base style for a box.
