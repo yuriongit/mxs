@@ -1,8 +1,7 @@
-# Open Command, Version Command & Demo Refresh
+# Config Command & Demo Refresh
 
-This release adds the `open` command for launching an existing script in the user's
-editor, adds a `version` command for printing the MXS version, and refreshes the demo
-recordings.
+This release adds the `cfg` command for opening the user's MXS configuration file
+in their editor, and refreshes the demo recordings.
 
 To install or upgrade MXS: **[mxs-cli.vercel.app/install](https://mxs-cli.vercel.app/install)**
 
@@ -10,19 +9,18 @@ To install or upgrade MXS: **[mxs-cli.vercel.app/install](https://mxs-cli.vercel
 
 ## ✨ What's New
 
-- **`open` command:** Open an existing script in the user's configured editor, with
-  support for GUI and TUI editors (e.g. Neovim).
-- **`version` command:** Print the current version of MXS.
+- **`cfg` command:** Open the user's MXS configuration file in their configured
+  editor, with support for GUI and TUI editors (e.g. Neovim). The `config` reference
+  is highlighted to point at the user's actual configuration file.
 
 ## 🛠️ Fixes & Improvements
 
-- **Command descriptions:** Updated the MXS overview, error, and command descriptions.
-- **Demo refresh:** Updated demo tapes and GIFs, increasing the font size and
-  decreasing the framerate.
+- **Demo refresh:** Converted demos from GIF to WebM, added a `cfg` demo, and
+  decreased tape wait intervals.
 
 ## 📚 Documentation
 
-- Updated the PRD with the new `open` command, and refreshed the README feature list.
+- Updated the PRD with the new `cfg` command, and refreshed the README feature list.
 
 ## 📚 Changelog
 
