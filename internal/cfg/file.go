@@ -79,6 +79,8 @@ func (f *File) Open(cfg *Cfg, validator *validator.Validate) (msg string, err er
 
 	// #nosec G204 -- comes from the user's config file for their own editor command
 	// (additionally, MXS will only run on their hardware)
+	//
+	// Additionally, cfg.FilePath is already predetermined in the cfg package (trusted & safe).
 	cmd := exec.Command(editor.NameAsCommand, cfg.FilePath)
 
 	switch editor.UIType {
