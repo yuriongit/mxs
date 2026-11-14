@@ -1,4 +1,4 @@
-Output "./demos/open/open.gif"
+Output "./demos/open/open.webm"
 
 Require mxs
 

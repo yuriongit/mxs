@@ -1,4 +1,4 @@
-Output "./demos/add/add.gif"
+Output "./demos/add/add.webm"
 
 Require mxs
 Require vim

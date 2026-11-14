@@ -1,4 +1,5 @@
-Output "./demos/exec/exec.gif"
+Output "./demos/exec/exec.webm"
+Output "./demos/exec/exec.gif" # For README embedding compatability
 
 Require mxs
 
